@@ -12,6 +12,10 @@
       href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
       rel="stylesheet"
     />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+    />
     <style>
       html {
         scroll-behavior: smooth;
@@ -20,7 +24,7 @@
         font-family: "Arial", sans-serif;
         background: linear-gradient(to bottom, #1a1a2e, #16213e);
         color: #fff;
-        transition: background 0.3s, color 0.3s;
+        transition: background 0.5s, color 0.5s;
       }
       body.light-mode {
         background: linear-gradient(to bottom, #f0f0f0, #d9d9d9);
@@ -36,15 +40,31 @@
       }
       .section {
         scroll-margin-top: 80px;
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+      }
+      .section.visible {
+        opacity: 1;
+        transform: translateY(0);
       }
       .card {
         background: rgba(255, 255, 255, 0.1);
         border-radius: 10px;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+      }
+      .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
+        background: rgba(255, 255, 255, 0.15);
       }
       .light-mode .card {
         background: rgba(255, 255, 255, 0.8);
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+      }
+      .light-mode .card:hover {
+        background: rgba(255, 255, 255, 0.95);
       }
       .nav-links {
         display: flex;
@@ -52,18 +72,313 @@
       .hamburger-menu {
         display: none;
       }
+      
+      /* Text animations */
+      .text-gradient {
+        background-image: linear-gradient(90deg, #3b82f6, #8b5cf6);
+        background-clip: text;
+        -webkit-background-clip: text;
+        color: transparent;
+        background-size: 200%;
+        animation: gradient-shift 3s infinite alternate;
+      }
+      
+      @keyframes gradient-shift {
+        0% {
+          background-position: 0%;
+        }
+        100% {
+          background-position: 100%;
+        }
+      }
+      
+      /* Button animations */
+      .btn-animated {
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
+      }
+      
+      .btn-animated:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08);
+      }
+      
+      .btn-animated::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 300px;
+        height: 300px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 0;
+        transition: transform 0.8s, opacity 0.8s;
+      }
+      
+      .btn-animated:active::after {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+        transition: 0s;
+      }
+      
+      /* Card entrance animations */
+      .card-animated {
+        animation: card-entrance 0.8s ease-out forwards;
+        opacity: 0;
+      }
+      
+      @keyframes card-entrance {
+        0% {
+          opacity: 0;
+          transform: translateY(25px);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      
+      /* Floating animation */
+      .float {
+        animation: float 3s ease-in-out infinite;
+      }
+      
+      @keyframes float {
+        0% {
+          transform: translateY(0px);
+        }
+        50% {
+          transform: translateY(-10px);
+        }
+        100% {
+          transform: translateY(0px);
+        }
+      }
+      
+      /* Pulse animation */
+      .pulse {
+        animation: pulse 2s infinite;
+      }
+      
+      @keyframes pulse {
+        0% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.05);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+      
+      /* Typing animation for headers */
+      .typing-effect {
+        border-right: 2px solid white;
+        white-space: nowrap;
+        overflow: hidden;
+        width: 0;
+        animation: typing 2.5s steps(40, end) forwards, blink-caret 0.75s step-end infinite;
+      }
+      
+      @keyframes typing {
+        from { width: 0 }
+        to { width: 100% }
+      }
+      
+      @keyframes blink-caret {
+        from, to { border-color: transparent }
+        50% { border-color: white }
+      }
+      
+      /* Enhanced slider controls */
+      input[type="range"] {
+        -webkit-appearance: none;
+        height: 8px;
+        border-radius: 5px;
+        background: rgba(255, 255, 255, 0.2);
+        outline: none;
+        margin: 10px 0;
+        transition: background 0.3s ease;
+      }
+      
+      input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: #3B82F6;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.5);
+      }
+      
+      input[type="range"]::-webkit-slider-thumb:hover {
+        background: #2563EB;
+        transform: scale(1.1);
+      }
+      
+      input[type="range"]:active::-webkit-slider-thumb {
+        animation: pulse-blue 1.5s infinite;
+      }
+      
+      @keyframes pulse-blue {
+        0% {
+          box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7);
+        }
+        70% {
+          box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
+        }
+        100% {
+          box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+        }
+      }
+      
+      /* Form input animations */
+      .form-input {
+        transition: border 0.3s ease, box-shadow 0.3s ease;
+        position: relative;
+        background: rgba(255, 255, 255, 0.1);
+      }
+      
+      .form-input:focus {
+        border-color: #3B82F6 !important;
+        box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+        background: rgba(255, 255, 255, 0.2);
+      }
+      
+      /* Canvas styling with border animation */
+      #canvas {
+        background-color: rgba(0, 0, 0, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        position: relative;
+        transition: box-shadow 0.3s ease;
+      }
+      
+      #canvas:hover {
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+      }
+      
+      .canvas-border {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        border-radius: 8px;
+        pointer-events: none;
+        border: 2px solid transparent;
+        background-image: linear-gradient(to right, #3B82F6, #8B5CF6, #EC4899, #F59E0B);
+        background-size: 500% 500%;
+        animation: gradient-border 4s ease infinite;
+        -webkit-mask: 
+          linear-gradient(#fff 0 0) content-box, 
+          linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        padding: 2px;
+      }
+      
+      @keyframes gradient-border {
+        0% { background-position: 0% 50% }
+        50% { background-position: 100% 50% }
+        100% { background-position: 0% 50% }
+      }
+      
+      .light-mode #canvas {
+        background-color: rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(0, 0, 0, 0.1) !important;
+      }
+      
+      /* Value display animations */
+      .value-animate {
+        transition: transform 0.3s ease, color 0.3s ease;
+      }
+      
+      .value-animate.updated {
+        transform: scale(1.2);
+        color: #3B82F6;
+      }
+      
+      /* Shape animations for decorative elements */
+      .shape {
+        position: absolute;
+        opacity: 0.5;
+        z-index: -1;
+        animation-duration: 15s;
+        animation-iteration-count: infinite;
+        animation-timing-function: linear;
+      }
+      
+      .shape-1 {
+        top: 10%;
+        left: 10%;
+        width: 50px;
+        height: 50px;
+        background: linear-gradient(45deg, #3B82F6, #8B5CF6);
+        border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+        animation-name: float-shape-1;
+      }
+      
+      .shape-2 {
+        bottom: 20%;
+        right: 10%;
+        width: 75px;
+        height: 75px;
+        background: linear-gradient(45deg, #EC4899, #F59E0B);
+        border-radius: 69% 31% 56% 44% / 29% 45% 55% 71%;
+        animation-name: float-shape-2;
+      }
+      
+      @keyframes float-shape-1 {
+        0% { transform: translate(0, 0) rotate(0deg); }
+        25% { transform: translate(10px, 15px) rotate(90deg); }
+        50% { transform: translate(15px, 0) rotate(180deg); }
+        75% { transform: translate(5px, -15px) rotate(270deg); }
+        100% { transform: translate(0, 0) rotate(360deg); }
+      }
+      
+      @keyframes float-shape-2 {
+        0% { transform: translate(0, 0) rotate(0deg); }
+        20% { transform: translate(-15px, 10px) rotate(-70deg); }
+        40% { transform: translate(-5px, 15px) rotate(-140deg); }
+        60% { transform: translate(15px, 5px) rotate(-210deg); }
+        80% { transform: translate(10px, -10px) rotate(-280deg); }
+        100% { transform: translate(0, 0) rotate(-360deg); }
+      }
+      
       @media (max-width: 768px) {
         .nav-links {
           display: none;
           flex-direction: column;
-          background: #333;
+          background: rgba(26, 26, 46, 0.95);
           position: absolute;
           top: 60px;
           left: 0;
           width: 100%;
+          padding: 1rem;
+          border-radius: 0 0 10px 10px;
+          box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+          z-index: 100;
         }
         .nav-links.active {
           display: flex;
+          animation: slide-down 0.3s ease-out forwards;
+        }
+        @keyframes slide-down {
+          from {
+            opacity: 0;
+            transform: translateY(-10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
         }
         .hamburger-menu {
           display: block;
@@ -76,33 +391,39 @@
   </head>
   <body class="dark:text-white light-mode:text-gray-800">
     <canvas id="background-canvas"></canvas>
+    
+    <!-- Decorative floating shapes -->
+    <div class="shape shape-1"></div>
+    <div class="shape shape-2"></div>
+    
     <header
       class="fixed top-0 left-0 w-full bg-gray-800 bg-opacity-70 backdrop-blur-md text-white p-4 flex justify-between items-center z-10"
     >
       <div class="logo flex items-center text-xl">
-        <i class="fas fa-atom mr-2"></i> Physics Sim
+        <i class="fas fa-atom mr-2 pulse"></i>
+        <span class="text-gradient">Physics Lab</span>
       </div>
       <nav class="nav-links space-y-2 md:space-y-0 md:flex md:space-x-4">
-        <a href="#home" class="hover:underline">Home</a>
-        <a href="#simulation" class="hover:underline">Simulation</a>
-        <a href="#about" class="hover:underline">About</a>
-        <a href="#theory" class="hover:underline">Theory</a>
-        <a href="#contact" class="hover:underline">Contact</a>
+        <a href="#home" class="hover:underline hover:text-blue-300 transition-colors duration-300">Home</a>
+        <a href="#simulation" class="hover:underline hover:text-blue-300 transition-colors duration-300">Simulation</a>
+        <a href="#about" class="hover:underline hover:text-blue-300 transition-colors duration-300">About</a>
+        <a href="#theory" class="hover:underline hover:text-blue-300 transition-colors duration-300">Theory</a>
+        <a href="#contact" class="hover:underline hover:text-blue-300 transition-colors duration-300">Contact</a>
       </nav>
       <div class="flex items-center space-x-4">
         <button
           id="try-now"
-          class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
+          class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded btn-animated"
         >
           Try it now
         </button>
         <i
           id="theme-toggle"
-          class="fas fa-moon cursor-pointer text-2xl"
+          class="fas fa-moon cursor-pointer text-2xl transition-transform duration-300 hover:rotate-12"
           aria-label="Toggle dark/light mode"
         ></i>
         <i
-          class="fas fa-bars hamburger-menu cursor-pointer text-2xl"
+          class="fas fa-bars hamburger-menu cursor-pointer text-2xl transition-transform duration-300 hover:scale-110"
           aria-label="Menu"
           onclick="toggleMenu()"
         ></i>
@@ -113,204 +434,349 @@
         id="home"
         class="section min-h-screen md:min-h-screen flex items-center justify-center text-center"
       >
-        <div>
-          <h1 class="text-4xl font-bold">Welcome to the Physics Simulation</h1>
+        <div class="animate__animated animate__fadeInUp">
+          <h1 class="text-4xl font-bold mb-4 typing-effect">Welcome to the Physics Simulation</h1>
           <p class="mt-4 text-lg">
             Explore fundamental mechanics concepts in real time.
           </p>
           <button
             id="start-exploring"
-            class="mt-6 bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded"
+            class="mt-6 bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded btn-animated"
           >
+            <i class="fas fa-rocket mr-2"></i>
             Start Exploring
           </button>
+          <div class="mt-8 text-sm text-gray-400">
+            <p>Current Date: <span id="current-date">2025-04-06 11:40:14</span></p>
+            <p>Username: <span id="username">prannvat</span></p>
+          </div>
         </div>
       </section>
+      
       <section id="simulation" class="section card p-6 mt-10">
-        <h2 class="text-2xl font-semibold">Simulation</h2>
-        <canvas
-          id="canvas"
-          class="w-full h-96 mt-4 rounded-lg border border-gray-300"
-        ></canvas>
-        <div id="controls" class="flex flex-wrap justify-center mt-4 space-x-4">
-          <label class="flex flex-col items-center"
-            >Gravity (m/s²):
-            <input
-              type="range"
-              id="g"
-              min="0"
-              max="20"
-              step="0.1"
-              value="9.8"
-              class="w-32"
-            />
-            <span id="g-value">9.8</span></label
-          >
-          <label class="flex flex-col items-center"
-            >Mass (kg):
-            <input
-              type="range"
-              id="m"
-              min="0.1"
-              max="10"
-              step="0.1"
-              value="1"
-              class="w-32"
-            />
-            <span id="m-value">1</span></label
-          >
-          <label class="flex flex-col items-center"
-            >Friction (kg/s):
-            <input
-              type="range"
-              id="k"
-              min="0"
-              max="5"
-              step="0.1"
-              value="0"
-              class="w-32"
-            />
-            <span id="k-value">0</span></label
-          >
-          <button
-            id="reset"
-            class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded mt-2"
-          >
-            Reset
-          </button>
+        <h2 class="text-2xl font-semibold flex items-center">
+          <i class="fas fa-flask mr-3 text-blue-400 float"></i>
+          <span>Simulation</span>
+        </h2>
+        <p class="mt-2 text-gray-300 text-sm animate__animated animate__fadeIn animate__delay-1s">
+          Click on the canvas to add particles and watch physics in action!
+        </p>
+        
+        <div class="relative mt-4">
+          <canvas
+            id="canvas"
+            class="w-full h-96 rounded-lg"
+          ></canvas>
+          <div class="canvas-border"></div>
+          <div class="absolute top-2 left-2 bg-black bg-opacity-50 text-white text-xs px-2 py-1 rounded animate__animated animate__fadeIn animate__delay-1s">
+            <span id="particles-count">0 particles</span>
+          </div>
+        </div>
+        
+        <div id="controls" class="flex flex-wrap justify-center mt-6 space-x-4 card-animated" style="animation-delay: 0.3s">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 w-full">
+            <label class="flex flex-col items-center p-3 bg-black bg-opacity-20 rounded-lg transition-all duration-300 hover:bg-opacity-30">
+              <div class="flex items-center mb-1">
+                <i class="fas fa-arrow-down mr-2 text-yellow-400"></i>
+                <span>Gravity (m/s²):</span>
+              </div>
+              <input
+                type="range"
+                id="g"
+                min="0"
+                max="20"
+                step="0.1"
+                value="9.8"
+                class="w-32 md:w-full"
+              />
+              <span id="g-value" class="value-animate mt-1">9.8</span>
+            </label>
+            
+            <label class="flex flex-col items-center p-3 bg-black bg-opacity-20 rounded-lg transition-all duration-300 hover:bg-opacity-30">
+              <div class="flex items-center mb-1">
+                <i class="fas fa-weight-hanging mr-2 text-blue-400"></i>
+                <span>Mass (kg):</span>
+              </div>
+              <input
+                type="range"
+                id="m"
+                min="0.1"
+                max="10"
+                step="0.1"
+                value="1"
+                class="w-32 md:w-full"
+              />
+              <span id="m-value" class="value-animate mt-1">1</span>
+            </label>
+            
+            <label class="flex flex-col items-center p-3 bg-black bg-opacity-20 rounded-lg transition-all duration-300 hover:bg-opacity-30">
+              <div class="flex items-center mb-1">
+                <i class="fas fa-wind mr-2 text-purple-400"></i>
+                <span>Friction (kg/s):</span>
+              </div>
+              <input
+                type="range"
+                id="k"
+                min="0"
+                max="5"
+                step="0.1"
+                value="0"
+                class="w-32 md:w-full"
+              />
+              <span id="k-value" class="value-animate mt-1">0</span>
+            </label>
+          </div>
+          
+          <div class="flex flex-wrap justify-center gap-3 w-full mt-4">
+            <button
+              id="add-multiple"
+              class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded btn-animated"
+            >
+              <i class="fas fa-plus-circle mr-1"></i> Add 10 Particles
+            </button>
+            <button
+              id="reset"
+              class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded btn-animated"
+            >
+              <i class="fas fa-trash-alt mr-1"></i> Reset
+            </button>
+          </div>
+        </div>
+        
+        <!-- Parameter effects card -->
+        <div class="card p-4 mt-6 card-animated" style="animation-delay: 0.6s">
+          <h3 class="text-xl font-semibold mb-2 flex items-center">
+            <i class="fas fa-chart-line mr-2 text-green-400"></i>
+            <span>Parameter Effects</span>
+          </h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <h4 class="font-medium">Current Settings:</h4>
+              <ul class="space-y-2 mt-2">
+                <li class="flex justify-between">
+                  <span>Gravity:</span>
+                  <span id="gravity-summary" class="value-animate">9.8 m/s² (Earth-like)</span>
+                </li>
+                <li class="flex justify-between">
+                  <span>Mass:</span>
+                  <span id="mass-summary" class="value-animate">1 kg</span>
+                </li>
+                <li class="flex justify-between">
+                  <span>Friction:</span>
+                  <span id="friction-summary" class="value-animate">0 kg/s (None)</span>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h4 class="font-medium">Expected Behavior:</h4>
+              <p id="behavior-description" class="text-sm mt-2 animate__animated animate__fadeIn animate__delay-1s">
+                Particles will accelerate downward at 9.8 m/s². Without friction, they will bounce indefinitely with minimal energy loss at boundaries.
+              </p>
+              <div class="mt-2 text-xs flex items-center">
+                <span id="gravity-description" class="mr-2">Standard Earth gravity</span>
+                <span class="text-gray-500">•</span> 
+                <span id="friction-description" class="ml-2">No friction (vacuum)</span>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
-      <section id="about" class="mb-10 rounded-lg px-5 py-10">
-        <h2 class="text-center mb-10">About the Simulation</h2>
-        <!-- Use grid, single column by default, 3 columns from md breakpoint upwards -->
+
+      <section id="about" class="section mb-10 rounded-lg px-5 py-10">
+        <h2 class="text-center text-3xl mb-10 flex items-center justify-center">
+          <i class="fas fa-info-circle mr-3 text-blue-400"></i>
+          <span>About the Simulation</span>
+        </h2>
+        
         <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-          <div class="card rounded-lg p-6">
-            <h3>Purpose</h3>
+          <div class="card rounded-lg p-6 card-animated" style="animation-delay: 0.2s">
+            <div class="flex items-center mb-3">
+              <i class="fas fa-bullseye text-red-400 text-2xl mr-3 float"></i>
+              <h3 class="text-xl">Purpose</h3>
+            </div>
             <p>
               This simulation aims to provide an interactive way to understand
               classical mechanics concepts through visual experimentation and
               real-time feedback.
             </p>
           </div>
-          <div class="card rounded-lg p-6">
-            <h3>Features</h3>
+          <div class="card rounded-lg p-6 card-animated" style="animation-delay: 0.4s">
+            <div class="flex items-center mb-3">
+              <i class="fas fa-star text-yellow-400 text-2xl mr-3 float"></i>
+              <h3 class="text-xl">Features</h3>
+            </div>
             <p>
               Adjust gravity, mass, and friction to see real-time effects on
               particle motion. Click anywhere on the canvas to add new
-              particles.
+              particles and observe physics in action.
             </p>
           </div>
-          <div class="card rounded-lg p-6">
-            <h3>Target Audience</h3>
+          <div class="card rounded-lg p-6 card-animated" style="animation-delay: 0.6s">
+            <div class="flex items-center mb-3">
+              <i class="fas fa-users text-green-400 text-2xl mr-3 float"></i>
+              <h3 class="text-xl">Target Audience</h3>
+            </div>
             <p>
               Students, educators, and anyone interested in physics. Perfect for
-              classroom demonstrations or self-paced learning.
+              classroom demonstrations or self-paced learning about particle dynamics.
             </p>
           </div>
         </div>
       </section>
 
-      <section id="theory" class="mb-10 rounded-lg px-5 py-10">
-        <h2 class="text-center mb-10">Theory Behind the Simulation</h2>
+      <section id="theory" class="section mb-10 rounded-lg px-5 py-10">
+        <h2 class="text-center text-3xl mb-10 flex items-center justify-center">
+          <i class="fas fa-book mr-3 text-purple-400"></i>
+          <span>Theory Behind the Simulation</span>
+        </h2>
+        
         <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-          <div class="card rounded-lg p-6">
-            <h3>Equations of Motion</h3>
+          <div class="card rounded-lg p-6 card-animated" style="animation-delay: 0.2s">
+            <div class="flex items-center mb-3">
+              <i class="fas fa-calculator text-blue-400 text-2xl mr-3 float"></i>
+              <h3 class="text-xl">Equations of Motion</h3>
+            </div>
             <p>
               The simulation uses the following equations:<br /><br />
-              aₓ = - (k / m) * vₓ<br />
-              aᵧ = g - (k / m) * vᵧ<br /><br />
+              <span class="inline-block transform hover:scale-105 transition-transform duration-300">aₓ = - (k / m) * vₓ</span><br />
+              <span class="inline-block transform hover:scale-105 transition-transform duration-300">aᵧ = g - (k / m) * vᵧ</span><br /><br />
               Where a is acceleration, v is velocity, k is friction coefficient,
               m is mass, and g is gravity.
             </p>
           </div>
-          <div class="card rounded-lg p-6">
-            <h3>Gravity</h3>
+          <div class="card rounded-lg p-6 card-animated" style="animation-delay: 0.4s">
+            <div class="flex items-center mb-3">
+              <i class="fas fa-arrow-down text-yellow-400 text-2xl mr-3 float"></i>
+              <h3 class="text-xl">Gravity</h3>
+            </div>
             <p>
               Gravity is modeled as a constant downward acceleration (g). On
               Earth, this is approximately 9.8 m/s², but you can adjust it to
-              simulate other environments.
+              simulate other environments like the Moon (1.62 m/s²) or Mars (3.72 m/s²).
             </p>
           </div>
-          <div class="card rounded-lg p-6">
-            <h3>Friction</h3>
+          <div class="card rounded-lg p-6 card-animated" style="animation-delay: 0.6s">
+            <div class="flex items-center mb-3">
+              <i class="fas fa-wind text-red-400 text-2xl mr-3 float"></i>
+              <h3 class="text-xl">Friction</h3>
+            </div>
             <p>
               Friction opposes motion and is proportional to velocity. The
               friction coefficient (k) determines how quickly objects slow down.
-              Set to 0 for frictionless motion.
+              Set to 0 for frictionless motion or increase it to simulate air or fluid resistance.
             </p>
           </div>
         </div>
       </section>
 
-      <section id="contact" class="section card p-6 mt-10 w-3/5 mx-auto">
-        <h2 class="text-2xl font-semibold">Contact Us</h2>
-        <form class="mt-4 space-y-4">
-          <div>
-            <label for="name" class="block">Name:</label>
+      <section id="contact" class="section card p-6 mt-10 w-full md:w-3/5 mx-auto">
+        <h2 class="text-2xl font-semibold flex items-center">
+          <i class="fas fa-envelope mr-3 text-green-400"></i>
+          <span>Contact Us</span>
+        </h2>
+        
+        <form class="mt-6 space-y-4">
+          <div class="relative">
+            <label for="name" class="block mb-1 text-sm">Name:</label>
             <input
               type="text"
               id="name"
               name="name"
-              class="w-full p-2 rounded border border-gray-300"
+              class="w-full p-2 rounded border border-gray-300 form-input transition-all duration-300"
               placeholder="Your name"
             />
           </div>
-          <div>
-            <label for="email" class="block">Email:</label>
+          <div class="relative">
+            <label for="email" class="block mb-1 text-sm">Email:</label>
             <input
               type="email"
               id="email"
               name="email"
-              class="w-full p-2 rounded border border-gray-300"
+              class="w-full p-2 rounded border border-gray-300 form-input transition-all duration-300"
               placeholder="Your email"
             />
           </div>
-          <div>
-            <label for="message" class="block">Message:</label>
+          <div class="relative">
+            <label for="message" class="block mb-1 text-sm">Message:</label>
             <textarea
               id="message"
               name="message"
-              class="w-full p-2 rounded border border-gray-300"
+              class="w-full p-2 rounded border border-gray-300 form-input transition-all duration-300"
+              rows="4"
               placeholder="Your message"
             ></textarea>
           </div>
           <button
             type="submit"
-            class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded"
+            class="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded btn-animated"
           >
-            Send
+            <i class="fas fa-paper-plane mr-2"></i>
+            Send Message
           </button>
         </form>
       </section>
     </main>
+    
     <footer class="bg-gray-800 text-white text-center p-4 mt-10">
-      <p>
+      <p class="animate__animated animate__fadeIn">
         &copy; <span id="year"></span> Physics Simulation. All rights reserved.
       </p>
+      <div class="flex justify-center mt-3 space-x-4">
+        <a href="#" class="text-blue-400 hover:text-blue-300 transition-colors duration-300 transform hover:scale-110">
+          <i class="fab fa-twitter"></i>
+        </a>
+        <a href="#" class="text-blue-400 hover:text-blue-300 transition-colors duration-300 transform hover:scale-110">
+          <i class="fab fa-github"></i>
+        </a>
+        <a href="#" class="text-blue-400 hover:text-blue-300 transition-colors duration-300 transform hover:scale-110">
+          <i class="fab fa-linkedin"></i>
+        </a>
+      </div>
     </footer>
+    
     <script>
+      // Date constants
       document.getElementById("year").textContent = new Date().getFullYear();
-      document
-        .getElementById("start-exploring")
-        .addEventListener("click", () => {
-          document
-            .getElementById("simulation")
-            .scrollIntoView({ behavior: "smooth" });
+      document.getElementById("current-date").textContent = "2025-04-06 11:40:14";
+      document.getElementById("username").textContent = "prannvat";
+      
+      // Intersection Observer for section animations
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
         });
-      document.getElementById("try-now").addEventListener("click", () => {
-        document
-          .getElementById("simulation")
-          .scrollIntoView({ behavior: "smooth" });
+      }, { threshold: 0.1 });
+      
+      document.querySelectorAll('.section').forEach(section => {
+        observer.observe(section);
       });
+      
+      // Navigation
+      document.getElementById("start-exploring").addEventListener("click", () => {
+        document.getElementById("simulation").scrollIntoView({ behavior: "smooth" });
+      });
+      
+      document.getElementById("try-now").addEventListener("click", () => {
+        document.getElementById("simulation").scrollIntoView({ behavior: "smooth" });
+      });
+      
+      // Theme toggle with animation
       const themeToggle = document.getElementById("theme-toggle");
       themeToggle.addEventListener("click", () => {
         document.body.classList.toggle("light-mode");
+        
         if (document.body.classList.contains("light-mode")) {
           themeToggle.classList.replace("fa-moon", "fa-sun");
           themeToggle.style.color = "#333";
+          themeToggle.classList.add("animate__animated", "animate__rotateIn");
+          setTimeout(() => themeToggle.classList.remove("animate__animated", "animate__rotateIn"), 1000);
         } else {
           themeToggle.classList.replace("fa-sun", "fa-moon");
           themeToggle.style.color = "#fff";
+          themeToggle.classList.add("animate__animated", "animate__rotateIn");
+          setTimeout(() => themeToggle.classList.remove("animate__animated", "animate__rotateIn"), 1000);
         }
       });
 
@@ -323,6 +789,7 @@
       const bgCanvas = document.getElementById("background-canvas");
       const bgCtx = bgCanvas.getContext("2d");
       let bgParticles = [];
+      
       function createBgParticles() {
         bgParticles = [];
         for (let i = 0; i < 50; i++) {
@@ -331,9 +798,12 @@
             y: Math.random() * bgCanvas.height,
             vx: (Math.random() - 0.5) * 0.5,
             vy: (Math.random() - 0.5) * 0.5,
+            size: Math.random() * 2 + 1,
+            color: Math.random() > 0.5 ? "rgba(59, 130, 246, 0.5)" : "rgba(139, 92, 246, 0.5)"
           });
         }
       }
+      
       function updateBgParticles() {
         for (let p of bgParticles) {
           p.x += p.vx;
@@ -342,27 +812,32 @@
           if (p.y < 0 || p.y > bgCanvas.height) p.vy = -p.vy;
         }
       }
+      
       function drawBgParticles() {
         bgCtx.clearRect(0, 0, bgCanvas.width, bgCanvas.height);
         const isLightMode = document.body.classList.contains("light-mode");
-        bgCtx.fillStyle = isLightMode
-          ? "rgba(0, 0, 0, 0.5)"
-          : "rgba(255, 255, 255, 0.5)";
-        bgCtx.strokeStyle = isLightMode
-          ? "rgba(0, 0, 0, 0.1)"
-          : "rgba(255, 255, 255, 0.1)";
+        
         for (let p of bgParticles) {
           bgCtx.beginPath();
-          bgCtx.arc(p.x, p.y, 2, 0, 2 * Math.PI);
+          bgCtx.arc(p.x, p.y, p.size, 0, 2 * Math.PI);
+          bgCtx.fillStyle = isLightMode ? "rgba(0, 0, 0, 0.2)" : p.color;
           bgCtx.fill();
         }
+        
+        // Connect particles with lines when close
+        bgCtx.strokeStyle = isLightMode ? "rgba(0, 0, 0, 0.05)" : "rgba(255, 255, 255, 0.05)";
+        bgCtx.lineWidth = 1;
+        
         for (let i = 0; i < bgParticles.length; i++) {
           for (let j = i + 1; j < bgParticles.length; j++) {
             let dx = bgParticles[i].x - bgParticles[j].x;
             let dy = bgParticles[i].y - bgParticles[j].y;
             let dist = Math.sqrt(dx * dx + dy * dy);
+            
             if (dist < 100) {
+              const opacity = (100 - dist) / 100 * (isLightMode ? 0.05 : 0.1);
               bgCtx.beginPath();
+              bgCtx.strokeStyle = isLightMode ? `rgba(0, 0, 0, ${opacity})` : `rgba(255, 255, 255, ${opacity})`;
               bgCtx.moveTo(bgParticles[i].x, bgParticles[i].y);
               bgCtx.lineTo(bgParticles[j].x, bgParticles[j].y);
               bgCtx.stroke();
@@ -370,16 +845,19 @@
           }
         }
       }
+      
       function animateBg() {
         updateBgParticles();
         drawBgParticles();
         requestAnimationFrame(animateBg);
       }
+      
       window.addEventListener("resize", () => {
         bgCanvas.width = window.innerWidth;
         bgCanvas.height = window.innerHeight;
         createBgParticles();
       });
+      
       bgCanvas.width = window.innerWidth;
       bgCanvas.height = window.innerHeight;
       createBgParticles();
@@ -388,94 +866,544 @@
       // Simulation canvas
       const canvas = document.getElementById("canvas");
       const ctx = canvas.getContext("2d");
-      canvas.width = canvas.clientWidth;
-      canvas.height = canvas.clientHeight;
+      const particlesCount = document.getElementById("particles-count");
+      
+      // Set canvas dimensions correctly
+      function resizeCanvas() {
+        canvas.width = canvas.clientWidth;
+        canvas.height = canvas.clientHeight;
+        canvasWidthInMeters = canvas.width / pixelsPerMeter;
+        canvasHeightInMeters = canvas.height / pixelsPerMeter;
+        console.log(`Canvas resized: ${canvas.width}x${canvas.height}px, ${canvasWidthInMeters}x${canvasHeightInMeters}m`);
+      }
+      
+      window.addEventListener("load", resizeCanvas);
+      window.addEventListener("resize", resizeCanvas);
+      
       const pixelsPerMeter = 100;
       let canvasWidthInMeters = canvas.width / pixelsPerMeter;
       let canvasHeightInMeters = canvas.height / pixelsPerMeter;
       const radiusInMeters = 0.1;
       const radiusInPixels = radiusInMeters * pixelsPerMeter;
+      
       let g = 9.8;
       let m = 1;
       let k = 0;
       let particles = [];
+      let particleTrails = [];
+      
       function addParticle(x, y) {
-        particles.push({ x, y, vx: 0, vy: 0 });
+        const hue = Math.floor(Math.random() * 360); // Random color
+        
+        particles.push({ 
+          x, 
+          y, 
+          vx: 0, 
+          vy: 0,
+          color: `hsl(${hue}, 80%, 60%)`,
+          age: 0
+        });
+        
+        // Add animation flash to the canvas
+        const flash = document.createElement('div');
+        flash.style.position = 'absolute';
+        flash.style.width = '20px';
+        flash.style.height = '20px';
+        flash.style.borderRadius = '50%';
+        flash.style.backgroundColor = 'white';
+        flash.style.left = `${x * pixelsPerMeter - 10}px`;
+        flash.style.top = `${y * pixelsPerMeter - 10}px`;
+        flash.style.pointerEvents = 'none';
+        flash.style.zIndex = '1';
+        flash.style.animation = 'flash 0.5s ease-out forwards';
+        canvas.parentNode.appendChild(flash);
+        
+        // Define the flash animation
+        if (!document.querySelector('#flash-animation')) {
+          const style = document.createElement('style');
+          style.id = 'flash-animation';
+          style.textContent = `
+            @keyframes flash {
+              0% { transform: scale(0.5); opacity: 1; }
+              100% { transform: scale(2); opacity: 0; }
+            }
+          `;
+          document.head.appendChild(style);
+        }
+        
+        // Remove after animation completes
+        setTimeout(() => {
+          flash.remove();
+        }, 500);
+        
+        updateParticleCount();
+        console.log(`Added particle at (${x.toFixed(2)}, ${y.toFixed(2)}) m, total: ${particles.length}`);
       }
+      
+      function addMultipleParticles(count) {
+        // Create explosion effect at center
+        const centerX = canvasWidthInMeters / 2;
+        const centerY = canvasHeightInMeters / 2;
+        
+        for (let i = 0; i < count; i++) {
+          // Calculate position in a circle around center
+          const angle = Math.random() * Math.PI * 2;
+          const distance = Math.random() * canvasWidthInMeters / 5;
+          const x = centerX + Math.cos(angle) * distance;
+          const y = centerY + Math.sin(angle) * distance;
+          
+          // Calculate velocity away from center
+          const speed = 2 + Math.random() * 3;
+          const vx = Math.cos(angle) * speed;
+          const vy = Math.sin(angle) * speed;
+          
+          // Random color based on position
+          const hue = (angle / (Math.PI * 2)) * 360;
+          
+          particles.push({ 
+            x, 
+            y, 
+            vx, 
+            vy,
+            color: `hsl(${hue}, 80%, 60%)`,
+            age: 0
+          });
+        }
+        
+        // Create explosion visual effect
+        const explosion = document.createElement('div');
+        explosion.style.position = 'absolute';
+        explosion.style.width = '50px';
+        explosion.style.height = '50px';
+        explosion.style.borderRadius = '50%';
+        explosion.style.backgroundColor = 'rgba(255, 255, 255, 0.8)';
+        explosion.style.boxShadow = '0 0 30px 15px rgba(255, 200, 100, 0.7)';
+        explosion.style.left = `${centerX * pixelsPerMeter - 25}px`;
+        explosion.style.top = `${centerY * pixelsPerMeter - 25}px`;
+        explosion.style.transform = 'scale(0.1)';
+        explosion.style.pointerEvents = 'none';
+        explosion.style.zIndex = '1';
+        explosion.style.animation = 'explode 0.7s ease-out forwards';
+        canvas.parentNode.appendChild(explosion);
+        
+        // Define the explosion animation
+        if (!document.querySelector('#explode-animation')) {
+          const style = document.createElement('style');
+          style.id = 'explode-animation';
+          style.textContent = `
+            @keyframes explode {
+              0% { transform: scale(0.1); opacity: 1; }
+              100% { transform: scale(3); opacity: 0; }
+            }
+          `;
+          document.head.appendChild(style);
+        }
+        
+        setTimeout(() => {
+          explosion.remove();
+        }, 700);
+        
+        updateParticleCount();
+        console.log(`Added ${count} particles, total: ${particles.length}`);
+      }
+      
+      function updateParticleCount() {
+        particlesCount.textContent = `${particles.length} particle${particles.length !== 1 ? 's' : ''}`;
+      }
+      
       function update(dt) {
-        const dtSec = dt / 1000;
+        const dtSec = Math.min(dt / 1000, 0.05); // Cap max time step to 50ms
+        
+        // Add dust particle every now and then
+        if (Math.random() < 0.1 * dtSec && particles.length > 0) {
+          addDustTrail();
+        }
+        
+        // Update dust trails
+        updateDustTrails(dtSec);
+        
         for (let p of particles) {
+          p.age += dtSec;
+          
+          // Calculate acceleration
           const ax = -(k / m) * p.vx;
           const ay = g - (k / m) * p.vy;
+          
+          // Update velocity
           p.vx += ax * dtSec;
           p.vy += ay * dtSec;
+          
+          // Update position
           p.x += p.vx * dtSec;
           p.y += p.vy * dtSec;
+          
+          // Handle boundaries
           if (p.x < radiusInMeters) {
             p.x = radiusInMeters;
             p.vx = -p.vx * 0.8;
+            createBoundaryParticles(radiusInMeters, p.y, 1);
           } else if (p.x > canvasWidthInMeters - radiusInMeters) {
             p.x = canvasWidthInMeters - radiusInMeters;
             p.vx = -p.vx * 0.8;
+            createBoundaryParticles(canvasWidthInMeters - radiusInMeters, p.y, -1);
           }
+          
           if (p.y < radiusInMeters) {
             p.y = radiusInMeters;
             p.vy = -p.vy * 0.8;
+            createBoundaryParticles(p.x, radiusInMeters, 0, 1);
           } else if (p.y > canvasHeightInMeters - radiusInMeters) {
             p.y = canvasHeightInMeters - radiusInMeters;
             p.vy = -p.vy * 0.8;
+            createBoundaryParticles(p.x, canvasHeightInMeters - radiusInMeters, 0, -1);
           }
         }
+        
+        // Update parameter displays with animation
+        updateParameterDisplays();
       }
+      
+      // Visual effects for boundary collisions
+      function createBoundaryParticles(x, y, dirX = 0, dirY = 0) {
+        const speed = Math.sqrt(dirX*dirX + dirY*dirY);
+        if (speed === 0) return;
+        
+        // Only create particles for significant collisions
+        const impactVel = Math.abs(dirX) + Math.abs(dirY);
+        if (impactVel < 2) return;
+        
+        const count = Math.min(5, Math.floor(impactVel));
+        
+        for (let i = 0; i < count; i++) {
+          // Scatter angle based on direction
+          const angle = Math.atan2(dirY, dirX) + (Math.random() - 0.5) * Math.PI * 0.5;
+          const distance = 0.05 + Math.random() * 0.1;
+          
+          particleTrails.push({
+            x: x + Math.cos(angle) * distance/2,
+            y: y + Math.sin(angle) * distance/2,
+            vx: Math.cos(angle) * distance * 10,
+            vy: Math.sin(angle) * distance * 10,
+            size: 2 + Math.random() * 3,
+            life: 1,
+            maxLife: 1,
+            color: `rgba(255, 255, 255, ${0.3 + Math.random() * 0.4})`
+          });
+        }
+      }
+      
+      // Add decorative dust trails
+      function addDustTrail() {
+        if (particles.length === 0) return;
+        
+        // Pick a random particle to add a trail to
+        const p = particles[Math.floor(Math.random() * particles.length)];
+        const speed = Math.sqrt(p.vx*p.vx + p.vy*p.vy);
+        
+        // Only add trail for fast-moving particles
+        if (speed < 2) return;
+        
+        // Calculate the trail particle position slightly behind the particle
+        const angle = Math.atan2(p.vy, p.vx);
+        const dist = 0.05 + Math.random() * 0.1;
+        
+        particleTrails.push({
+          x: p.x - Math.cos(angle) * dist,
+          y: p.y - Math.sin(angle) * dist,
+          vx: p.vx * 0.1 * (Math.random() - 0.5),
+          vy: p.vy * 0.1 * (Math.random() - 0.5),
+          size: 1 + Math.random() * 2,
+          life: 0.5 + Math.random() * 0.5,
+          maxLife: 0.5 + Math.random() * 0.5,
+          color: `rgba(${100 + Math.random() * 155}, ${100 + Math.random() * 155}, ${200 + Math.random() * 55}, 0.4)`
+        });
+      }
+      
+      function updateDustTrails(dt) {
+        for (let i = particleTrails.length - 1; i >= 0; i--) {
+          const trail = particleTrails[i];
+          
+          trail.life -= dt;
+          if (trail.life <= 0) {
+            particleTrails.splice(i, 1);
+            continue;
+          }
+          
+          trail.x += trail.vx * dt;
+          trail.y += trail.vy * dt;
+          trail.vy += g * dt * 0.1; // Slight gravity effect
+        }
+      }
+      
       function draw() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        // Draw grid
+        ctx.strokeStyle = "rgba(255,255,255,0.05)";
+        ctx.lineWidth = 0.5;
+        ctx.beginPath();
+        
+        for (let i = 0; i <= canvasWidthInMeters; i++) {
+          const x = i * pixelsPerMeter;
+          ctx.moveTo(x, 0);
+          ctx.lineTo(x, canvas.height);
+        }
+        
+        for (let i = 0; i <= canvasHeightInMeters; i++) {
+          const y = i * pixelsPerMeter;
+          ctx.moveTo(0, y);
+          ctx.lineTo(canvas.width, y);
+        }
+        
+        ctx.stroke();
+        
+        // Draw dust trails behind particles
+        for (const trail of particleTrails) {
+          const lifeRatio = trail.life / trail.maxLife;
+          const alpha = lifeRatio * 0.7;
+          const size = trail.size * lifeRatio;
+          
+          ctx.beginPath();
+          ctx.arc(
+            trail.x * pixelsPerMeter, 
+            trail.y * pixelsPerMeter, 
+            size, 
+            0, 
+            Math.PI * 2
+          );
+          
+          // Parse the original color to apply alpha
+          let color = trail.color;
+          if (color.startsWith('rgba')) {
+            color = color.replace(/[\d\.]+\)$/g, `${alpha})`);
+          } else {
+            color = color.replace(')', `, ${alpha})`).replace('rgb', 'rgba');
+          }
+          
+          ctx.fillStyle = color;
+          ctx.fill();
+        }
+        
+        // Draw particles with glow effects
         for (let p of particles) {
           const pixelX = p.x * pixelsPerMeter;
           const pixelY = p.y * pixelsPerMeter;
+          
+          // Calculate speed for visual effects
+          const speed = Math.sqrt(p.vx * p.vx + p.vy * p.vy);
+          const normalizedSpeed = Math.min(1, speed / 10);
+          
+          // Create glow effect
+          const glowSize = radiusInPixels * (1 + normalizedSpeed * 2);
+          const gradient = ctx.createRadialGradient(
+            pixelX, pixelY, radiusInPixels * 0.5,
+            pixelX, pixelY, glowSize
+          );
+          
+          gradient.addColorStop(0, p.color);
+          gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+          
+          ctx.beginPath();
+          ctx.arc(pixelX, pixelY, glowSize, 0, 2 * Math.PI);
+          ctx.fillStyle = gradient;
+          ctx.fill();
+          
+          // Draw particle
           ctx.beginPath();
           ctx.arc(pixelX, pixelY, radiusInPixels, 0, 2 * Math.PI);
-          ctx.fillStyle = "#add8e6";
+          ctx.fillStyle = p.color;
           ctx.fill();
+          
+          // Draw velocity vector for fast particles
+          if (speed > 3) {
+            const angle = Math.atan2(p.vy, p.vx);
+            const lineLength = radiusInPixels + normalizedSpeed * 15;
+            
+            ctx.beginPath();
+            ctx.moveTo(pixelX, pixelY);
+            ctx.lineTo(
+              pixelX + Math.cos(angle) * lineLength,
+              pixelY + Math.sin(angle) * lineLength
+            );
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.7)';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+          }
         }
       }
+      
       let lastTime = 0;
       function animate(time) {
-        const dt = time - lastTime;
+        if (lastTime === 0) {
+          lastTime = time;
+          requestAnimationFrame(animate);
+          return;
+        }
+        
+        const dt = Math.min(time - lastTime, 50); // Cap dt to avoid huge jumps
         lastTime = time;
+        
         update(dt);
         draw();
         requestAnimationFrame(animate);
       }
+      
+      // Handle value display animation
+      function updateParameterDisplays() {
+        document.getElementById('g-value').textContent = g.toFixed(1);
+        document.getElementById('m-value').textContent = m.toFixed(1);
+        document.getElementById('k-value').textContent = k.toFixed(1);
+        
+        document.getElementById('gravity-summary').textContent = 
+          `${g.toFixed(1)} m/s² ${g === 0 ? "(Zero-G)" : g < 5 ? "(Low)" : g > 15 ? "(High)" : "(Earth-like)"}`;
+        
+        document.getElementById('mass-summary').textContent = 
+          `${m.toFixed(1)} kg ${m < 0.5 ? "(Light)" : m > 5 ? "(Heavy)" : ""}`;
+        
+        document.getElementById('friction-summary').textContent = 
+          `${k.toFixed(1)} kg/s ${k === 0 ? "(None)" : k < 1 ? "(Low)" : k > 3 ? "(High)" : "(Medium)"}`;
+        
+        // Set gravity description
+        const gravityDesc = document.getElementById('gravity-description');
+        if (g === 0) {
+          gravityDesc.textContent = "Zero gravity (space)";
+        } else if (g < 3) {
+          gravityDesc.textContent = "Low gravity (Moon-like)";
+        } else if (g < 5) {
+          gravityDesc.textContent = "Medium-low gravity (Mars-like)";
+        } else if (g > 15) {
+          gravityDesc.textContent = "High gravity (Jupiter-like)";
+        } else if (g > 9) {
+          gravityDesc.textContent = "Above Earth gravity";
+        } else {
+          gravityDesc.textContent = "Standard Earth gravity";
+        }
+        
+        // Set friction description
+        const frictionDesc = document.getElementById('friction-description');
+        if (k === 0) {
+          frictionDesc.textContent = "No friction (vacuum)";
+        } else if (k < 1) {
+          frictionDesc.textContent = "Low friction (air-like)";
+        } else if (k < 3) {
+          frictionDesc.textContent = "Medium friction (water-like)";
+        } else {
+          frictionDesc.textContent = "High friction (honey-like)";
+        }
+        
+        // Update behavior description
+        let behaviorText = "";
+        if (g === 0) {
+          behaviorText = "Particles will float in a straight line until hitting boundaries.";
+          if (k > 0) behaviorText += " Friction will gradually slow them down.";
+        } else {
+          behaviorText = `Particles will accelerate downward at ${g.toFixed(1)} m/s².`;
+          if (k === 0) {
+            behaviorText += " Without friction, they will bounce indefinitely with minimal energy loss.";
+          } else if (k < 1) {
+            behaviorText += ` With low friction (${k.toFixed(1)} kg/s), they will gradually slow down.`;
+          } else {
+            behaviorText += ` With high friction (${k.toFixed(1)} kg/s), they will quickly come to rest.`;
+          }
+        }
+        
+        document.getElementById('behavior-description').textContent = behaviorText;
+      }
+      
+      // Animation for value changes
+      function animateValueChange(elementId) {
+        const el = document.getElementById(elementId);
+        el.classList.add('updated');
+        setTimeout(() => el.classList.remove('updated'), 300);
+      }
+      
+      // Start animation
       requestAnimationFrame(animate);
+      
+      // Click event to add particles
       canvas.addEventListener("click", (event) => {
-        const mouseX = event.offsetX;
-        const mouseY = event.offsetY;
+        const rect = canvas.getBoundingClientRect();
+        const mouseX = event.clientX - rect.left;
+        const mouseY = event.clientY - rect.top;
+        
+        // Convert to meters
         const x = mouseX / pixelsPerMeter;
         const y = mouseY / pixelsPerMeter;
+        
         addParticle(x, y);
       });
+      
+      // Controls
       const gInput = document.getElementById("g");
-      const gValue = document.getElementById("g-value");
+      const mInput = document.getElementById("m");
+      const kInput = document.getElementById("k");
+      
       gInput.addEventListener("input", () => {
         g = parseFloat(gInput.value);
-        gValue.textContent = g.toFixed(1);
+        animateValueChange('g-value');
       });
-      const mInput = document.getElementById("m");
-      const mValue = document.getElementById("m-value");
+      
       mInput.addEventListener("input", () => {
         m = parseFloat(mInput.value);
-        mValue.textContent = m.toFixed(1);
+        animateValueChange('m-value');
       });
-      const kInput = document.getElementById("k");
-      const kValue = document.getElementById("k-value");
+      
       kInput.addEventListener("input", () => {
         k = parseFloat(kInput.value);
-        kValue.textContent = k.toFixed(1);
+        animateValueChange('k-value');
       });
-      const resetButton = document.getElementById("reset");
-      resetButton.addEventListener("click", () => {
+      
+      // Reset with animation
+      document.getElementById("reset").addEventListener("click", () => {
+        // Create a flash effect over the canvas
+        const flash = document.createElement('div');
+        flash.style.position = 'absolute';
+        flash.style.top = '0';
+        flash.style.left = '0';
+        flash.style.width = '100%';
+        flash.style.height = '100%';
+        flash.style.backgroundColor = 'rgba(255, 255, 255, 0.3)';
+        flash.style.borderRadius = '8px';
+        flash.style.animation = 'canvas-flash 0.5s ease-out forwards';
+        canvas.parentNode.appendChild(flash);
+        
+        if (!document.querySelector('#canvas-flash-animation')) {
+          const style = document.createElement('style');
+          style.id = 'canvas-flash-animation';
+          style.textContent = `
+            @keyframes canvas-flash {
+              0% { opacity: 0.3; }
+              100% { opacity: 0; }
+            }
+          `;
+          document.head.appendChild(style);
+        }
+        
+        setTimeout(() => {
+          flash.remove();
+        }, 500);
+        
         particles = [];
+        particleTrails = [];
+        updateParticleCount();
       });
+      
+      // Add multiple particles with animation
+      document.getElementById("add-multiple").addEventListener("click", () => {
+        addMultipleParticles(10);
+      });
+      
+      // Animate form inputs on focus
+      document.querySelectorAll('.form-input').forEach(input => {
+        input.addEventListener('focus', () => {
+          input.classList.add('animate__animated', 'animate__pulse');
+          setTimeout(() => input.classList.remove('animate__animated', 'animate__pulse'), 1000);
+        });
+      });
+      
+      // Initial update
+      updateParameterDisplays();
+      updateParticleCount();
     </script>
   </body>
 </html>
