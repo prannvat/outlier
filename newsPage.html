@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced Professional News Dashboard</title>
+    <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Poppins:wght@400;600&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: #16425b;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            font-family: 'Manrope', sans-serif;
+        }
+
+        .app-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Enhanced Header/Navbar */
+        .navbar {
+            background: #ffffff;
+            padding: 15px 40px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar-brand {
+            color: #3a7ca5;
+            font-size: 1.6em;
+            font-weight: 700;
+            font-family: 'Poppins', sans-serif;
+            text-decoration: none;
+            transition: color 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .navbar-brand i {
+            font-size: 1.2em;
+        }
+
+        .navbar-brand:hover {
+            color: #2f6690;
+        }
+
+        .navbar-links {
+            display: flex;
+            gap: 25px;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: #16425b;
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 5px 0;
+            cursor: pointer;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: #3a7ca5;
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after,
+        .nav-link.active::after {
+            width: 100%;
+        }
+
+        .nav-link:hover {
+            color: #3a7ca5;
+        }
+
+        .nav-link.active {
+            color: #3a7ca5;
+            font-weight: 600;
+        }
+
+        .navbar-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .search-form {
+            position: relative;
+            width: 250px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px 15px;
+            padding-right: 40px;
+            border: 1px solid #e0e0e0;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #81c3d7;
+            box-shadow: 0 0 0 3px rgba(129, 195, 215, 0.2);
+        }
+
+        .search-button {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #3a7ca5;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .user-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-button {
+            background: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            border-radius: 30px;
+            padding: 8px 15px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #16425b;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .action-button:hover {
+            background: #e9ecef;
+        }
+
+        .action-button.primary {
+            background: #3a7ca5;
+            color: white;
+            border-color: #3a7ca5;
+        }
+
+        .action-button.primary:hover {
+            background: #2f6690;
+        }
+
+        /* Main Content */
+        .main-content {
+            display: flex;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px;
+            flex: 1;
+            gap: 40px;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: #ffffff;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .sidebar-title {
+            font-size: 1.2em;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #16425b;
+        }
+
+        .category-list {
+            list-style: none;
+        }
+
+        .category-item {
+            padding: 10px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            border-radius: 4px;
+            color: #16425b;
+        }
+
+        .category-item:hover,
+        .category-item.active {
+            background: #e9ecef;
+        }
+
+        .content-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .sort-control {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 20px;
+        }
+
+        .sort-control select {
+            padding: 8px 12px;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            color: #16425b;
+        }
+
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .news-card {
+            background: #ffffff;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        .news-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .news-image {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+        }
+
+        .news-content-wrapper {
+            padding: 15px;
+        }
+
+        .news-title {
+            font-size: 1.2em;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #16425b;
+        }
+
+        .news-meta {
+            display: flex;
+            gap: 10px;
+            font-size: 0.9rem;
+            color: #6c757d;
+            margin-bottom: 10px;
+        }
+
+        .news-excerpt {
+            font-size: 0.95rem;
+            color: #16425b;
+            line-height: 1.5;
+        }
+
+        /* Page Content Styles */
+        .page-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px;
+            background: #ffffff;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+            border-radius: 8px;
+            line-height: 1.6;
+        }
+
+        .page-content h2 {
+            font-size: 2em;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #3a7ca5;
+        }
+
+        .page-content p {
+            font-size: 1rem;
+            color: #16425b;
+            margin-bottom: 20px;
+        }
+
+        .page-content ul {
+            list-style: disc;
+            padding-left: 20px;
+            margin-bottom: 20px;
+        }
+
+        .page-content li {
+            margin-bottom: 10px;
+        }
+
+        /* Modal Styles */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 200;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal-content {
+            background: #ffffff;
+            width: 80%;
+            max-width: 800px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.2);
+            animation: fadeInUp 0.3s ease;
+        }
+
+        .modal-header {
+            padding: 15px;
+            background: #3a7ca5;
+            color: #ffffff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h2 {
+            font-size: 1.5em;
+            font-weight: 600;
+        }
+
+        .modal-close {
+            cursor: pointer;
+            font-size: 1.2em;
+        }
+
+        .modal-body {
+            padding: 20px;
+            color: #16425b;
+            line-height: 1.6;
+        }
+
+        .modal-footer {
+            padding: 15px;
+            background: #f8f9fa;
+            text-align: right;
+        }
+
+        .modal-footer-link {
+            color: #3a7ca5;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        /* Popup Styles */
+        .popup {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #ffffff;
+            border: 1px solid #e0e0e0;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
+            z-index: 300;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            transform: translateY(20px);
+        }
+
+        .popup.active {
+            opacity: 1;
+            pointer-events: all;
+            transform: translateY(0);
+        }
+
+        .popup-header {
+            background: #3a7ca5;
+            color: #ffffff;
+            padding: 10px 15px;
+            font-weight: 600;
+        }
+
+        .popup-body {
+            padding: 15px;
+            color: #16425b;
+        }
+
+        .popup-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            color: #ffffff;
+            font-size: 1.2em;
+        }
+
+        /* Enhanced Footer */
+        .footer {
+            background: #16425b;
+            color: #ffffff;
+            padding: 60px 40px 30px;
+            margin-top: 60px;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 40px;
+        }
+
+        .footer-column {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .footer-logo {
+            font-size: 1.5em;
+            font-weight: 700;
+            font-family: 'Poppins', sans-serif;
+            margin-bottom: 20px;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .footer-logo i {
+            font-size: 1.2em;
+            color: #81c3d7;
+        }
+
+        .footer-description {
+            color: #e0e1dd;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .footer-heading {
+            font-size: 1.2em;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #ffffff;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .footer-heading::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background: #81c3d7;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .footer-link {
+            color: #e0e1dd;
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            position: relative;
+            padding-left: 0;
+            cursor: pointer;
+        }
+
+        .footer-link:hover {
+            color: #81c3d7;
+            padding-left: 5px;
+        }
+
+        .footer-contact {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .footer-contact i {
+            color: #81c3d7;
+            font-size: 1.1rem;
+            margin-top: 3px;
+        }
+
+        .footer-contact-text {
+            color: #e0e1dd;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .social-icon:hover {
+            background: #81c3d7;
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding-top: 30px;
+            margin-top: 40px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .copyright {
+            color: #e0e1dd;
+            font-size: 0.9rem;
+        }
+
+        .footer-bottom-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .footer-bottom-link {
+            color: #e0e1dd;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+
+        .footer-bottom-link:hover {
+            color: #81c3d7;
+        }
+
+        /* Newsletter Form */
+        .newsletter-form {
+            display: flex;
+            margin-top: 15px;
+        }
+
+        .newsletter-input {
+            flex: 1;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px 0 0 4px;
+            font-size: 0.9rem;
+        }
+
+        .newsletter-input:focus {
+            outline: none;
+        }
+
+        .newsletter-button {
+            background: #3a7ca5;
+            color: white;
+            border: none;
+            border-radius: 0 4px 4px 0;
+            padding: 0 15px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .newsletter-button:hover {
+            background: #2f6690;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        const initialNews = [
+            { id: 1, title: "Tech Breakthrough Unveiled", category: "Technology", date: "2023-11-01", popularity: 95, excerpt: "A revolutionary AI technology has been revealed that promises to transform industry standards with unprecedented capabilities.", image: "https://picsum.photos/600/300?random=1", content: "<p>Full article content for Tech Breakthrough Unveiled.</p>" },
+            { id: 2, title: "Market Hits Record High", category: "Finance", date: "2023-11-02", popularity: 87, excerpt: "Stock markets reached unprecedented levels today, signaling strong economic confidence among investors.", image: "https://picsum.photos/600/300?random=2", content: "<p>Full article content for Market Hits Record High.</p>" },
+            { id: 3, title: "New Sports Season Begins", category: "Sports", date: "2023-10-30", popularity: 78, excerpt: "The annual sports championship kicked off with record-breaking attendance and exciting opening matches.", image: "https://picsum.photos/600/300?random=3", content: "<p>Full article content for New Sports Season Begins.</p>" },
+            { id: 4, title: "Climate Summit Results", category: "Environment", date: "2023-11-03", popularity: 92, excerpt: "World leaders agreed on ambitious new climate goals to address pressing environmental challenges.", image: "https://picsum.photos/600/300?random=4", content: "<p>Full article content for Climate Summit Results.</p>" },
+            { id: 5, title: "Gadget Release Preview", category: "Technology", date: "2023-10-31", popularity: 85, excerpt: "Upcoming tech gadgets were showcased at the annual innovation conference, exciting tech enthusiasts.", image: "https://picsum.photos/600/300?random=5", content: "<p>Full article content for Gadget Release Preview.</p>" },
+        ];
+
+        const NewsDashboard = () => {
+            const [news, setNews] = useState(initialNews);
+            const [categoryFilter, setCategoryFilter] = useState("All");
+            const [sortBy, setSortBy] = useState("date");
+            const [activePage, setActivePage] = useState("home");
+            const [selectedArticle, setSelectedArticle] = useState(null);
+            const [popup, setPopup] = useState("");
+
+            const categories = ["All", ...new Set(initialNews.map(item => item.category))];
+
+            useEffect(() => {
+                let filteredNews = [...initialNews];
+                if (categoryFilter !== "All") {
+                    filteredNews = filteredNews.filter(item => item.category === categoryFilter);
+                }
+                filteredNews.sort((a, b) => {
+                    if (sortBy === "date") return new Date(b.date) - new Date(a.date);
+                    if (sortBy === "popularity") return b.popularity - a.popularity;
+                    return 0;
+                });
+                setNews(filteredNews);
+            }, [categoryFilter, sortBy]);
+
+            const renderContent = () => {
+                switch (activePage) {
+                    case "home":
+                        return (
+                            <div className="main-content">
+                                <aside className="sidebar">
+                                    <h3 className="sidebar-title">Categories</h3>
+                                    <ul className="category-list">
+                                        {categories.map(category => (
+                                            <li
+                                                key={category}
+                                                className={`category-item ${categoryFilter === category ? "active" : ""}`}
+                                                onClick={() => setCategoryFilter(category)}
+                                            >
+                                                {category}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </aside>
+                                <div className="content-area">
+                                    <div className="sort-control">
+                                        <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
+                                            <option value="date">Sort by Date</option>
+                                            <option value="popularity">Sort by Popularity</option>
+                                        </select>
+                                    </div>
+                                    <div className="news-grid">
+                                        {news.map(article => (
+                                            <div key={article.id} className="news-card" onClick={() => setSelectedArticle(article)}>
+                                                <img src={article.image} alt={article.title} className="news-image" />
+                                                <div className="news-content-wrapper">
+                                                    <h4 className="news-title">{article.title}</h4>
+                                                    <div className="news-meta">
+                                                        <span>{article.category}</span>
+                                                        <span>{article.date}</span>
+                                                        <span>{article.popularity} views</span>
+                                                    </div>
+                                                    <p className="news-excerpt">{article.excerpt}</p>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+                        );
+                    case "latest":
+                        return (
+                            <div className="page-content">
+                                <h2>Latest News</h2>
+                                <p>Stay updated with the latest news from around the world. Our team brings you the most recent and relevant stories as they happen.</p>
+                                <ul>
+                                    {initialNews.map(article => (
+                                        <li key={article.id}>
+                                            <strong>{article.title}</strong> - {article.excerpt}
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        );
+                    case "popular":
+                        return (
+                            <div className="page-content">
+                                <h2>Popular Stories</h2>
+                                <p>Discover the most popular stories that are trending right now. These articles have captured the attention of our readers.</p>
+                                <ul>
+                                    {initialNews
+                                        .sort((a, b) => b.popularity - a.popularity)
+                                        .map(article => (
+                                            <li key={article.id}>
+                                                <strong>{article.title}</strong> - {article.excerpt}
+                                            </li>
+                                        ))}
+                                </ul>
+                            </div>
+                        );
+                    case "categories":
+                        return (
+                            <div className="page-content">
+                                <h2>Categories</h2>
+                                <p>Explore news by categories. Whether you're interested in technology, finance, sports, or more, we have something for everyone.</p>
+                                <ul>
+                                    {categories.map(category => (
+                                        <li key={category} onClick={() => setCategoryFilter(category)}>
+                                            <strong>{category}</strong>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        );
+                    case "about":
+                        return (
+                            <div className="page-content">
+                                <h2>About Us</h2>
+                                <p>NewsCorp is your trusted source for the latest news and insights from around the world. Our mission is to deliver accurate, timely, and relevant information to our readers.</p>
+                                <p>Our team of experienced journalists and editors work tirelessly to bring you the stories that matter most. We are committed to upholding the highest standards of journalism and providing a platform for diverse voices and perspectives.</p>
+                            </div>
+                        );
+                    case "contact":
+                        return (
+                            <div className="page-content">
+                                <h2>Contact Us</h2>
+                                <p>We'd love to hear from you! Whether you have a question, feedback, or a story idea, feel free to reach out to us.</p>
+                                <p>Email: contact@newscorp.com</p>
+                                <p>Phone: +1 (555) 123-4567</p>
+                                <p>Address: 123 News Street, Media City</p>
+                            </div>
+                        );
+                    default:
+                        return null;
+                }
+            };
+
+            const handlePopup = (message) => {
+                setPopup(message);
+                setTimeout(() => setPopup(""), 3000);
+            };
+
+            return (
+                <div className="app-container">
+                    <nav className="navbar">
+                        <div className="navbar-container">
+                            <a href="#" className="navbar-brand">NewsCorp</a>
+                            <div className="navbar-links">
+                                <span className={`nav-link ${activePage === "home" ? "active" : ""}`} onClick={() => setActivePage("home")}>Home</span>
+                                <span className={`nav-link ${activePage === "latest" ? "active" : ""}`} onClick={() => setActivePage("latest")}>Latest</span>
+                                <span className={`nav-link ${activePage === "popular" ? "active" : ""}`} onClick={() => setActivePage("popular")}>Popular</span>
+                                <span className={`nav-link ${activePage === "categories" ? "active" : ""}`} onClick={() => setActivePage("categories")}>Categories</span>
+                                <span className={`nav-link ${activePage === "about" ? "active" : ""}`} onClick={() => setActivePage("about")}>About</span>
+                                <span className={`nav-link ${activePage === "contact" ? "active" : ""}`} onClick={() => setActivePage("contact")}>Contact</span>
+                            </div>
+                            <div className="navbar-right">
+                                <form className="search-form">
+                                    <input type="text" className="search-input" placeholder="Search news..." />
+                                    <button type="submit" className="search-button">
+                                        <i className="fas fa-search"></i>
+                                    </button>
+                                </form>
+                                <div className="user-actions">
+                                    <button className="action-button" onClick={() => handlePopup("Sign In feature coming soon!")}>Sign In</button>
+                                    <button className="action-button primary" onClick={() => handlePopup("Subscribe feature coming soon!")}>Subscribe</button>
+                                </div>
+                            </div>
+                        </div>
+                    </nav>
+
+                    {renderContent()}
+
+                    {selectedArticle && (
+                        <div className={`modal ${selectedArticle ? "active" : ""}`} onClick={() => setSelectedArticle(null)}>
+                            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                                <div className="modal-header">
+                                    <h2>{selectedArticle.title}</h2>
+                                    <span className="modal-close" onClick={() => setSelectedArticle(null)}>&times;</span>
+                                </div>
+                                <div className="modal-body" dangerouslySetInnerHTML={{ __html: selectedArticle.content }}></div>
+                                <div className="modal-footer">
+                                    <a href="#" className="modal-footer-link">Read more on our website</a>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {popup && (
+                        <div className="popup active">
+                            <span className="popup-close" onClick={() => setPopup("")}>&times;</span>
+                            <div className="popup-header">Notice</div>
+                            <div className="popup-body">{popup}</div>
+                        </div>
+                    )}
+
+                    <footer className="footer">
+                        <div className="footer-content">
+                            <div className="footer-column">
+                                <div className="footer-logo">NewsCorp</div>
+                                <p className="footer-description">
+                                    Your trusted source for the latest news and insights from around the world. 
+                                    We deliver accurate, timely, and relevant information.
+                                </p>
+                                <div className="social-icons">
+                                    <a href="#" className="social-icon"><i className="fab fa-facebook-f"></i></a>
+                                    <a href="#" className="social-icon"><i className="fab fa-twitter"></i></a>
+                                    <a href="#" className="social-icon"><i className="fab fa-instagram"></i></a>
+                                    <a href="#" className="social-icon"><i className="fab fa-linkedin-in"></i></a>
+                                </div>
+                            </div>
+                            
+                            <div className="footer-column">
+                                <h4 className="footer-heading">Categories</h4>
+                                <div className="footer-links">
+                                    <a href="#" className="footer-link">Technology</a>
+                                    <a href="#" className="footer-link">Finance</a>
+                                    <a href="#" className="footer-link">Sports</a>
+                                    <a href="#" className="footer-link">Environment</a>
+                                    <a href="#" className="footer-link">Politics</a>
+                                    <a href="#" className="footer-link">Health</a>
+                                </div>
+                            </div>
+                            
+                            <div className="footer-column">
+                                <h4 className="footer-heading">Quick Links</h4>
+                                <div className="footer-links">
+                                    <a href="#" className="footer-link">Home</a>
+                                    <a href="#" className="footer-link">Latest News</a>
+                                    <a href="#" className="footer-link">Popular Stories</a>
+                                    <a href="#" className="footer-link">About Us</a>
+                                    <a href="#" className="footer-link">Contact</a>
+                                    <a href="#" className="footer-link">Careers</a>
+                                </div>
+                            </div>
+                            
+                            <div className="footer-column">
+                                <h4 className="footer-heading">Stay Connected</h4>
+                                <p className="footer-description">Subscribe to our newsletter for the latest updates.</p>
+                                <form className="newsletter-form">
+                                    <input type="email" className="newsletter-input" placeholder="Your email address" />
+                                    <button type="submit" className="newsletter-button">
+                                        <i className="fas fa-paper-plane"></i>
+                                    </button>
+                                </form>
+                                <div className="footer-contact">
+                                    <i className="fas fa-envelope"></i>
+                                    <div className="footer-contact-text">contact@newscorp.com</div>
+                                </div>
+                                <div className="footer-contact">
+                                    <i className="fas fa-phone"></i>
+                                    <div className="footer-contact-text">+1 (555) 123-4567</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div className="footer-bottom">
+                            <div className="copyright">© 2023 NewsCorp. All rights reserved.</div>
+                            <div className="footer-bottom-links">
+                                <a href="#" className="footer-bottom-link">Privacy Policy</a>
+                                <a href="#" className="footer-bottom-link">Terms of Service</a>
+                                <a href="#" className="footer-bottom-link">Cookie Policy</a>
+                            </div>
+                        </div>
+                    </footer>
+                </div>
+            );
+        };
+
+        ReactDOM.render(<NewsDashboard />, document.getElementById('root'));
+    </script>
+    
+    <!-- Add Font Awesome for icons -->
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</body>
+</html>

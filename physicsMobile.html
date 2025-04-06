@@ -1,0 +1,4139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Physics Lab: Projectile Motion</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intro.js/4.2.2/introjs.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #0F766E;
+      --primary-dark: #0b5f59;
+      --secondary: #F97316;
+      --secondary-dark: #ea580c;
+      --accent: #8B5CF6;
+      --background: #F9FAFB;
+      --card-bg: #FFFFFF;
+      --text-primary: #1F2937;
+      --text-secondary: #4B5563;
+      --success: #10B981;
+      --success-dark: #059669;
+      --border: #E5E7EB;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--background);
+      color: var(--text-primary);
+      padding: 0;
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1rem;
+    }
+    .page-header {
+      text-align: center;
+      padding: 2rem 1rem;
+      background: linear-gradient(to right, var(--primary), var(--accent));
+      color: white;
+      margin-bottom: 2rem;
+    }
+    .title-text {
+      font-weight: 700;
+      font-size: 2.5rem;
+      margin: 0;
+      padding: 0;
+      letter-spacing: -0.025em;
+    }
+    .subtitle-text {
+      font-weight: 400;
+      opacity: 0.9;
+      margin-top: 0.5rem;
+    }
+    .card {
+      background: var(--card-bg);
+      border-radius: 1rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .card-header {
+      background: var(--primary);
+      color: white;
+      padding: 1.25rem 1.5rem;
+      font-weight: 600;
+      font-size: 1.25rem;
+      letter-spacing: -0.025em;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .card-body {
+      padding: 1.5rem;
+    }
+    /* Sliders */
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      background: transparent;
+      cursor: pointer;
+      width: 100%;
+    }
+    input[type="range"]::-webkit-slider-runnable-track {
+      height: 8px;
+      background: var(--border);
+      border-radius: 8px;
+      transition: background 0.3s ease;
+    }
+    input[type="range"]:hover::-webkit-slider-runnable-track {
+      background: var(--text-secondary);
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      height: 20px;
+      width: 20px;
+      border-radius: 50%;
+      background: var(--secondary);
+      margin-top: -6px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      transition: background 0.3s ease, transform 0.2s ease;
+    }
+    input[type="range"]:hover::-webkit-slider-thumb {
+      background: var(--secondary-dark);
+      transform: scale(1.1);
+    }
+    input[type="range"]:focus::-webkit-slider-thumb {
+      box-shadow: 0 0 0 4px rgba(249, 115, 22, 0.25);
+    }
+    /* Control labels */
+    .control-label {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1.25rem;
+    }
+    .label-text {
+      font-weight: 500;
+      color: var(--text-secondary);
+      min-width: 140px;
+    }
+    .value-display {
+      font-weight: 600;
+      color: var(--primary);
+      width: 50px;
+      text-align: right;
+      margin-left: 1rem;
+    }
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      border: none;
+      outline: none;
+      gap: 0.5rem;
+    }
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+    .btn-primary:hover {
+      background: var(--primary-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(15, 118, 110, 0.3);
+    }
+    .btn-secondary {
+      background: var(--secondary);
+      color: white;
+    }
+    .btn-secondary:hover {
+      background: var(--secondary-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3);
+    }
+    .btn-success {
+      background: var(--success);
+      color: white;
+    }
+    .btn-success:hover {
+      background: var(--success-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+    /* Canvas */
+    canvas {
+      width: 100%;
+      height: auto;
+      background: white;
+      border-radius: 0.5rem;
+      box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.05);
+    }
+    /* Data panels */
+    .data-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 1rem;
+    }
+    .data-item {
+      background: rgba(15, 118, 110, 0.05);
+      border-radius: 0.5rem;
+      padding: 0.75rem;
+      transition: all 0.2s ease;
+    }
+    .data-item:hover {
+      background: rgba(15, 118, 110, 0.1);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(15, 118, 110, 0.08);
+    }
+    .data-label {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.25rem;
+    }
+    .data-value {
+      font-weight: 600;
+      color: var(--primary);
+      font-size: 1.125rem;
+    }
+    /* Checkbox */
+    .checkbox-container {
+      display: flex;
+      align-items: center;
+      margin-top: 1rem;
+      cursor: pointer;
+    }
+    .checkbox-container input {
+      position: absolute;
+      opacity: 0;
+      cursor: pointer;
+      height: 0;
+      width: 0;
+    }
+    .checkbox-custom {
+      height: 18px;
+      width: 18px;
+      background-color: white;
+      border: 2px solid var(--border);
+      border-radius: 4px;
+      margin-right: 0.5rem;
+      position: relative;
+      transition: all 0.2s ease;
+    }
+    .checkbox-container:hover .checkbox-custom {
+      border-color: var(--primary);
+    }
+    .checkbox-container input:checked ~ .checkbox-custom {
+      background-color: var(--primary);
+      border-color: var(--primary);
+    }
+    .checkbox-custom:after {
+      content: "";
+      position: absolute;
+      display: none;
+      left: 5px;
+      top: 1px;
+      width: 5px;
+      height: 10px;
+      border: solid white;
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg);
+    }
+    .checkbox-container input:checked ~ .checkbox-custom:after {
+      display: block;
+    }
+    /* Responsive breakpoints */
+    @media (max-width: 768px) {
+      .title-text {
+        font-size: 2rem;
+      }
+      .label-text {
+        min-width: 120px;
+      }
+      .control-label {
+        flex-wrap: wrap;
+      }
+      .data-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    @media (max-width: 640px) {
+      .page-header {
+        padding: 1.5rem 1rem;
+      }
+      .title-text {
+        font-size: 1.75rem;
+      }
+      .data-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    /* Custom tooltip styles */
+    [data-tooltip] {
+      position: relative;
+      cursor: pointer;
+    }
+    [data-tooltip]::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      bottom: 125%;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #1E293B;
+      color: #F1F5F9;
+      text-align: center;
+      border-radius: 0.5rem;
+      padding: 0.5rem 1rem;
+      font-size: 0.875rem;
+      font-weight: normal;
+      min-width: 120px;
+      max-width: 250px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      z-index: 100;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s, visibility 0.3s;
+      pointer-events: none;
+      white-space: normal;
+      line-height: 1.4;
+    }
+    [data-tooltip]::before {
+      content: "";
+      position: absolute;
+      bottom: 125%;
+      left: 50%;
+      transform: translateX(-50%);
+      border-width: 5px;
+      border-style: solid;
+      border-color: #1E293B transparent transparent transparent;
+      z-index: 100;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s, visibility 0.3s;
+      pointer-events: none;
+    }
+    [data-tooltip]:hover::after,
+    [data-tooltip]:hover::before {
+      opacity: 1;
+      visibility: visible;
+    }
+    /* Mobile tooltip adjustments */
+    @media (max-width: 768px) {
+      [data-tooltip]::after {
+        width: 180px;
+        white-space: normal;
+      }
+    }
+    /* Intro.js customization */
+    .introjs-tooltip {
+      border-radius: 1rem;
+      box-shadow: 0 16px 32px rgba(0, 0, 0, 0.1);
+    }
+    .introjs-button {
+      background: var(--primary);
+      color: white;
+      text-shadow: none;
+      border: none;
+      box-shadow: none;
+      border-radius: 0.25rem;
+      transition: all 0.2s ease;
+    }
+    .introjs-button:hover {
+      background: var(--primary-dark);
+      color: white;
+      box-shadow: 0 4px 12px rgba(15, 118, 110, 0.3);
+    }
+    /* Responsive layout order for mobile */
+    @media (max-width: 1023px) {
+      .section-simulation {
+        order: 1;
+      }
+      .section-controls {
+        order: 2;
+      }
+      .section-data {
+        order: 3;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="page-header">
+    <h1 class="title-text" data-step="1" data-intro="Welcome to Physics Lab! This interactive simulation helps you understand the principles of projectile motion.">
+      Physics Lab: Projectile Motion
+    </h1>
+    <p class="subtitle-text">Explore the physics of objects in flight</p>
+  </header>
+  <div class="container mx-auto">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <!-- Simulation area (2/3 of screen on large displays) -->
+      <div class="lg:col-span-2 flex flex-col gap-6 section-simulation">
+        <div class="card">
+          <div class="card-header">
+            Simulation Visualization
+          </div>
+          <div class="card-body p-4">
+            <canvas id="canvas" data-step="4" data-intro="This graph shows the projectile's trajectory. The orange dot marks its current position, and a green arrow indicates velocity direction."></canvas>
+          </div>
+        </div>
+        <!-- Mobile Controls -->
+        <div class="block lg:hidden section-controls">
+          <div class="card mb-6" data-step="2" data-intro="Control your projectile's parameters here. Adjust the angle, velocity, and mass to see how they affect the trajectory.">
+            <div class="card-header">
+              Projectile Parameters
+            </div>
+            <div class="card-body">
+              <div class="control-label">
+                <span class="label-text" data-tooltip="The angle of launch measured from the horizontal">Angle (°)</span>
+                <input type="range" id="angle-mobile" min="0" max="90" value="45" class="mobile-control">
+                <span id="angle-value-mobile" class="value-display">45</span>
+              </div>
+              <div class="control-label">
+                <span class="label-text" data-tooltip="The initial speed of the projectile">Initial Velocity (m/s)</span>
+                <input type="range" id="velocity-mobile" min="0" max="100" value="50" class="mobile-control">
+                <span id="velocity-value-mobile" class="value-display">50</span>
+              </div>
+              <div class="control-label">
+                <span class="label-text" data-tooltip="The mass of the projectile (affects energy calculations)">Mass (kg)</span>
+                <input type="range" id="mass-mobile" min="1" max="100" value="10" class="mobile-control">
+                <span id="mass-value-mobile" class="value-display">10</span>
+              </div>
+              <label class="checkbox-container">
+                <input type="checkbox" id="show-velocity-mobile" checked class="mobile-control">
+                <span class="checkbox-custom"></span>
+                <span data-tooltip="Show or hide the velocity vector on the projectile">Show Velocity Vector</span>
+              </label>
+            </div>
+          </div>
+          <div class="card mb-6" data-step="3" data-intro="Control the simulation with these buttons. Play to start, pause to freeze, and replay to restart.">
+            <div class="card-header">
+              Simulation Controls
+            </div>
+            <div class="card-body">
+              <div class="flex gap-4">
+                <button id="play-pause-mobile" class="btn btn-primary mobile-control">
+                  <span id="play-pause-text-mobile">Play</span>
+                  <span id="play-pause-icon-mobile">▶</span>
+                </button>
+                <button id="replay-mobile" class="btn btn-success mobile-control">
+                  <span>Replay</span>
+                  <span>⟳</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Data Panels -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 section-data">
+          <div class="card">
+            <div class="card-header">Real-time Path Data</div>
+            <div class="card-body p-4">
+              <div class="data-grid">
+                <div class="data-item" data-tooltip="Current time in the simulation">
+                  <div class="data-label">Time</div>
+                  <div class="data-value"><span id="time">0</span> s</div>
+                </div>
+                <div class="data-item" data-tooltip="Current horizontal position">
+                  <div class="data-label">X Position</div>
+                  <div class="data-value"><span id="x">0</span> m</div>
+                </div>
+                <div class="data-item" data-tooltip="Current vertical position">
+                  <div class="data-label">Y Position</div>
+                  <div class="data-value"><span id="y">0</span> m</div>
+                </div>
+                <div class="data-item" data-tooltip="Current horizontal velocity">
+                  <div class="data-label">X Velocity</div>
+                  <div class="data-value"><span id="vx">0</span> m/s</div>
+                </div>
+                <div class="data-item" data-tooltip="Current vertical velocity">
+                  <div class="data-label">Y Velocity</div>
+                  <div class="data-value"><span id="vy">0</span> m/s</div>
+                </div>
+                <div class="data-item" data-tooltip="Current speed (magnitude of velocity)">
+                  <div class="data-label">Speed</div>
+                  <div class="data-value"><span id="speed">0</span> m/s</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header">Energy & Metrics</div>
+            <div class="card-body p-4">
+              <div class="data-grid">
+                <div class="data-item" data-tooltip="Energy from motion: (1/2) × mass × speed²">
+                  <div class="data-label">Kinetic Energy</div>
+                  <div class="data-value"><span id="ke">0</span> J</div>
+                </div>
+                <div class="data-item" data-tooltip="Energy from height: mass × gravity × height">
+                  <div class="data-label">Potential Energy</div>
+                  <div class="data-value"><span id="pe">0</span> J</div>
+                </div>
+                <div class="data-item" data-tooltip="Total energy (KE + PE), should remain constant">
+                  <div class="data-label">Total Energy</div>
+                  <div class="data-value"><span id="e">0</span> J</div>
+                </div>
+                <div class="data-item" data-tooltip="Maximum height reached during flight">
+                  <div class="data-label">Max Height</div>
+                  <div class="data-value"><span id="h">0</span> m</div>
+                </div>
+                <div class="data-item" data-tooltip="Total horizontal distance traveled">
+                  <div class="data-label">Range</div>
+                  <div class="data-value"><span id="r">0</span> m</div>
+                </div>
+                <div class="data-item" data-tooltip="Total time the projectile stays in the air">
+                  <div class="data-label">Flight Time</div>
+                  <div class="data-value"><span id="t-flight">0</span> s</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Desktop Controls (visible on large screens) -->
+      <div class="lg:col-span-1 hidden lg:block">
+        <div class="card mb-6" data-step="2" data-intro="Control your projectile's parameters here. Adjust the angle, velocity, and mass to see how they affect the trajectory.">
+          <div class="card-header">
+            Projectile Parameters
+          </div>
+          <div class="card-body">
+            <div class="control-label">
+              <span class="label-text" data-tooltip="The angle of launch measured from the horizontal">Angle (°)</span>
+              <input type="range" id="angle" min="0" max="90" value="45">
+              <span id="angle-value" class="value-display">45</span>
+            </div>
+            <div class="control-label">
+              <span class="label-text" data-tooltip="The initial speed of the projectile">Initial Velocity (m/s)</span>
+              <input type="range" id="velocity" min="0" max="100" value="50">
+              <span id="velocity-value" class="value-display">50</span>
+            </div>
+            <div class="control-label">
+              <span class="label-text" data-tooltip="The mass of the projectile (affects energy calculations)">Mass (kg)</span>
+              <input type="range" id="mass" min="1" max="100" value="10">
+              <span id="mass-value" class="value-display">10</span>
+            </div>
+            <label class="checkbox-container">
+              <input type="checkbox" id="show-velocity" checked>
+              <span class="checkbox-custom"></span>
+              <span data-tooltip="Show or hide the velocity vector on the projectile">Show Velocity Vector</span>
+            </label>
+          </div>
+        </div>
+        <div class="card mb-6" data-step="3" data-intro="Control the simulation with these buttons. Play to start, pause to freeze, and replay to restart.">
+          <div class="card-header">
+            Simulation Controls
+          </div>
+          <div class="card-body">
+            <div class="flex gap-4">
+              <button id="play-pause" class="btn btn-primary">
+                <span id="play-pause-text">Play</span>
+                <span id="play-pause-icon">▶</span>
+              </button>
+              <button id="replay" class="btn btn-success">
+                <span>Replay</span>
+                <span>⟳</span>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="card" data-step="5" data-intro="This section explains key physics concepts related to projectile motion.">
+          <div class="card-header">
+            Physics Concepts
+          </div>
+          <div class="card-body">
+            <div class="mb-4">
+              <h3 class="font-semibold text-lg mb-2">Projectile Motion</h3>
+              <p class="text-sm text-gray-600">
+                Projectile motion is a form of motion where an object moves in a parabolic path under the influence of gravity. The horizontal and vertical components of motion are independent.
+              </p>
+            </div>
+            <div class="mb-4">
+              <h3 class="font-semibold text-lg mb-2">Key Equations</h3>
+              <div class="bg-gray-50 rounded-lg p-3 text-sm">
+                <p><strong>Range:</strong> R = (v₀² × sin(2θ)) ÷ g</p>
+                <p><strong>Max Height:</strong> H = (v₀ × sin(θ))² ÷ (2g)</p>
+                <p><strong>Time of Flight:</strong> T = (2 × v₀ × sin(θ)) ÷ g</p>
+              </div>
+            </div>
+            <a href="#" class="text-primary font-medium hover:underline text-sm inline-flex items-center">
+              Learn more about projectile motion
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ml-1">
+                <path d="M5 12h14"></path>
+                <path d="M12 5l7 7-7 7"></path>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <footer class="mt-10 text-center text-sm text-gray-500 pb-6">
+      <p>Physics Lab: Interactive Learning Tools © 2025</p>
+    </footer>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/intro.js/4.2.2/intro.min.js"></script>
+  <script>
+    // Canvas and simulation logic
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    const angleSlider = document.getElementById('angle');
+    const velocitySlider = document.getElementById('velocity');
+    const massSlider = document.getElementById('mass');
+    const angleValue = document.getElementById('angle-value');
+    const velocityValue = document.getElementById('velocity-value');
+    const massValue = document.getElementById('mass-value');
+    const playPauseButton = document.getElementById('play-pause');
+    const playPauseText = document.getElementById('play-pause-text');
+    const playPauseIcon = document.getElementById('play-pause-icon');
+    const replayButton = document.getElementById('replay');
+    const timeSpan = document.getElementById('time');
+    const xSpan = document.getElementById('x');
+    const ySpan = document.getElementById('y');
+    const vxSpan = document.getElementById('vx');
+    const vySpan = document.getElementById('vy');
+    const speedSpan = document.getElementById('speed');
+    const keSpan = document.getElementById('ke');
+    const peSpan = document.getElementById('pe');
+    const eSpan = document.getElementById('e');
+    const hSpan = document.getElementById('h');
+    const rSpan = document.getElementById('r');
+    const tFlightSpan = document.getElementById('t-flight');
+    const showVelocityCheckbox = document.getElementById('show-velocity');
+    let theta = parseFloat(angleSlider.value) * Math.PI / 180;
+    let v0 = parseFloat(velocitySlider.value);
+    let m = parseFloat(massSlider.value);
+    const g = 9.8;
+    let t = 0;
+    let isPlaying = false;
+    let lastTime = 0;
+    let x = 0, y = 0, vx = 0, vy = 0, speed = 0, ke = 0, pe = 0, e = 0, H = 0, R = 0, T = 0;
+    function resizeCanvas() {
+      const container = canvas.parentElement;
+      const width = container.clientWidth;
+      const height = width * 0.6;
+      canvas.width = width;
+      canvas.height = height;
+      draw();
+    }
+    window.addEventListener('resize', resizeCanvas);
+    setTimeout(resizeCanvas, 10);
+    function calculateParameters() {
+      theta = parseFloat(angleSlider.value) * Math.PI / 180;
+      v0 = parseFloat(velocitySlider.value);
+      m = parseFloat(massSlider.value);
+      const sinTheta = Math.sin(theta);
+      const cosTheta = Math.cos(theta);
+      T = 2 * v0 * sinTheta / g;
+      R = v0 * v0 * Math.sin(2 * theta) / g;
+      H = (v0 * sinTheta) ** 2 / (2 * g);
+      return { T, R, H };
+    }
+    function setScale() {
+      if (R === 0 || H === 0) return 1;
+      const W = canvas.width;
+      const H_canvas = canvas.height;
+      const s_x = W / R;
+      const s_y = H_canvas / H;
+      const s = Math.min(s_x, s_y) * 0.85;
+      return s;
+    }
+    function draw() {
+      if (!canvas.width || !canvas.height) return;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const s = setScale();
+      ctx.lineWidth = 0.5;
+      ctx.strokeStyle = 'rgba(229, 231, 235, 0.8)';
+      for (let x = 0; x <= R; x += R/10) {
+        ctx.beginPath();
+        ctx.moveTo(s * x, 0);
+        ctx.lineTo(s * x, canvas.height);
+        ctx.stroke();
+      }
+      for (let y = 0; y <= H*1.2; y += H/5) {
+        ctx.beginPath();
+        ctx.moveTo(0, canvas.height - s * y);
+        ctx.lineTo(canvas.width, canvas.height - s * y);
+        ctx.stroke();
+      }
+      ctx.beginPath();
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = 'rgba(107, 114, 128, 0.6)';
+      ctx.moveTo(0, canvas.height);
+      ctx.lineTo(canvas.width, canvas.height);
+      ctx.stroke();
+      ctx.beginPath();
+      let first = true;
+      for (let ti = 0; ti <= T; ti += 0.01) {
+        let xi = v0 * Math.cos(theta) * ti;
+        let yi = v0 * Math.sin(theta) * ti - 0.5 * g * ti * ti;
+        if (yi < 0) yi = 0;
+        const pxi = s * xi;
+        const pyi = canvas.height - s * yi;
+        if (first) {
+          ctx.moveTo(pxi, pyi);
+          first = false;
+        } else {
+          ctx.lineTo(pxi, pyi);
+        }
+      }
+      ctx.setLineDash([5, 5]);
+      ctx.strokeStyle = 'rgba(139, 92, 246, 0.5)';
+      ctx.stroke();
+      ctx.setLineDash([]);
+      if (t > 0) {
+        ctx.beginPath();
+        first = true;
+        for (let ti = 0; ti <= t; ti += 0.01) {
+          let xi = v0 * Math.cos(theta) * ti;
+          let yi = v0 * Math.sin(theta) * ti - 0.5 * g * ti * ti;
+          if (yi < 0) yi = 0;
+          const pxi = s * xi;
+          const pyi = canvas.height - s * yi;
+          if (first) {
+            ctx.moveTo(pxi, pyi);
+            first = false;
+          } else {
+            ctx.lineTo(pxi, pyi);
+          }
+        }
+        ctx.lineWidth = 3;
+        ctx.strokeStyle = '#0F766E';
+        ctx.stroke();
+      }
+      if (t <= T) {
+        const px = s * x;
+        const py = canvas.height - s * y;
+        const gradient = ctx.createRadialGradient(px, py, 0, px, py, 20);
+        gradient.addColorStop(0, 'rgba(249, 115, 22, 0.7)');
+        gradient.addColorStop(0.5, 'rgba(249, 115, 22, 0.3)');
+        gradient.addColorStop(1, 'transparent');
+        ctx.fillStyle = gradient;
+        ctx.beginPath();
+        ctx.arc(px, py, 20, 0, 2 * Math.PI);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(px, py, 8, 0, 2 * Math.PI);
+        ctx.fillStyle = '#F97316';
+        ctx.fill();
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = 'white';
+        ctx.stroke();
+        if (showVelocityCheckbox.checked && speed > 0) {
+          const arrowLength = Math.min(40, speed * 0.6);
+          const theta_canvas = Math.atan2(-vy, vx);
+          const arrowEndX = px + arrowLength * Math.cos(theta_canvas);
+          const arrowEndY = py + arrowLength * Math.sin(theta_canvas);
+          ctx.beginPath();
+          ctx.moveTo(px, py);
+          ctx.lineTo(arrowEndX, arrowEndY);
+          ctx.strokeStyle = '#10B981';
+          ctx.lineWidth = 3;
+          ctx.stroke();
+          const headLength = 12;
+          const angle1 = theta_canvas - Math.PI / 6;
+          const angle2 = theta_canvas + Math.PI / 6;
+          ctx.beginPath();
+          ctx.moveTo(arrowEndX, arrowEndY);
+          ctx.lineTo(arrowEndX - headLength * Math.cos(angle1), arrowEndY - headLength * Math.sin(angle1));
+          ctx.moveTo(arrowEndX, arrowEndY);
+          ctx.lineTo(arrowEndX - headLength * Math.cos(angle2), arrowEndY - headLength * Math.sin(angle2));
+          ctx.stroke();
+          ctx.font = '12px Inter, sans-serif';
+          ctx.fillStyle = '#10B981';
+          ctx.textAlign = 'center';
+          const textX = arrowEndX + 20 * Math.cos(theta_canvas);
+          const textY = arrowEndY + 20 * Math.sin(theta_canvas);
+          ctx.fillText(`${speed.toFixed(1)} m/s`, textX, textY);
+        }
+      }
+      ctx.font = '12px Inter, sans-serif';
+      ctx.fillStyle = 'rgba(75, 85, 99, 0.8)';
+      ctx.textAlign = 'right';
+      ctx.fillText('0 m', 20, canvas.height - 5);
+      ctx.textAlign = 'center';
+      const xLabelStep = Math.ceil(R / 5);
+      for (let x = xLabelStep; x <= R; x += xLabelStep) {
+        const labelX = s * x;
+        ctx.fillText(`${x.toFixed(0)} m`, labelX, canvas.height - 5);
+      }
+      ctx.textAlign = 'right';
+      const yLabelStep = Math.ceil(H / 3);
+      for (let y = yLabelStep; y <= H; y += yLabelStep) {
+        const labelY = canvas.height - s * y;
+        ctx.fillText(`${y.toFixed(0)} m`, 20, labelY + 4);
+      }
+    }
+    function updateData() {
+      x = v0 * Math.cos(theta) * t;
+      y = v0 * Math.sin(theta) * t - 0.5 * g * t * t;
+      if (y < 0) y = 0;
+      vx = v0 * Math.cos(theta);
+      vy = v0 * Math.sin(theta) - g * t;
+      if (y === 0 && vy < 0) vy = 0;
+      speed = Math.sqrt(vx * vx + vy * vy);
+      ke = 0.5 * m * speed * speed;
+      pe = m * g * y;
+      e = ke + pe;
+      timeSpan.textContent = t.toFixed(2);
+      xSpan.textContent = x.toFixed(2);
+      ySpan.textContent = y.toFixed(2);
+      vxSpan.textContent = vx.toFixed(2);
+      vySpan.textContent = vy.toFixed(2);
+      speedSpan.textContent = speed.toFixed(2);
+      keSpan.textContent = ke.toFixed(1);
+      peSpan.textContent = pe.toFixed(1);
+      eSpan.textContent = e.toFixed(1);
+      hSpan.textContent = H.toFixed(2);
+      rSpan.textContent = R.toFixed(2);
+      tFlightSpan.textContent = T.toFixed(2);
+    }
+    function update(currentTime) {
+      if (lastTime === 0) lastTime = currentTime;
+      const deltaTime = (currentTime - lastTime) / 1000;
+      lastTime = currentTime;
+      if (isPlaying) {
+        t += deltaTime;
+        if (t > T) {
+          t = T;
+          isPlaying = false;
+          playPauseText.textContent = 'Play';
+          playPauseIcon.textContent = '▶';
+        }
+        updateData();
+      }
+      draw();
+      requestAnimationFrame(update);
+    }
+    const angleMobileSlider = document.getElementById('angle-mobile');
+    const velocityMobileSlider = document.getElementById('velocity-mobile');
+    const massMobileSlider = document.getElementById('mass-mobile');
+    const angleMobileValue = document.getElementById('angle-value-mobile');
+    const velocityMobileValue = document.getElementById('velocity-value-mobile');
+    const massMobileValue = document.getElementById('mass-value-mobile');
+    const playPauseMobileButton = document.getElementById('play-pause-mobile');
+    const playPauseMobileText = document.getElementById('play-pause-text-mobile');
+    const playPauseMobileIcon = document.getElementById('play-pause-icon-mobile');
+    const replayMobileButton = document.getElementById('replay-mobile');
+    const showVelocityMobileCheckbox = document.getElementById('show-velocity-mobile');
+    function syncControls(fromMobile = false) {
+      if (fromMobile) {
+        angleSlider.value = angleMobileSlider.value;
+        velocitySlider.value = velocityMobileSlider.value;
+        massSlider.value = massMobileSlider.value;
+        showVelocityCheckbox.checked = showVelocityMobileCheckbox.checked;
+        angleValue.textContent = angleMobileSlider.value;
+        velocityValue.textContent = velocityMobileSlider.value;
+        massValue.textContent = massMobileSlider.value;
+      } else {
+        angleMobileSlider.value = angleSlider.value;
+        velocityMobileSlider.value = velocitySlider.value;
+        massMobileSlider.value = massSlider.value;
+        showVelocityMobileCheckbox.checked = showVelocityCheckbox.checked;
+        angleMobileValue.textContent = angleSlider.value;
+        velocityMobileValue.textContent = velocitySlider.value;
+        massMobileValue.textContent = massSlider.value;
+      }
+    }
+    syncControls(false);
+    angleSlider.addEventListener('input', () => {
+      angleValue.textContent = angleSlider.value;
+      syncControls(false);
+      t = 0;
+      isPlaying = false;
+      playPauseText.textContent = playPauseMobileText.textContent = 'Play';
+      playPauseIcon.textContent = playPauseMobileIcon.textContent = '▶';
+      calculateParameters();
+      updateData();
+    });
+    velocitySlider.addEventListener('input', () => {
+      velocityValue.textContent = velocitySlider.value;
+      syncControls(false);
+      t = 0;
+      isPlaying = false;
+      playPauseText.textContent = playPauseMobileText.textContent = 'Play';
+      playPauseIcon.textContent = playPauseMobileIcon.textContent = '▶';
+      calculateParameters();
+      updateData();
+    });
+    massSlider.addEventListener('input', () => {
+      massValue.textContent = massSlider.value;
+      syncControls(false);
+      m = parseFloat(massSlider.value);
+      updateData();
+    });
+    angleMobileSlider.addEventListener('input', () => {
+      angleMobileValue.textContent = angleMobileSlider.value;
+      syncControls(true);
+      t = 0;
+      isPlaying = false;
+      playPauseText.textContent = playPauseMobileText.textContent = 'Play';
+      playPauseIcon.textContent = playPauseMobileIcon.textContent = '▶';
+      calculateParameters();
+      updateData();
+    });
+    velocityMobileSlider.addEventListener('input', () => {
+      velocityMobileValue.textContent = velocityMobileSlider.value;
+      syncControls(true);
+      t = 0;
+      isPlaying = false;
+      playPauseText.textContent = playPauseMobileText.textContent = 'Play';
+      playPauseIcon.textContent = playPauseMobileIcon.textContent = '▶';
+      calculateParameters();
+      updateData();
+    });
+    massMobileSlider.addEventListener('input', () => {
+      massMobileValue.textContent = massMobileSlider.value;
+      syncControls(true);
+      m = parseFloat(massMobileSlider.value);
+      updateData();
+    });
+    function updatePlayPauseButtons() {
+      if (isPlaying) {
+        playPauseText.textContent = playPauseMobileText.textContent = 'Pause';
+        playPauseIcon.textContent = playPauseMobileIcon.textContent = '⏸';
+      } else {
+        playPauseText.textContent = playPauseMobileText.textContent = 'Play';
+        playPauseIcon.textContent = playPauseMobileIcon.textContent = '▶';
+      }
+    }
+    playPauseButton.addEventListener('click', () => {
+      if (t >= T) t = 0;
+      isPlaying = !isPlaying;
+      updatePlayPauseButtons();
+    });
+    playPauseMobileButton.addEventListener('click', () => {
+      if (t >= T) t = 0;
+      isPlaying = !isPlaying;
+      updatePlayPauseButtons();
+    });
+    replayButton.addEventListener('click', () => {
+      t = 0;
+      isPlaying = true;
+      updatePlayPauseButtons();
+      updateData();
+    });
+    replayMobileButton.addEventListener('click', () => {
+      t = 0;
+      isPlaying = true;
+      updatePlayPauseButtons();
+      updateData();
+    });
+    showVelocityCheckbox.addEventListener('change', () => {
+      showVelocityMobileCheckbox.checked = showVelocityCheckbox.checked;
+      draw();
+    });
+    showVelocityMobileCheckbox.addEventListener('change', () => {
+      showVelocityCheckbox.checked = showVelocityMobileCheckbox.checked;
+      draw();
+    });
+    angleValue.textContent = angleSlider.value;
+    velocityValue.textContent = velocitySlider.value;
+    massValue.textContent = massSlider.value;
+    calculateParameters();
+    updateData();
+    requestAnimationFrame(update);
+    
+    // Intro.js initialization
+    document.addEventListener('DOMContentLoaded', () => {
+      setTimeout(() => {
+        const intro = introJs();
+        // Helper function to get the responsive element
+        function getResponsiveElement(desktopSelector, mobileSelector) {
+          const desktopEl = document.querySelector(desktopSelector);
+          if (desktopEl && window.getComputedStyle(desktopEl).display !== 'none') {
+            return desktopEl;
+          }
+          return document.querySelector(mobileSelector);
+        }
+        intro.setOptions({
+          steps: [
+            {
+              element: document.querySelector('[data-step="1"]'),
+              intro: "Welcome to Physics Lab! This interactive simulation helps you understand the principles of projectile motion.",
+              position: 'bottom'
+            },
+            {
+              element: getResponsiveElement('.lg\\:block .card:nth-child(1)', '.section-controls.lg\\:hidden .card:nth-child(1)'),
+              intro: "Control your projectile's parameters here. Adjust the angle, velocity, and mass to see how they affect the trajectory.",
+              position: 'right'
+            },
+            {
+              element: getResponsiveElement('.lg\\:block .card:nth-child(2)', '.section-controls.lg\\:hidden .card:nth-child(2)'),
+              intro: "Control the simulation with these buttons. Play to start, pause to freeze, and replay to restart.",
+              position: 'right'
+            },
+            {
+              element: document.querySelector('[data-step="4"]'),
+              intro: "This graph shows the projectile's trajectory. The orange dot marks its current position, and a green arrow indicates velocity direction.",
+              position: 'bottom'
+            },
+            {
+              element: document.querySelector('[data-step="5"]'),
+              intro: "This section explains key physics concepts related to projectile motion.",
+              position: 'left'
+            }
+          ],
+          showBullets: true,
+          showProgress: true,
+          disableInteraction: false,
+          scrollToElement: true,
+          tooltipClass: 'customTooltip'
+        });
+        const style = document.createElement('style');
+        style.textContent = `
+          .customTooltip {
+            max-width: 450px;
+            min-width: 250px;
+          }
+          .introjs-tooltip {
+            border-radius: 10px;
+            z-index: 999999 !important;
+          }
+          .introjs-helperLayer {
+            background-color: rgba(255, 255, 255, 0.2);
+            z-index: 999990 !important;
+          }
+          .introjs-overlay {
+            z-index: 999980 !important;
+          }
+          .introjs-tooltipReferenceLayer {
+            z-index: 999995 !important;
+          }
+          .introjs-showElement {
+            z-index: 999998 !important;
+          }
+          .introjs-fixParent {
+            z-index: auto !important;
+          }
+        `;
+        document.head.appendChild(style);
+        intro.start();
+        window.addEventListener('resize', () => {
+          if (intro._currentStep !== undefined) {
+            intro.refresh();
+          }
+        });
+      }, 800);
+    });
+  </script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log("PROFESSIONAL UI/UX ENHANCEMENT LOADING");
+      
+      // Add modern fonts
+      const fontLink = document.createElement('link');
+      fontLink.href = 'https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap';
+      fontLink.rel = 'stylesheet';
+      document.head.appendChild(fontLink);
+      
+      // Create professional styling
+      const styleEl = document.createElement('style');
+      styleEl.id = 'professional-enhancement';
+      styleEl.textContent = `
+        /* Modern Color Palette */
+        :root {
+          --primary: #2563eb;
+          --primary-dark: #1d4ed8;
+          --primary-light: #3b82f6;
+          --secondary: #f97316;
+          --secondary-dark: #ea580c;
+          --secondary-light: #fb923c;
+          --accent: #8b5cf6;
+          --background: #f8fafc;
+          --card-bg: #ffffff;
+          --text-primary: #0f172a;
+          --text-secondary: #475569;
+          --text-tertiary: #64748b;
+          --success: #10b981;
+          --success-dark: #059669;
+          --border: #e2e8f0;
+          --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+          --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+          --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        
+        /* Typography */
+        body {
+          font-family: 'Poppins', sans-serif;
+          background: var(--background);
+          color: var(--text-primary);
+          letter-spacing: -0.01em;
+        }
+        
+        h1, h2, h3, h4, h5, h6, .title-text, .subtitle-text {
+          font-family: 'Montserrat', sans-serif;
+          letter-spacing: -0.025em;
+        }
+        
+        .title-text {
+          font-weight: 700;
+          color: white;
+        }
+        
+        .subtitle-text {
+          font-weight: 400;
+          color: rgba(255, 255, 255, 0.9);
+        }
+        
+        /* Header Enhancement */
+        .page-header {
+          background: linear-gradient(135deg, var(--primary), var(--accent)) !important;
+          box-shadow: var(--shadow-md);
+          position: relative;
+          overflow: hidden;
+        }
+        
+        .page-header::before {
+          content: '';
+          position: absolute;
+          top: -50%;
+          left: -50%;
+          width: 200%;
+          height: 200%;
+          background: linear-gradient(45deg, rgba(255,255,255,0.1) 25%, transparent 25%, transparent 50%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.1) 75%, transparent 75%);
+          background-size: 20px 20px;
+          transform: rotate(30deg);
+          opacity: 0.3;
+          pointer-events: none;
+        }
+        
+        /* Card Enhancements */
+        .card {
+          border-radius: 16px !important;
+          overflow: hidden;
+          box-shadow: var(--shadow-md);
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
+          border: none !important;
+        }
+        
+        .card:hover {
+          transform: translateY(-5px);
+          box-shadow: var(--shadow-lg);
+        }
+        
+        .card-header {
+          background: var(--primary) !important;
+          padding: 1.5rem !important;
+          position: relative;
+          overflow: hidden;
+        }
+        
+        .card-header::after {
+          content: '';
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          width: 100%;
+          height: 4px;
+          background: linear-gradient(90deg, var(--primary-light), var(--accent));
+        }
+        
+        /* Button Enhancements */
+        .btn {
+          font-family: 'Poppins', sans-serif;
+          font-weight: 500;
+          border-radius: 10px !important;
+          padding: 0.75rem 1.5rem !important;
+          transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+          position: relative;
+          overflow: hidden;
+          box-shadow: var(--shadow-sm);
+          border: none !important;
+        }
+        
+        .btn::after {
+          content: '';
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          top: 0;
+          left: 0;
+          background: linear-gradient(rgba(255,255,255,0.2), rgba(255,255,255,0));
+          opacity: 0;
+          transition: opacity 0.3s ease;
+        }
+        
+        .btn:hover::after {
+          opacity: 1;
+        }
+        
+        .btn:active {
+          transform: scale(0.97);
+        }
+        
+        .btn-primary {
+          background: var(--primary) !important;
+          box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3);
+        }
+        
+        .btn-primary:hover {
+          background: var(--primary-dark) !important;
+          box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+        }
+        
+        .btn-secondary {
+          background: var(--secondary) !important;
+          box-shadow: 0 4px 14px rgba(249, 115, 22, 0.3);
+        }
+        
+        .btn-secondary:hover {
+          background: var(--secondary-dark) !important;
+          box-shadow: 0 6px 20px rgba(249, 115, 22, 0.4);
+        }
+        
+        .btn-success {
+          background: var(--success) !important;
+          box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
+        }
+        
+        .btn-success:hover {
+          background: var(--success-dark) !important;
+          box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+        }
+        
+        /* Slider Enhancements */
+        input[type="range"] {
+          -webkit-appearance: none;
+          height: 8px;
+          background: #e2e8f0;
+          border-radius: 8px;
+          box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+          -webkit-appearance: none;
+          width: 22px;
+          height: 22px;
+          background: linear-gradient(135deg, var(--secondary), var(--secondary-dark));
+          border-radius: 50%;
+          cursor: pointer;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+          transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb:hover {
+          transform: scale(1.15);
+          box-shadow: 0 3px 12px rgba(0,0,0,0.25);
+        }
+        
+        /* Canvas Enhancement */
+        canvas {
+          border-radius: 12px;
+          box-shadow: var(--shadow-sm);
+          transition: box-shadow 0.3s ease;
+        }
+        
+        canvas:hover {
+          box-shadow: var(--shadow-md);
+        }
+        
+        /* Control label enhancements */
+        .control-label {
+          display: flex;
+          align-items: center;
+          padding: 0.75rem;
+          border-radius: 8px;
+          transition: background-color 0.2s ease;
+        }
+        
+        .control-label:hover {
+          background-color: rgba(241, 245, 249, 0.7);
+        }
+        
+        .label-text {
+          font-weight: 500;
+          color: var(--text-secondary);
+        }
+        
+        .value-display {
+          font-weight: 600;
+          color: var(--primary);
+          background: rgba(37, 99, 235, 0.1);
+          padding: 0.25rem 0.5rem;
+          border-radius: 6px;
+          min-width: 40px;
+          text-align: center;
+        }
+        
+        /* Data item enhancements */
+        .data-item {
+          background: rgba(241, 245, 249, 0.5);
+          border-radius: 10px;
+          padding: 1rem;
+          box-shadow: var(--shadow-sm);
+          transition: all 0.3s ease;
+          border: 1px solid var(--border);
+        }
+        
+        .data-item:hover {
+          transform: translateY(-3px);
+          box-shadow: var(--shadow-md);
+          background: rgba(241, 245, 249, 0.8);
+        }
+        
+        .data-label {
+          font-size: 0.875rem;
+          color: var(--text-tertiary);
+          margin-bottom: 0.25rem;
+        }
+        
+        .data-value {
+          font-weight: 600;
+          color: var(--primary);
+          font-size: 1.125rem;
+        }
+        
+        /* Checkbox Enhancement */
+        .checkbox-custom {
+          border-radius: 6px;
+          transition: all 0.2s ease;
+        }
+        
+        .checkbox-container:hover .checkbox-custom {
+          box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+        }
+        
+        /* Motion animation for physics elements */
+        @keyframes float {
+          0% { transform: translateY(0); }
+          50% { transform: translateY(-5px); }
+          100% { transform: translateY(0); }
+        }
+        
+        .trajectory-element {
+          animation: float 3s ease-in-out infinite;
+        }
+        
+        /* Enhanced tooltips */
+        [data-tooltip]::after {
+          font-family: 'Poppins', sans-serif;
+          font-weight: 400;
+          border-radius: 8px;
+          padding: 0.75rem 1rem;
+          box-shadow: var(--shadow-lg);
+          background-color: var(--text-primary);
+          color: white;
+          border: none;
+          transition: opacity 0.3s ease, transform 0.3s ease;
+          transform: translateX(-50%) translateY(8px);
+        }
+        
+        [data-tooltip]:hover::after {
+          transform: translateX(-50%) translateY(0);
+        }
+        
+        /* Loading animations */
+        @keyframes shimmer {
+          0% { background-position: -200% 0; }
+          100% { background-position: 200% 0; }
+        }
+        
+        .loading-element {
+          background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+          background-size: 200% 100%;
+          animation: shimmer 1.5s infinite;
+          border-radius: 8px;
+        }
+        
+        /* Entry animations */
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        
+        .card, .data-item, .btn {
+          animation: fadeInUp 0.5s ease backwards;
+        }
+        
+        /* Staggered animations */
+        .card:nth-child(1) { animation-delay: 0.1s; }
+        .card:nth-child(2) { animation-delay: 0.2s; }
+        .card:nth-child(3) { animation-delay: 0.3s; }
+        
+        .data-item:nth-child(1) { animation-delay: 0.2s; }
+        .data-item:nth-child(2) { animation-delay: 0.3s; }
+        .data-item:nth-child(3) { animation-delay: 0.4s; }
+        .data-item:nth-child(4) { animation-delay: 0.5s; }
+      `;
+      document.head.appendChild(styleEl);
+      
+      // Add subtle animations to interactive elements
+      function addInteractiveAnimations() {
+        // Add trajectory animation class to physics elements
+        document.querySelectorAll('canvas').forEach(canvas => {
+          const wrapper = document.createElement('div');
+          wrapper.className = 'trajectory-element';
+          canvas.parentNode.insertBefore(wrapper, canvas);
+          wrapper.appendChild(canvas);
+        });
+        
+        // Add ripple effect to buttons
+        document.querySelectorAll('.btn').forEach(button => {
+          button.addEventListener('click', function(e) {
+            const ripple = document.createElement('span');
+            ripple.className = 'ripple';
+            ripple.style.position = 'absolute';
+            ripple.style.borderRadius = '50%';
+            ripple.style.transform = 'scale(0)';
+            ripple.style.background = 'rgba(255, 255, 255, 0.5)';
+            ripple.style.pointerEvents = 'none';
+            
+            const rect = this.getBoundingClientRect();
+            const size = Math.max(rect.width, rect.height) * 2;
+            ripple.style.width = ripple.style.height = `${size}px`;
+            ripple.style.left = `${e.clientX - rect.left - size/2}px`;
+            ripple.style.top = `${e.clientY - rect.top - size/2}px`;
+            
+            this.appendChild(ripple);
+            
+            ripple.style.animation = 'ripple 0.6s ease-out forwards';
+            
+            setTimeout(() => {
+              ripple.remove();
+            }, 600);
+          });
+        });
+        
+        // Add ripple animation
+        const rippleStyle = document.createElement('style');
+        rippleStyle.textContent = `
+          @keyframes ripple {
+            to {
+              transform: scale(2);
+              opacity: 0;
+            }
+          }
+        `;
+        document.head.appendChild(rippleStyle);
+      }
+      
+      // Add 3D transform hover effects to cards
+      function add3DCardEffects() {
+        document.querySelectorAll('.card').forEach(card => {
+          card.addEventListener('mousemove', function(e) {
+            const rect = this.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            
+            const rotateX = (y - centerY) / 20;
+            const rotateY = (centerX - x) / 20;
+            
+            this.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+          });
+          
+          card.addEventListener('mouseleave', function() {
+            this.style.transform = 'perspective(1000px) rotateX(0) rotateY(0)';
+          });
+        });
+      }
+      
+      // Run enhancements after a delay
+      setTimeout(() => {
+        addInteractiveAnimations();
+        add3DCardEffects();
+      }, 500);
+      
+      console.log("PROFESSIONAL UI/UX ENHANCEMENT LOADED");
+    });
+  </script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log("PROFESSIONAL FOOTER LOADING");
+      
+      // Create footer element
+      const footer = document.createElement('footer');
+      footer.className = 'modern-footer';
+      
+      // Add footer HTML content
+      footer.innerHTML = `
+        <div class="footer-container">
+          <div class="footer-content">
+            <div class="footer-brand">
+              <h3>Physics Lab</h3>
+              <p>Interactive physics simulations to help you understand the fundamental principles of motion, energy, and forces.</p>
+              <div class="social-icons">
+                <a href="#" aria-label="Twitter"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"></path></svg></a>
+                <a href="#" aria-label="GitHub"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg></a>
+                <a href="#" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg></a>
+                <a href="#" aria-label="YouTube"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"></path><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon></svg></a>
+              </div>
+            </div>
+            
+            <div class="footer-links">
+              <div class="footer-section">
+                <h4>Learning Resources</h4>
+                <ul>
+                  <li><a href="#">Lab Guides</a></li>
+                  <li><a href="#">Physics Formulas</a></li>
+                  <li><a href="#">Video Tutorials</a></li>
+                  <li><a href="#">FAQ</a></li>
+                </ul>
+              </div>
+              
+              <div class="footer-section">
+                <h4>Experiments</h4>
+                <ul>
+                  <li><a href="#">Projectile Motion</a></li>
+                  <li><a href="#">Pendulum</a></li>
+                  <li><a href="#">Wave Interference</a></li>
+                  <li><a href="#">Circuit Lab</a></li>
+                </ul>
+              </div>
+              
+              <div class="footer-section">
+                <h4>About Us</h4>
+                <ul>
+                  <li><a href="#">Our Team</a></li>
+                  <li><a href="#">Mission</a></li>
+                  <li><a href="#">Partners</a></li>
+                  <li><a href="#">Contact</a></li>
+                </ul>
+              </div>
+            </div>
+            
+            <div class="footer-newsletter">
+              <h4>Stay Updated</h4>
+              <p>Subscribe to our newsletter for the latest experiments and features.</p>
+              <div class="newsletter-form">
+                <input type="email" placeholder="Your email address">
+                <button class="btn-subscribe">Subscribe</button>
+              </div>
+            </div>
+          </div>
+          
+          <div class="footer-bottom">
+            <p>&copy; ${new Date().getFullYear()} Physics Lab. All rights reserved.</p>
+            <div class="footer-bottom-links">
+              <a href="#">Privacy Policy</a>
+              <a href="#">Terms of Service</a>
+              <a href="#">Cookies</a>
+            </div>
+          </div>
+        </div>
+      `;
+      
+      // Create and add footer styling
+      const styleEl = document.createElement('style');
+      styleEl.id = 'footer-styles';
+      styleEl.textContent = `
+        /* Footer Styles */
+        .modern-footer {
+          background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+          color: #f8fafc;
+          padding: 4rem 0 1.5rem;
+          margin-top: 5rem;
+          position: relative;
+          overflow: hidden;
+          box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.1);
+        }
+        
+        .modern-footer::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 5px;
+          background: linear-gradient(90deg, var(--primary), var(--accent));
+        }
+        
+        .footer-container {
+          max-width: 1200px;
+          margin: 0 auto;
+          padding: 0 2rem;
+        }
+        
+        .footer-content {
+          display: grid;
+          grid-template-columns: repeat(12, 1fr);
+          gap: 2.5rem;
+          margin-bottom: 3rem;
+        }
+        
+        .footer-brand {
+          grid-column: span 3;
+        }
+        
+        .footer-brand h3 {
+          font-family: 'Montserrat', sans-serif;
+          font-weight: 700;
+          font-size: 1.5rem;
+          margin-bottom: 1rem;
+          background: linear-gradient(90deg, #fff, #bfdbfe);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+        }
+        
+        .footer-brand p {
+          font-size: 0.95rem;
+          line-height: 1.6;
+          color: rgba(255, 255, 255, 0.8);
+          margin-bottom: 1.5rem;
+        }
+        
+        .social-icons {
+          display: flex;
+          gap: 1rem;
+        }
+        
+        .social-icons a {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 36px;
+          height: 36px;
+          border-radius: 50%;
+          background: rgba(255, 255, 255, 0.1);
+          color: white;
+          transition: all 0.3s ease;
+        }
+        
+        .social-icons a:hover {
+          background: rgba(255, 255, 255, 0.2);
+          transform: translateY(-3px);
+          box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .footer-links {
+          grid-column: span 6;
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 2rem;
+        }
+        
+        .footer-section h4 {
+          font-family: 'Montserrat', sans-serif;
+          font-weight: 600;
+          font-size: 1.1rem;
+          margin-bottom: 1.2rem;
+          color: white;
+        }
+        
+        .footer-section ul {
+          list-style: none;
+          padding: 0;
+          margin: 0;
+        }
+        
+        .footer-section li {
+          margin-bottom: 0.7rem;
+        }
+        
+        .footer-section a {
+          color: rgba(255, 255, 255, 0.7);
+          text-decoration: none;
+          font-size: 0.95rem;
+          transition: all 0.3s ease;
+          position: relative;
+        }
+        
+        .footer-section a:hover {
+          color: white;
+        }
+        
+        .footer-section a::after {
+          content: '';
+          position: absolute;
+          width: 0;
+          height: 1px;
+          bottom: -3px;
+          left: 0;
+          background-color: white;
+          transition: width 0.3s ease;
+        }
+        
+        .footer-section a:hover::after {
+          width: 100%;
+        }
+        
+        .footer-newsletter {
+          grid-column: span 3;
+        }
+        
+        .newsletter-form {
+          display: flex;
+          flex-direction: column;
+          gap: 0.75rem;
+          margin-top: 1rem;
+        }
+        
+        .newsletter-form input {
+          padding: 0.75rem 1rem;
+          border-radius: 8px;
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          background: rgba(255, 255, 255, 0.05);
+          color: white;
+          font-family: 'Poppins', sans-serif;
+          transition: all 0.3s ease;
+        }
+        
+        .newsletter-form input:focus {
+          outline: none;
+          border-color: rgba(255, 255, 255, 0.3);
+          background: rgba(255, 255, 255, 0.1);
+          box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
+        }
+        
+        .newsletter-form input::placeholder {
+          color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .btn-subscribe {
+          font-family: 'Poppins', sans-serif;
+          font-weight: 500;
+          padding: 0.75rem 1.5rem;
+          border-radius: 8px;
+          background: linear-gradient(135deg, var(--secondary), var(--secondary-dark));
+          color: white;
+          border: none;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          position: relative;
+          overflow: hidden;
+        }
+        
+        .btn-subscribe:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .btn-subscribe:active {
+          transform: translateY(0);
+        }
+        
+        .footer-bottom {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding-top: 1.5rem;
+          border-top: 1px solid rgba(255, 255, 255, 0.1);
+          font-size: 0.875rem;
+          color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .footer-bottom-links {
+          display: flex;
+          gap: 1.5rem;
+        }
+        
+        .footer-bottom-links a {
+          color: rgba(255, 255, 255, 0.6);
+          text-decoration: none;
+          transition: color 0.3s ease;
+        }
+        
+        .footer-bottom-links a:hover {
+          color: white;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 1024px) {
+          .footer-content {
+            grid-template-columns: repeat(2, 1fr);
+          }
+          
+          .footer-brand {
+            grid-column: span 1;
+          }
+          
+          .footer-links {
+            grid-column: span 1;
+            grid-template-columns: repeat(2, 1fr);
+          }
+          
+          .footer-newsletter {
+            grid-column: span 2;
+            margin-top: 2rem;
+          }
+        }
+        
+        @media (max-width: 768px) {
+          .footer-content {
+            grid-template-columns: 1fr;
+            gap: 2rem;
+          }
+          
+          .footer-brand, .footer-links, .footer-newsletter {
+            grid-column: span 1;
+          }
+          
+          .footer-bottom {
+            flex-direction: column;
+            gap: 1rem;
+            text-align: center;
+          }
+          
+          .footer-bottom-links {
+            justify-content: center;
+          }
+        }
+        
+        /* Entrance animation */
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        
+        .modern-footer {
+          animation: fadeInUp 0.8s ease;
+        }
+      `;
+      document.head.appendChild(styleEl);
+      
+      // Add footer to the page
+      document.body.appendChild(footer);
+      
+      // Add interaction to newsletter button
+      setTimeout(() => {
+        const subscribeBtn = document.querySelector('.btn-subscribe');
+        if (subscribeBtn) {
+          subscribeBtn.addEventListener('click', function() {
+            const emailInput = this.previousElementSibling;
+            const email = emailInput.value.trim();
+            
+            if (email && email.includes('@') && email.includes('.')) {
+              emailInput.value = '';
+              
+              // Create success notification
+              const notification = document.createElement('div');
+              notification.className = 'subscribe-notification';
+              notification.textContent = 'Thank you for subscribing!';
+              
+              // Style notification
+              Object.assign(notification.style, {
+                position: 'fixed',
+                bottom: '20px',
+                right: '20px',
+                background: 'linear-gradient(135deg, var(--success), var(--success-dark))',
+                color: 'white',
+                padding: '1rem 1.5rem',
+                borderRadius: '8px',
+                boxShadow: '0 5px 15px rgba(0, 0, 0, 0.2)',
+                fontFamily: 'Poppins, sans-serif',
+                zIndex: '1000',
+                opacity: '0',
+                transform: 'translateY(10px)',
+                transition: 'opacity 0.3s ease, transform 0.3s ease'
+              });
+              
+              document.body.appendChild(notification);
+              
+              // Animate notification in and out
+              setTimeout(() => {
+                notification.style.opacity = '1';
+                notification.style.transform = 'translateY(0)';
+                
+                setTimeout(() => {
+                  notification.style.opacity = '0';
+                  notification.style.transform = 'translateY(10px)';
+                  
+                  setTimeout(() => {
+                    notification.remove();
+                  }, 300);
+                }, 3000);
+              }, 10);
+            } else {
+              emailInput.style.borderColor = '#f43f5e';
+              emailInput.style.boxShadow = '0 0 0 3px rgba(244, 63, 94, 0.2)';
+              
+              setTimeout(() => {
+                emailInput.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+                emailInput.style.boxShadow = 'none';
+              }, 2000);
+            }
+          });
+        }
+      }, 1000);
+      
+      console.log("PROFESSIONAL FOOTER LOADED");
+    });
+  </script>
+  <!-- PHYSICS ANIMATION HEADER ENHANCEMENT -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log("PHYSICS ANIMATION HEADER ENHANCEMENT LOADING");
+      
+      // Create canvas for physics particles
+      const physicsHeader = document.querySelector('.page-header');
+      
+      if (physicsHeader) {
+        // Add canvas container with proper positioning
+        const canvasContainer = document.createElement('div');
+        canvasContainer.className = 'physics-animation-container';
+        canvasContainer.style.cssText = `
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          overflow: hidden;
+          z-index: 1;
+          pointer-events: none;
+        `;
+        
+        // Create canvas element
+        const canvas = document.createElement('canvas');
+        canvas.className = 'physics-animation-canvas';
+        canvas.style.cssText = `
+          width: 100%;
+          height: 100%;
+          opacity: 0.6;
+        `;
+        canvasContainer.appendChild(canvas);
+        
+        // Add container to header (before any text elements)
+        physicsHeader.insertBefore(canvasContainer, physicsHeader.firstChild);
+        
+        // Make sure header text is above the canvas
+        const headerTitle = physicsHeader.querySelector('.title-text');
+        const headerSubtitle = physicsHeader.querySelector('.subtitle-text');
+        
+        if (headerTitle) headerTitle.style.position = 'relative';
+        if (headerTitle) headerTitle.style.zIndex = '2';
+        if (headerSubtitle) headerSubtitle.style.position = 'relative';
+        if (headerSubtitle) headerSubtitle.style.zIndex = '2';
+        
+        // Set up canvas context
+        const ctx = canvas.getContext('2d');
+        canvas.width = canvasContainer.clientWidth;
+        canvas.height = canvasContainer.clientHeight;
+        
+        // Physics particles configuration
+        const particles = [];
+        const projectiles = [];
+        const NUM_PARTICLES = 30;
+        const GRAVITY = 0.05;
+        const FRICTION = 0.99;
+        
+        // Colors matching our theme
+        const colors = [
+          'rgba(219, 234, 254, 0.8)', // Light blue
+          'rgba(191, 219, 254, 0.8)', // Lighter blue
+          'rgba(147, 197, 253, 0.8)', // Mid blue
+          'rgba(255, 237, 213, 0.8)', // Light orange
+          'rgba(254, 215, 170, 0.8)'  // Light orange
+        ];
+        
+        // Create physics particles - these will be affected by gravity
+        class Particle {
+          constructor(x, y, radius, color) {
+            this.x = x;
+            this.y = y;
+            this.radius = radius;
+            this.color = color;
+            this.velocity = {
+              x: (Math.random() - 0.5) * 2,
+              y: (Math.random() - 0.5) * 2
+            };
+            this.alpha = 1;
+            this.mass = radius;
+          }
+          
+          draw() {
+            ctx.save();
+            ctx.globalAlpha = this.alpha;
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+            ctx.fillStyle = this.color;
+            ctx.fill();
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+            ctx.stroke();
+            ctx.restore();
+          }
+          
+          update() {
+            this.draw();
+            
+            // Apply gravity and friction
+            this.velocity.y += GRAVITY * this.mass * 0.1;
+            this.velocity.x *= FRICTION;
+            this.velocity.y *= FRICTION;
+            
+            // Boundary bouncing
+            if (this.x + this.radius + this.velocity.x > canvas.width || 
+                this.x - this.radius + this.velocity.x < 0) {
+              this.velocity.x = -this.velocity.x * 0.8;
+            }
+            
+            if (this.y + this.radius + this.velocity.y > canvas.height || 
+                this.y - this.radius + this.velocity.y < 0) {
+              this.velocity.y = -this.velocity.y * 0.8;
+            } else {
+              this.velocity.y += GRAVITY;
+            }
+            
+            // Update position
+            this.x += this.velocity.x;
+            this.y += this.velocity.y;
+            
+            // Fade out slowly
+            this.alpha -= 0.003;
+          }
+        }
+        
+        // Create projectile particles - these will travel in straight lines
+        class Projectile {
+          constructor(x, y, radius, color, velocity) {
+            this.x = x;
+            this.y = y;
+            this.radius = radius;
+            this.color = color;
+            this.velocity = velocity;
+            this.alpha = 1;
+          }
+          
+          draw() {
+            ctx.save();
+            ctx.globalAlpha = this.alpha;
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+            ctx.fillStyle = this.color;
+            ctx.fill();
+            ctx.restore();
+          }
+          
+          update() {
+            this.draw();
+            this.x += this.velocity.x;
+            this.y += this.velocity.y;
+            this.alpha -= 0.01;
+          }
+        }
+        
+        // Initialize particles
+        function initParticles() {
+          for (let i = 0; i < NUM_PARTICLES; i++) {
+            const radius = Math.random() * 4 + 1;
+            const x = Math.random() * (canvas.width - radius * 2) + radius;
+            const y = Math.random() * (canvas.height - radius * 2) + radius;
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            particles.push(new Particle(x, y, radius, color));
+          }
+        }
+        
+        // Launch a new projectile
+        function launchProjectile() {
+          const angle = Math.random() * Math.PI * 2;
+          const velocity = {
+            x: Math.cos(angle) * (Math.random() * 3 + 2),
+            y: Math.sin(angle) * (Math.random() * 3 + 2)
+          };
+          
+          const radius = Math.random() * 3 + 2;
+          const color = colors[Math.floor(Math.random() * colors.length)];
+          
+          // Start projectiles from different edges
+          let x, y;
+          if (Math.random() > 0.5) {
+            x = Math.random() < 0.5 ? 0 : canvas.width;
+            y = Math.random() * canvas.height;
+          } else {
+            x = Math.random() * canvas.width;
+            y = Math.random() < 0.5 ? 0 : canvas.height;
+          }
+          
+          projectiles.push(new Projectile(x, y, radius, color, velocity));
+        }
+        
+        // Animate the canvas
+        function animate() {
+          requestAnimationFrame(animate);
+          ctx.fillStyle = 'rgba(30, 58, 138, 0.1)';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          
+          // Update and remove faded particles
+          particles.forEach((particle, index) => {
+            particle.update();
+            if (particle.alpha <= 0.05) {
+              particles.splice(index, 1);
+            }
+          });
+          
+          // Update and remove faded projectiles
+          projectiles.forEach((projectile, index) => {
+            projectile.update();
+            if (projectile.alpha <= 0.05 || 
+                projectile.x < 0 || 
+                projectile.x > canvas.width || 
+                projectile.y < 0 || 
+                projectile.y > canvas.height) {
+              projectiles.splice(index, 1);
+            }
+          });
+          
+          // Add new particles when needed
+          if (particles.length < NUM_PARTICLES) {
+            const radius = Math.random() * 4 + 1;
+            const x = Math.random() * (canvas.width - radius * 2) + radius;
+            const y = Math.random() * (canvas.height - radius * 2) + radius;
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            particles.push(new Particle(x, y, radius, color));
+          }
+        }
+        
+        // Launch projectiles periodically
+        setInterval(launchProjectile, 600);
+        
+        // Initialize and start animation
+        initParticles();
+        animate();
+        
+        // Resize canvas when window resizes
+        window.addEventListener('resize', () => {
+          canvas.width = canvasContainer.clientWidth;
+          canvas.height = canvasContainer.clientHeight;
+        });
+        
+        // Add animated text effect
+        if (headerTitle) {
+          const text = headerTitle.textContent;
+          headerTitle.innerHTML = '';
+          
+          // Create wrapper for better animation control
+          const textWrapper = document.createElement('span');
+          textWrapper.className = 'physics-title-animation';
+          headerTitle.appendChild(textWrapper);
+          
+          // Split text into individual characters for animation
+          [...text].forEach((char, i) => {
+            const charSpan = document.createElement('span');
+            charSpan.textContent = char === ' ' ? '\u00A0' : char;
+            charSpan.style.cssText = `
+              position: relative;
+              display: inline-block;
+              animation: float-char 3s ease-in-out infinite;
+              animation-delay: ${i * 0.05}s;
+            `;
+            textWrapper.appendChild(charSpan);
+          });
+          
+          // Add animations for floating characters
+          const textAnimation = document.createElement('style');
+          textAnimation.textContent = `
+            @keyframes float-char {
+              0%, 100% { transform: translateY(0); }
+              50% { transform: translateY(-10px); }
+            }
+            
+            .physics-title-animation span {
+              display: inline-block;
+              opacity: 0;
+              animation: fadeIn 0.8s forwards;
+            }
+            
+            @keyframes fadeIn {
+              from { opacity: 0; transform: translateY(20px); }
+              to { opacity: 1; transform: translateY(0); }
+            }
+            
+            .physics-title-animation {
+              background: linear-gradient(90deg, #ffffff, #90cdf4, #ffffff);
+              background-size: 200% auto;
+              -webkit-background-clip: text;
+              -webkit-text-fill-color: transparent;
+              animation: shine 3s linear infinite;
+            }
+            
+            @keyframes shine {
+              0% { background-position: 0% center; }
+              100% { background-position: 200% center; }
+            }
+          `;
+          document.head.appendChild(textAnimation);
+        }
+        
+        // Add equations floating in the background
+        const equations = [
+          'E = mc²',
+          'F = ma',
+          'v = u + at',
+          's = ut + ½at²',
+          'v² = u² + 2as',
+          'p = mv',
+          'Ek = ½mv²',
+          'W = Fd',
+          'P = W/t'
+        ];
+        
+        // Create and animate physics equations
+        for (let i = 0; i < 5; i++) {
+          const equation = document.createElement('div');
+          equation.className = 'physics-equation';
+          equation.textContent = equations[Math.floor(Math.random() * equations.length)];
+          
+          // Position randomly in the header
+          equation.style.cssText = `
+            position: absolute;
+            z-index: 1;
+            color: rgba(255, 255, 255, 0.15);
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            white-space: nowrap;
+            top: ${Math.random() * 100}%;
+            left: ${Math.random() * 100}%;
+            font-size: ${Math.random() * 20 + 10}px;
+            transform: rotate(${Math.random() * 40 - 20}deg);
+            animation: float-equation ${Math.random() * 5 + 10}s linear infinite;
+            animation-delay: ${Math.random() * 5}s;
+            pointer-events: none;
+          `;
+          
+          physicsHeader.appendChild(equation);
+        }
+        
+        // Add animation for equations
+        const equationAnimation = document.createElement('style');
+        equationAnimation.textContent = `
+          @keyframes float-equation {
+            0% { transform: translate(0, 0) rotate(${Math.random() * 40 - 20}deg); }
+            25% { transform: translate(${Math.random() * 50}px, ${Math.random() * 50}px) rotate(${Math.random() * 40 - 20}deg); }
+            50% { transform: translate(${Math.random() * 100}px, ${Math.random() * 20}px) rotate(${Math.random() * 40 - 20}deg); }
+            75% { transform: translate(${Math.random() * 50}px, ${Math.random() * 50}px) rotate(${Math.random() * 40 - 20}deg); }
+            100% { transform: translate(0, 0) rotate(${Math.random() * 40 - 20}deg); }
+          }
+        `;
+        document.head.appendChild(equationAnimation);
+      }
+      
+      console.log("PHYSICS ANIMATION HEADER ENHANCEMENT LOADED");
+    });
+  </script>
+  <!-- ENHANCED TITLE OVERLAY -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log("ENHANCED TITLE OVERLAY LOADING");
+      
+      // Find the header and existing title
+      const header = document.querySelector('.page-header');
+      const existingTitle = header?.querySelector('.title-text');
+      const existingSubtitle = header?.querySelector('.subtitle-text');
+      
+      if (header && existingTitle) {
+        // Get the original title text
+        const titleText = existingTitle.textContent || 'Physics Lab';
+        
+        // Create a container for the enhanced title
+        const enhancedTitleContainer = document.createElement('div');
+        enhancedTitleContainer.className = 'enhanced-title-container';
+        enhancedTitleContainer.style.cssText = `
+          position: relative;
+          z-index: 10;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          width: 100%;
+          padding: 1.5rem 0;
+          text-align: center;
+        `;
+        
+        // Create the main title
+        const enhancedTitle = document.createElement('h1');
+        enhancedTitle.className = 'enhanced-title';
+        enhancedTitle.textContent = titleText;
+        
+        // Create a divider line
+        const divider = document.createElement('div');
+        divider.className = 'title-divider';
+        divider.style.cssText = `
+          width: 80px;
+          height: 4px;
+          margin: 10px 0;
+          background: linear-gradient(90deg, rgba(255,255,255,0.3), rgba(255,255,255,0.9), rgba(255,255,255,0.3));
+          border-radius: 2px;
+        `;
+        
+        // Add enhanced styling
+        const titleStyles = document.createElement('style');
+        titleStyles.textContent = `
+          .enhanced-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            color: white;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            margin: 0;
+            padding: 0;
+            transform: translateY(0);
+            position: relative;
+            text-transform: uppercase;
+          }
+          
+          .enhanced-title::after {
+            content: '${titleText}';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #3b82f6, #8b5cf6, #3b82f6);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            z-index: -1;
+            filter: blur(8px);
+            opacity: 0.7;
+            animation: shine 5s linear infinite;
+          }
+          
+          .enhanced-subtitle {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 400;
+            color: rgba(255, 255, 255, 0.9);
+            margin: 0.5rem 0 0 0;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+            max-width: 600px;
+          }
+          
+          @keyframes shine {
+            0% { background-position: 0% center; }
+            100% { background-position: 200% center; }
+          }
+          
+          /* Physics icon decoration */
+          .physics-icon {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            fill: rgba(255, 255, 255, 0.15);
+            animation: float 5s ease-in-out infinite;
+          }
+          
+          .physics-icon:nth-child(1) {
+            top: -15px;
+            left: 10%;
+            animation-delay: 0s;
+            transform: rotate(15deg);
+          }
+          
+          .physics-icon:nth-child(2) {
+            bottom: -10px;
+            right: 15%;
+            animation-delay: 1.5s;
+            transform: rotate(-10deg);
+          }
+          
+          @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(10deg); }
+          }
+          
+          /* Responsive adjustments */
+          @media (max-width: 768px) {
+            .enhanced-title {
+              font-size: 2rem;
+            }
+            
+            .enhanced-subtitle {
+              font-size: 1rem;
+              padding: 0 1rem;
+            }
+          }
+          
+          @media (max-width: 480px) {
+            .enhanced-title {
+              font-size: 1.75rem;
+            }
+            
+            .enhanced-subtitle {
+              font-size: 0.9rem;
+            }
+          }
+        `;
+        document.head.appendChild(titleStyles);
+        
+        // Create physics icons (SVG)
+        const createPhysicsIcon = (svgPath) => {
+          const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+          svg.setAttribute('class', 'physics-icon');
+          svg.setAttribute('viewBox', '0 0 24 24');
+          svg.innerHTML = svgPath;
+          return svg;
+        };
+        
+        // Add atom icon
+        const atomIcon = createPhysicsIcon(`
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/>
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/>
+        `);
+        
+        // Add formula icon
+        const formulaIcon = createPhysicsIcon(`
+          <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14h-2V9h-2V7h4v10z"/>
+        `);
+        
+        // Hide the original title and subtitle
+        existingTitle.style.display = 'none';
+        if (existingSubtitle) existingSubtitle.style.display = 'none';
+        
+        // Create new enhanced subtitle
+        const enhancedSubtitle = document.createElement('p');
+        enhancedSubtitle.className = 'enhanced-subtitle';
+        enhancedSubtitle.textContent = existingSubtitle ? existingSubtitle.textContent : 'Master the principles of motion, energy, and forces';
+        
+        // Assemble the enhanced title container
+        enhancedTitleContainer.appendChild(atomIcon.cloneNode(true));
+        enhancedTitleContainer.appendChild(formulaIcon.cloneNode(true));
+        enhancedTitleContainer.appendChild(enhancedTitle);
+        enhancedTitleContainer.appendChild(divider);
+        enhancedTitleContainer.appendChild(enhancedSubtitle);
+        
+        // Insert the enhanced title into the header
+        header.insertBefore(enhancedTitleContainer, header.firstChild);
+        
+        // Add entrance animation
+        enhancedTitle.style.cssText = `
+          opacity: 0;
+          transform: scale(0.9) translateY(-20px);
+          transition: opacity 0.8s ease, transform 0.8s ease;
+        `;
+        
+        enhancedSubtitle.style.cssText = `
+          opacity: 0;
+          transform: translateY(20px);
+          transition: opacity 0.8s ease 0.2s, transform 0.8s ease 0.2s;
+        `;
+        
+        divider.style.cssText += `
+          opacity: 0;
+          width: 0;
+          transition: opacity 0.8s ease 0.1s, width 0.8s ease 0.1s;
+        `;
+        
+        // Trigger animation after a short delay
+        setTimeout(() => {
+          enhancedTitle.style.opacity = '1';
+          enhancedTitle.style.transform = 'scale(1) translateY(0)';
+          
+          enhancedSubtitle.style.opacity = '1';
+          enhancedSubtitle.style.transform = 'translateY(0)';
+          
+          divider.style.opacity = '1';
+          divider.style.width = '80px';
+        }, 100);
+      }
+      
+      console.log("ENHANCED TITLE OVERLAY LOADED");
+    });
+  </script>
+  <!-- SIMULATION STABILITY FIX -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log("SIMULATION STABILITY FIX LOADING");
+      
+      // Create a stability fix style
+      const stabilityStyle = document.createElement('style');
+      stabilityStyle.textContent = `
+        /* Disable 3D effects on simulation area */
+        .section-simulation .card:first-child,
+        .card:has(#canvas),
+        #canvas,
+        .trajectory-element {
+          transform: none !important;
+          transition: box-shadow 0.3s ease !important;
+          perspective: none !important;
+          animation: none !important;
+        }
+        
+        /* Ensure the canvas parent doesn't rotate */
+        #canvas {
+          transform: none !important;
+        }
+        
+        /* Still allow subtle hover effects for the card, but no rotation */
+        .section-simulation .card:first-child:hover {
+          transform: none !important;
+          box-shadow: var(--shadow-lg) !important;
+        }
+      `;
+      document.head.appendChild(stabilityStyle);
+      
+      // Find and specifically disable 3D effects on simulation
+      const disableSimulationEffects = () => {
+        // Find simulation card containing canvas
+        const simulationCard = document.querySelector('.card:has(#canvas)') || 
+                              document.querySelector('.section-simulation .card:first-child');
+        
+        // Find canvas element
+        const canvas = document.querySelector('#canvas');
+        
+        if (simulationCard) {
+          // Remove event listeners that cause rotation
+          simulationCard.onmousemove = null;
+          simulationCard.onmouseleave = null;
+          
+          // Ensure no transform is applied
+          simulationCard.style.transform = 'none';
+          simulationCard.style.transition = 'box-shadow 0.3s ease';
+          
+          console.log("Simulation card stabilized");
+        }
+        
+        if (canvas) {
+          // Ensure canvas parent doesn't have transform
+          if (canvas.parentElement) {
+            canvas.parentElement.style.transform = 'none';
+          }
+          console.log("Canvas stabilized");
+        }
+      };
+      
+      // Run immediately
+      setTimeout(disableSimulationEffects, 500);
+      
+      // Also run after any potential DOM changes
+      const observer = new MutationObserver(() => {
+        disableSimulationEffects();
+      });
+      
+      observer.observe(document.body, { 
+        childList: true, 
+        subtree: true 
+      });
+      
+      console.log("SIMULATION STABILITY FIX LOADED");
+    });
+  </script>
+  <!-- SIMULATION HOVER EFFECT RESTORATION -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log("SIMULATION HOVER EFFECT RESTORATION LOADING");
+      
+      // Create style to remove automatic animations but keep hover effects
+      const hoverStyle = document.createElement('style');
+      hoverStyle.textContent = `
+        /* Remove automatic animations but keep hover capability */
+        .section-simulation .card:first-child,
+        .card:has(#canvas),
+        #canvas-container,
+        .trajectory-element {
+          animation: none !important;
+          transform: none !important;
+          transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+        }
+        
+        /* Restore hover 3D effect only */
+        .section-simulation .card:first-child:hover,
+        .card:has(#canvas):hover {
+          transform: perspective(1000px) rotateX(5deg) rotateY(5deg) !important;
+          box-shadow: var(--shadow-lg) !important;
+        }
+        
+        /* Ensure canvas doesn't move independently */
+        #canvas {
+          transform: none !important;
+        }
+      `;
+      document.head.appendChild(hoverStyle);
+      
+      // Find simulation cards and add manual hover effect
+      const findAndEnhanceSimulationCard = () => {
+        // Multiple selectors to find the simulation card
+        const simulationCard = document.querySelector('.card:has(#canvas)') || 
+                              document.querySelector('.section-simulation .card:first-child') ||
+                              document.querySelector('.card:has(canvas)');
+        
+        if (simulationCard) {
+          // Remove any existing automatic animation/rotation
+          simulationCard.style.animation = 'none';
+          simulationCard.style.transform = 'none';
+          
+          // Clear automatic movement handlers
+          simulationCard.onmousemove = null;
+          
+          // Add manual hover 3D effect
+          simulationCard.addEventListener('mousemove', function(e) {
+            // Only apply effect while hovering
+            const rect = this.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            
+            // Calculate rotation angles (reduced intensity)
+            const rotateX = (y - centerY) / 30;
+            const rotateY = (centerX - x) / 30;
+            
+            // Apply the transform
+            this.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+          });
+          
+          // Reset when not hovering
+          simulationCard.addEventListener('mouseleave', function() {
+            this.style.transform = 'perspective(1000px) rotateX(0) rotateY(0)';
+          });
+          
+          console.log("Simulation card hover effect restored");
+        }
+      };
+      
+      // Run after a delay to ensure the DOM is ready
+      setTimeout(findAndEnhanceSimulationCard, 1000);
+      
+      // Also run after any content changes
+      const observer = new MutationObserver((mutations) => {
+        findAndEnhanceSimulationCard();
+      });
+      
+      observer.observe(document.body, { 
+        childList: true, 
+        subtree: true 
+      });
+      
+      console.log("SIMULATION HOVER EFFECT RESTORATION LOADED");
+    });
+  </script>
+  <!-- MOBILE TITLE FIX -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log("MOBILE TITLE FIX LOADING");
+      
+      // Create responsive title styles
+      const mobileTitleFix = document.createElement('style');
+      mobileTitleFix.textContent = `
+        /* Better responsive sizing for title */
+        .enhanced-title-container {
+          width: 100% !important;
+          padding: 1rem 0.5rem !important;
+          overflow: hidden !important;
+        }
+        
+        /* Adjustments for various screen sizes */
+        @media (max-width: 768px) {
+          .enhanced-title {
+            font-size: 1.75rem !important;
+            letter-spacing: -0.02em !important;
+            line-height: 1.2 !important;
+            padding: 0 10px !important;
+            word-break: keep-all !important;
+            white-space: normal !important;
+          }
+          
+          .enhanced-subtitle {
+            font-size: 0.95rem !important;
+            padding: 0 1rem !important;
+            max-width: 100% !important;
+          }
+          
+          /* Adjust physics icons for mobile */
+          .physics-icon {
+            width: 30px !important;
+            height: 30px !important;
+          }
+        }
+        
+        /* Even smaller screens */
+        @media (max-width: 480px) {
+          .enhanced-title {
+            font-size: 1.5rem !important;
+            max-width: 100% !important;
+            text-align: center !important;
+            padding: 0 5px !important;
+          }
+          
+          .enhanced-subtitle {
+            font-size: 0.85rem !important;
+            text-align: center !important;
+            max-width: 100% !important;
+            padding: 0 0.5rem !important;
+          }
+          
+          .title-divider {
+            width: 60px !important;
+            height: 3px !important;
+            margin: 8px 0 !important;
+          }
+          
+          /* Hide or reduce decorative elements on very small screens */
+          .physics-icon {
+            width: 24px !important;
+            height: 24px !important;
+            opacity: 0.5 !important;
+          }
+        }
+        
+        /* Ensure any title animation doesn't cause overflow */
+        .enhanced-title::after {
+          content: '' !important; /* Remove duplicate text that might cause overflow */
+        }
+      `;
+      document.head.appendChild(mobileTitleFix);
+      
+      // Function to fix any existing title issues
+      const fixMobileTitle = () => {
+        const enhancedTitle = document.querySelector('.enhanced-title');
+        const enhancedSubtitle = document.querySelector('.enhanced-subtitle');
+        const titleContainer = document.querySelector('.enhanced-title-container');
+        
+        if (enhancedTitle) {
+          // Ensure mobile compatibility
+          enhancedTitle.style.maxWidth = '100%';
+          enhancedTitle.style.overflowWrap = 'break-word';
+          enhancedTitle.style.wordWrap = 'break-word';
+          enhancedTitle.style.hyphens = 'auto';
+          
+          // If title is still too long for mobile, try to shorten it
+          if (window.innerWidth < 480 && enhancedTitle.textContent.length > 15) {
+            // Store original text in data attribute if not already stored
+            if (!enhancedTitle.dataset.originalText) {
+              enhancedTitle.dataset.originalText = enhancedTitle.textContent;
+            }
+            
+            // For very small screens, consider abbreviating title
+            let shortTitle = enhancedTitle.dataset.originalText;
+            if (shortTitle.toLowerCase().includes('physics')) {
+              shortTitle = 'Physics Lab';
+            } else if (shortTitle.length > 20) {
+              shortTitle = shortTitle.split(' ').slice(0, 2).join(' ');
+            }
+            
+            enhancedTitle.textContent = shortTitle;
+          } else if (enhancedTitle.dataset.originalText && window.innerWidth >= 480) {
+            // Restore original text on larger screens
+            enhancedTitle.textContent = enhancedTitle.dataset.originalText;
+          }
+        }
+        
+        if (titleContainer) {
+          // Ensure container is responsive
+          titleContainer.style.width = '100%';
+          titleContainer.style.boxSizing = 'border-box';
+        }
+      };
+      
+      // Run immediately
+      fixMobileTitle();
+      
+      // Run on resize
+      window.addEventListener('resize', fixMobileTitle);
+      
+      console.log("MOBILE TITLE FIX LOADED");
+    });
+  </script>
+  <!-- PROFESSIONAL COLOR SCHEME AND FORMATTING REFINEMENT -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log("PROFESSIONAL COLOR SCHEME AND FORMATTING REFINEMENT LOADING");
+      
+      // Add modern color palette
+      const colorScheme = document.createElement('style');
+      colorScheme.id = 'professional-color-scheme';
+      colorScheme.textContent = `
+        :root {
+          /* Primary palette */
+          --primary: #1a56db;
+          --primary-dark: #1e429f;
+          --primary-light: #3b82f6;
+          --primary-gradient: linear-gradient(135deg, #1e429f, #3b82f6);
+          
+          /* Secondary palette */
+          --secondary: #7c3aed;
+          --secondary-dark: #6d28d9;
+          --secondary-light: #8b5cf6;
+          --secondary-gradient: linear-gradient(135deg, #6d28d9, #8b5cf6);
+          
+          /* Neutral palette */
+          --neutral-50: #f9fafb;
+          --neutral-100: #f3f4f6;
+          --neutral-200: #e5e7eb;
+          --neutral-300: #d1d5db;
+          --neutral-400: #9ca3af;
+          --neutral-500: #6b7280;
+          --neutral-600: #4b5563;
+          --neutral-700: #374151;
+          --neutral-800: #1f2937;
+          --neutral-900: #111827;
+          --neutral-950: #0f172a;
+          
+          /* Accent colors */
+          --accent-blue: #3b82f6;
+          --accent-purple: #8b5cf6;
+          --accent-indigo: #6366f1;
+          --accent-cyan: #0ea5e9;
+          --accent-teal: #14b8a6;
+          --accent-green: #22c55e;
+          --accent-red: #ef4444;
+          --accent-orange: #f97316;
+          --accent-yellow: #eab308;
+          
+          /* Semantic colors */
+          --success: #10b981;
+          --warning: #f59e0b;
+          --error: #ef4444;
+          --info: #3b82f6;
+          
+          /* Background colors */
+          --bg-body: #f9fafb;
+          --bg-card: #ffffff;
+          --bg-header: #0f172a;
+          --bg-footer: #0f172a;
+          
+          /* Text colors */
+          --text-primary: #111827;
+          --text-secondary: #4b5563;
+          --text-tertiary: #6b7280;
+          --text-muted: #9ca3af;
+          --text-light: #ffffff;
+          --text-link: #2563eb;
+          
+          /* Border colors */
+          --border-light: #e5e7eb;
+          --border-medium: #d1d5db;
+          --border-focus: #3b82f6;
+          
+          /* Shadow values with blue tint */
+          --shadow-sm: 0 1px 2px 0 rgba(30, 58, 138, 0.05);
+          --shadow: 0 1px 3px 0 rgba(30, 58, 138, 0.1), 0 1px 2px -1px rgba(30, 58, 138, 0.1);
+          --shadow-md: 0 4px 6px -1px rgba(30, 58, 138, 0.1), 0 2px 4px -2px rgba(30, 58, 138, 0.1);
+          --shadow-lg: 0 10px 15px -3px rgba(30, 58, 138, 0.1), 0 4px 6px -4px rgba(30, 58, 138, 0.1);
+          --shadow-xl: 0 20px 25px -5px rgba(30, 58, 138, 0.1), 0 8px 10px -6px rgba(30, 58, 138, 0.1);
+          --shadow-inner: inset 0 2px 4px 0 rgba(30, 58, 138, 0.05);
+          
+          /* Timing functions */
+          --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+          --ease-in: cubic-bezier(0.4, 0, 1, 1);
+          --ease-out: cubic-bezier(0, 0, 0.2, 1);
+          --ease-linear: linear;
+        }
+        
+        /* Apply professional colors */
+        body {
+          background-color: var(--bg-body);
+          color: var(--text-primary);
+        }
+        
+        /* Header styling */
+        .page-header {
+          background: var(--neutral-950);
+          background: linear-gradient(135deg, var(--neutral-950), var(--neutral-900));
+          border-bottom: none;
+          box-shadow: var(--shadow-lg);
+        }
+        
+        /* Enhanced title styling */
+        .enhanced-title {
+          color: white;
+          text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        .enhanced-title::after {
+          background: linear-gradient(45deg, var(--primary-light), var(--secondary-light), var(--primary-light));
+          background-size: 200% auto;
+        }
+        
+        .enhanced-subtitle {
+          color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .title-divider {
+          background: linear-gradient(90deg, rgba(255,255,255,0.1), rgba(255,255,255,0.9), rgba(255,255,255,0.1));
+        }
+        
+        /* Card styling */
+        .card {
+          background-color: var(--bg-card);
+          border: none;
+          box-shadow: var(--shadow-md);
+          transition: transform 0.2s var(--ease-out), box-shadow 0.2s var(--ease-out);
+          border-radius: 12px;
+          overflow: hidden;
+        }
+        
+        .card:hover {
+          box-shadow: var(--shadow-lg);
+        }
+        
+        .card-header {
+          background-color: var(--neutral-50);
+          border-bottom: 1px solid var(--border-light);
+          color: var(--neutral-800);
+          font-weight: 600;
+        }
+        
+        /* Button styling */
+        .btn {
+          border-radius: 8px;
+          font-weight: 500;
+          transition: all 0.2s var(--ease-out);
+          box-shadow: var(--shadow-sm);
+          border: none;
+        }
+        
+        .btn-primary {
+          background: var(--primary-gradient);
+          color: white;
+        }
+        
+        .btn-primary:hover {
+          background: linear-gradient(135deg, var(--primary), var(--primary-light));
+          box-shadow: var(--shadow-md);
+        }
+        
+        .btn-secondary {
+          background: var(--secondary-gradient);
+          color: white;
+        }
+        
+        .btn-secondary:hover {
+          background: linear-gradient(135deg, var(--secondary), var(--secondary-light));
+          box-shadow: var(--shadow-md);
+        }
+        
+        .btn-outline {
+          background: transparent;
+          border: 1px solid var(--neutral-300);
+          color: var(--neutral-700);
+        }
+        
+        .btn-outline:hover {
+          border-color: var(--primary);
+          color: var(--primary);
+        }
+        
+        /* Form control styling */
+        input, select, textarea {
+          border: 1px solid var(--border-medium);
+          border-radius: 8px;
+          transition: all 0.2s var(--ease-out);
+        }
+        
+        input:focus, select:focus, textarea:focus {
+          border-color: var(--border-focus);
+          box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+          outline: none;
+        }
+        
+        /* Slider controls */
+        input[type="range"] {
+          -webkit-appearance: none;
+          height: 6px;
+          background: linear-gradient(to right, var(--primary-light), var(--secondary-light));
+          border-radius: 3px;
+          border: none;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+          -webkit-appearance: none;
+          width: 18px;
+          height: 18px;
+          background: white;
+          border-radius: 50%;
+          border: 2px solid var(--primary);
+          box-shadow: var(--shadow-md);
+          cursor: pointer;
+        }
+        
+        /* Footer styling */
+        .modern-footer {
+          background: linear-gradient(135deg, var(--neutral-950), var(--neutral-900));
+          color: white;
+          border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .footer-links a {
+          color: var(--neutral-300);
+          transition: color 0.2s var(--ease-out);
+        }
+        
+        .footer-links a:hover {
+          color: white;
+        }
+        
+        /* Physics animation colors */
+        .physics-animation-canvas {
+          opacity: 0.6;
+        }
+        
+        /* Explanation box styling */
+        .explanation-box {
+          border-left: 4px solid var(--primary);
+          background-color: rgba(59, 130, 246, 0.05);
+        }
+        
+        .explanation-box h4 {
+          color: var(--primary);
+        }
+        
+        /* Data display styling */
+        .data-item {
+          border: 1px solid var(--border-light);
+          border-radius: 8px;
+          background-color: var(--neutral-50);
+        }
+        
+        .data-label {
+          color: var(--text-secondary);
+          font-weight: 500;
+        }
+        
+        .data-value {
+          color: var(--primary);
+          font-weight: 600;
+        }
+        
+        /* Mobile specific refinements */
+        @media (max-width: 768px) {
+          /* Enhance contrast for better readability */
+          .card-header {
+            background-color: var(--neutral-100);
+            font-weight: 600;
+          }
+          
+          /* More distinct section boundaries */
+          .section {
+            margin-bottom: 1.5rem;
+          }
+          
+          /* Ensure proper container padding */
+          .container {
+            padding: 0.75rem;
+          }
+          
+          /* Full width buttons */
+          .btn {
+            padding: 0.75rem !important;
+            display: block;
+            width: 100%;
+            margin: 0.5rem 0;
+          }
+          
+          /* Optimize form controls for touch */
+          label {
+            margin-bottom: 0.5rem;
+            display: block;
+            font-weight: 500;
+          }
+          
+          input, select {
+            font-size: 16px !important; /* Prevent iOS zoom */
+            padding: 0.75rem !important;
+          }
+          
+          /* Enhanced touch targets */
+          input[type="range"] {
+            height: 30px !important;
+            padding: 0 !important;
+          }
+          
+          input[type="range"]::-webkit-slider-thumb {
+            width: 24px !important;
+            height: 24px !important;
+          }
+          
+          /* Proper spacing */
+          .card {
+            margin-bottom: 1rem;
+          }
+          
+          /* Title adjustments */
+          .enhanced-title-container {
+            padding: 1rem 0.5rem !important; 
+          }
+          
+          .enhanced-title {
+            font-size: 1.5rem !important;
+            white-space: nowrap !important;
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
+          }
+          
+          /* Fix for any canvas overflow issues */
+          canvas {
+            max-width: 100% !important;
+            height: auto !important;
+            display: block !important;
+          }
+          
+          /* Layout fixes for footer */
+          .footer-content {
+            padding: 1.5rem 1rem !important;
+          }
+          
+          .footer-bottom {
+            padding: 1.25rem 1rem !important; 
+          }
+        }
+        
+        /* Extra small mobile adjustments */
+        @media (max-width: 480px) {
+          /* Even more compact layout */
+          .card-header {
+            padding: 0.875rem 1rem !important;
+          }
+          
+          .card-body {
+            padding: 1rem !important;
+          }
+          
+          /* Ensure single line title */
+          .enhanced-title {
+            font-size: 1.25rem !important;
+          }
+          
+          /* List formatting */
+          ul, ol {
+            padding-left: 1.25rem !important;
+          }
+          
+          /* Control label spacing */
+          .control-label {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 1.25rem !important;
+          }
+          
+          .explanation-box {
+            padding: 0.75rem !important;
+            margin-bottom: 1rem !important;
+          }
+        }
+        
+        /* Fix any grid layout issues */
+        .grid, .row {
+          display: grid;
+        }
+        
+        @media (max-width: 768px) {
+          .grid, .row {
+            grid-template-columns: 1fr !important;
+            gap: 1rem !important;
+          }
+        }
+        
+        /* Make animations more subtle on mobile */
+        @media (max-width: 768px) {
+          .physics-animation-canvas {
+            opacity: 0.4 !important;
+          }
+          
+          /* Reduce motion for better performance */
+          @media (prefers-reduced-motion) {
+            *, *::before, *::after {
+              animation-duration: 0.01ms !important;
+              animation-iteration-count: 1 !important;
+              transition-duration: 0.01ms !important;
+              scroll-behavior: auto !important;
+            }
+          }
+        }
+      `;
+      document.head.appendChild(colorScheme);
+      
+      // Fix any remaining layout issues on mobile
+      const fixRemainingLayoutIssues = () => {
+        // Fix any content that might be too wide
+        document.querySelectorAll('*').forEach(el => {
+          if (el.scrollWidth > window.innerWidth) {
+            // Add debug to find oversized elements
+            console.log('Oversized element:', el);
+            
+            // Fix oversized elements
+            if (el.tagName !== 'BODY' && el.tagName !== 'HTML') {
+              el.style.maxWidth = '100%';
+              el.style.overflowX = 'hidden';
+            }
+          }
+        });
+        
+        // Ensure proper input control spacing
+        document.querySelectorAll('input[type="range"]').forEach(slider => {
+          const parent = slider.parentElement;
+          if (parent) {
+            parent.style.marginBottom = '1.5rem';
+          }
+          
+          // Ensure labels are properly positioned
+          const prevSibling = slider.previousElementSibling;
+          if (prevSibling && prevSibling.tagName === 'LABEL') {
+            prevSibling.style.display = 'block';
+            prevSibling.style.marginBottom = '0.5rem';
+          }
+        });
+        
+        // Fix button container layouts
+        document.querySelectorAll('.btn-container, .button-container').forEach(container => {
+          if (window.innerWidth <= 768) {
+            container.style.display = 'flex';
+            container.style.flexDirection = 'column';
+            container.style.gap = '0.5rem';
+            
+            // Make buttons full width on mobile
+            container.querySelectorAll('.btn').forEach(btn => {
+              btn.style.width = '100%';
+              btn.style.margin = '0.25rem 0';
+            });
+          }
+        });
+        
+        // Fix canvas container size issues
+        const canvasContainer = document.querySelector('#canvas-container');
+        if (canvasContainer) {
+          canvasContainer.style.width = '100%';
+          canvasContainer.style.overflow = 'hidden';
+        }
+        
+        // Fix table display on mobile
+        document.querySelectorAll('table').forEach(table => {
+          if (window.innerWidth <= 768) {
+            table.style.display = 'block';
+            table.style.width = '100%';
+            table.style.overflowX = 'auto';
+          }
+        });
+      };
+      
+      // Run after a delay to ensure all other scripts have run
+      setTimeout(fixRemainingLayoutIssues, 2000);
+      
+      // Also run on resize
+      window.addEventListener('resize', () => {
+        setTimeout(fixRemainingLayoutIssues, 200);
+      });
+      
+      console.log("PROFESSIONAL COLOR SCHEME AND FORMATTING REFINEMENT LOADED");
+    });
+  </script>
+  <!-- HARMONIOUS COLOR SCHEME FIX -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log("HARMONIOUS COLOR SCHEME FIX LOADING");
+      
+      // Create a more consistent, professional color palette
+      const improvedColorScheme = document.createElement('style');
+      improvedColorScheme.id = 'harmonious-color-scheme';
+      improvedColorScheme.textContent = `
+        :root {
+          /* Primary color - Teal/Blue */
+          --primary: #0F766E;
+          --primary-dark: #0E6B62;
+          --primary-light: #14B8A6;
+          --primary-gradient: linear-gradient(135deg, #0F766E, #14B8A6);
+          --primary-transparent: rgba(15, 118, 110, 0.1);
+          
+          /* Secondary color - Amber/Orange */
+          --secondary: #F97316;
+          --secondary-dark: #EA580C;
+          --secondary-light: #FB923C;
+          --secondary-gradient: linear-gradient(135deg, #EA580C, #FB923C);
+          --secondary-transparent: rgba(249, 115, 22, 0.1);
+          
+          /* Neutral colors */
+          --neutral-50: #F8FAFC;
+          --neutral-100: #F1F5F9;
+          --neutral-200: #E2E8F0;
+          --neutral-300: #CBD5E1;
+          --neutral-400: #94A3B8;
+          --neutral-500: #64748B;
+          --neutral-600: #475569;
+          --neutral-700: #334155;
+          --neutral-800: #1E293B;
+          --neutral-900: #0F172A;
+          
+          /* Accent colors - used sparingly */
+          --accent-purple: #8B5CF6;
+          --accent-rose: #F43F5E;
+          --accent-green: #10B981;
+          
+          /* Semantic colors - consistent with primary/secondary */
+          --success: #10B981;
+          --success-light: #D1FAE5;
+          --warning: #F97316;
+          --warning-light: #FFEDD5;
+          --error: #EF4444;
+          --error-light: #FEE2E2;
+          --info: #0F766E;
+          --info-light: #CCFBF1;
+          
+          /* Background and text */
+          --bg-body: #F8FAFC;
+          --bg-card: #FFFFFF;
+          --bg-card-alt: #F1F5F9;
+          --bg-header: #0F172A;
+          --bg-footer: #0F172A;
+          
+          /* Text colors */
+          --text-primary: #0F172A;
+          --text-secondary: #334155;
+          --text-tertiary: #64748B;
+          --text-light: #FFFFFF;
+          --text-link: #0F766E;
+          
+          /* Border colors */
+          --border-light: #E2E8F0;
+          --border-medium: #CBD5E1;
+          --border-focus: #14B8A6;
+          
+          /* Shadows - with teal tint */
+          --shadow-sm: 0 1px 2px rgba(15, 118, 110, 0.05);
+          --shadow: 0 1px 3px rgba(15, 118, 110, 0.1), 0 1px 2px rgba(15, 118, 110, 0.06);
+          --shadow-md: 0 4px 6px rgba(15, 118, 110, 0.07), 0 2px 4px rgba(15, 118, 110, 0.06);
+          --shadow-lg: 0 10px 15px rgba(15, 118, 110, 0.05), 0 4px 6px rgba(15, 118, 110, 0.05);
+          --shadow-xl: 0 20px 25px rgba(15, 118, 110, 0.04), 0 10px 10px rgba(15, 118, 110, 0.03);
+        }
+        
+        /* Apply the consistent color scheme throughout */
+        
+        /* Base elements */
+        body {
+          background-color: var(--bg-body);
+          color: var(--text-primary);
+        }
+        
+        a {
+          color: var(--text-link);
+        }
+        
+        a:hover {
+          color: var(--primary-dark);
+        }
+        
+        /* Header styling */
+        .page-header {
+          background: var(--primary-gradient);
+          border-bottom: none;
+          box-shadow: var(--shadow-lg);
+        }
+        
+        /* Title styling */
+        .enhanced-title {
+          color: var(--text-light);
+          text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        
+        .enhanced-subtitle {
+          color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .title-divider {
+          background: rgba(255, 255, 255, 0.5);
+        }
+        
+        /* Card styling */
+        .card {
+          background-color: var(--bg-card);
+          border: none;
+          box-shadow: var(--shadow);
+          transition: box-shadow 0.3s ease, transform 0.3s ease;
+          border-radius: 10px;
+        }
+        
+        .card:hover {
+          box-shadow: var(--shadow-md);
+        }
+        
+        .card-header {
+          background-color: var(--primary);
+          color: var(--text-light);
+          font-weight: 500;
+          border-bottom: none;
+          border-radius: 10px 10px 0 0;
+        }
+        
+        /* Button styling */
+        .btn {
+          font-weight: 500;
+          border-radius: 8px;
+          transition: all 0.2s ease;
+          box-shadow: var(--shadow-sm);
+        }
+        
+        .btn-primary {
+          background: var(--primary);
+          color: white;
+          border: none;
+        }
+        
+        .btn-primary:hover {
+          background: var(--primary-dark);
+          box-shadow: var(--shadow-md);
+          transform: translateY(-1px);
+        }
+        
+        .btn-secondary {
+          background: var(--secondary);
+          color: white;
+          border: none;
+        }
+        
+        .btn-secondary:hover {
+          background: var(--secondary-dark);
+          box-shadow: var(--shadow-md);
+          transform: translateY(-1px);
+        }
+        
+        .btn-success {
+          background: var(--success);
+          color: white;
+          border: none;
+        }
+        
+        /* Sliders */
+        input[type="range"] {
+          appearance: none;
+          background: transparent;
+          width: 100%;
+        }
+        
+        input[type="range"]::-webkit-slider-runnable-track {
+          height: 8px;
+          background: var(--neutral-200);
+          border-radius: 4px;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+          appearance: none;
+          width: 20px;
+          height: 20px;
+          background: var(--secondary);
+          border-radius: 50%;
+          margin-top: -6px;
+          border: 2px solid white;
+          cursor: pointer;
+          box-shadow: var(--shadow);
+        }
+        
+        input[type="range"]:focus::-webkit-slider-thumb {
+          background: var(--secondary-dark);
+          box-shadow: 0 0 0 3px var(--secondary-transparent);
+        }
+        
+        /* Labels and text */
+        .label-text {
+          color: var(--text-secondary);
+          font-weight: 500;
+        }
+        
+        .value-display {
+          color: var(--primary);
+          font-weight: 600;
+        }
+        
+        /* Explanation boxes */
+        .explanation-box {
+          background-color: var(--primary-transparent);
+          border-left: 3px solid var(--primary);
+          border-radius: 0 8px 8px 0;
+        }
+        
+        .explanation-box h4 {
+          color: var(--primary);
+        }
+        
+        /* Footer styling */
+        .modern-footer {
+          background-color: var(--bg-footer);
+          color: var(--text-light);
+        }
+        
+        .footer-container {
+          background: linear-gradient(to bottom, var(--neutral-900), var(--neutral-800));
+        }
+        
+        .footer-content h3 {
+          color: var(--text-light);
+        }
+        
+        .footer-content p {
+          color: var(--neutral-300);
+        }
+        
+        .footer-links h4 {
+          color: var(--neutral-200);
+        }
+        
+        .footer-links a {
+          color: var(--neutral-400);
+        }
+        
+        .footer-links a:hover {
+          color: var(--primary-light);
+        }
+        
+        .footer-bottom {
+          background-color: rgba(0, 0, 0, 0.2);
+        }
+        
+        .footer-newsletter input[type="email"] {
+          background-color: rgba(255, 255, 255, 0.05);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          color: var(--text-light);
+        }
+        
+        .footer-newsletter button {
+          background: var(--secondary-gradient);
+        }
+        
+        /* Physics animation */
+        .physics-animation-canvas {
+          opacity: 0.5;
+        }
+        
+        .physics-icon svg {
+          fill: var(--text-light);
+          stroke: var(--text-light);
+        }
+        
+        /* Data display */
+        .data-item {
+          border: 1px solid var(--border-light);
+          background-color: var(--neutral-50);
+        }
+        
+        .data-item-label {
+          color: var(--text-tertiary);
+        }
+        
+        .data-item-value {
+          color: var(--primary);
+          font-weight: 600;
+        }
+        
+        /* Mobile-specific adjustments */
+        @media (max-width: 768px) {
+          .card-header {
+            padding: 0.9rem 1.1rem !important;
+          }
+          
+          .btn {
+            box-shadow: var(--shadow);
+          }
+          
+          .physics-animation-canvas {
+            opacity: 0.3;
+          }
+          
+          .explanation-box {
+            background-color: var(--primary-transparent);
+            margin-bottom: 1rem !important;
+          }
+        }
+      `;
+      
+      // Remove any previous color schemes
+      const oldSchemes = document.querySelectorAll('[id$="-color-scheme"]');
+      oldSchemes.forEach(scheme => scheme.remove());
+      
+      // Add the new color scheme
+      document.head.appendChild(improvedColorScheme);
+      
+      console.log("HARMONIOUS COLOR SCHEME FIX LOADED");
+    });
+  </script>
+  <!-- COHESIVE BLUE COLOR SCHEME FIX -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log("COHESIVE BLUE COLOR SCHEME FIX LOADING");
+      
+      // Create a consistent blue color palette that matches the header
+      const cohesiveColorScheme = document.createElement('style');
+      cohesiveColorScheme.id = 'cohesive-blue-color-scheme';
+      cohesiveColorScheme.textContent = `
+        :root {
+          /* Primary color - Blue (matching header) */
+          --primary: #1e40af;
+          --primary-dark: #1e3a8a;
+          --primary-light: #3b82f6;
+          --primary-gradient: linear-gradient(135deg, #1e3a8a, #3b82f6);
+          --primary-transparent: rgba(30, 64, 175, 0.1);
+          
+          /* Secondary color - Light Blue */
+          --secondary: #0ea5e9;
+          --secondary-dark: #0284c7;
+          --secondary-light: #38bdf8;
+          --secondary-gradient: linear-gradient(135deg, #0284c7, #38bdf8);
+          --secondary-transparent: rgba(14, 165, 233, 0.1);
+          
+          /* Neutral colors */
+          --neutral-50: #f8fafc;
+          --neutral-100: #f1f5f9;
+          --neutral-200: #e2e8f0;
+          --neutral-300: #cbd5e1;
+          --neutral-400: #94a3b8;
+          --neutral-500: #64748b;
+          --neutral-600: #475569;
+          --neutral-700: #334155;
+          --neutral-800: #1e293b;
+          --neutral-900: #0f172a;
+          
+          /* Accent colors - used sparingly */
+          --accent-indigo: #6366f1;
+          --accent-violet: #8b5cf6;
+          --accent-slate: #64748b;
+          
+          /* Semantic colors - consistent with blue theme */
+          --success: #0d9488;
+          --success-light: #d1fae5;
+          --warning: #f59e0b;
+          --warning-light: #fef3c7;
+          --error: #ef4444;
+          --error-light: #fee2e2;
+          --info: #0ea5e9;
+          --info-light: #e0f2fe;
+          
+          /* Background and text */
+          --bg-body: #f8fafc;
+          --bg-card: #ffffff;
+          --bg-card-alt: #f1f5f9;
+          --bg-header: #0f172a;
+          --bg-footer: #0f172a;
+          
+          /* Text colors */
+          --text-primary: #0f172a;
+          --text-secondary: #334155;
+          --text-tertiary: #64748b;
+          --text-light: #ffffff;
+          --text-link: #2563eb;
+          
+          /* Border colors */
+          --border-light: #e2e8f0;
+          --border-medium: #cbd5e1;
+          --border-focus: #3b82f6;
+          
+          /* Shadows - with blue tint */
+          --shadow-sm: 0 1px 2px rgba(30, 64, 175, 0.05);
+          --shadow: 0 1px 3px rgba(30, 64, 175, 0.1), 0 1px 2px rgba(30, 64, 175, 0.06);
+          --shadow-md: 0 4px 6px rgba(30, 64, 175, 0.07), 0 2px 4px rgba(30, 64, 175, 0.06);
+          --shadow-lg: 0 10px 15px rgba(30, 64, 175, 0.05), 0 4px 6px rgba(30, 64, 175, 0.05);
+          --shadow-xl: 0 20px 25px rgba(30, 64, 175, 0.04), 0 10px 10px rgba(30, 64, 175, 0.03);
+        }
+        
+        /* Apply the consistent blue color scheme throughout */
+        
+        /* Base elements */
+        body {
+          background-color: var(--bg-body);
+          color: var(--text-primary);
+        }
+        
+        a {
+          color: var(--text-link);
+        }
+        
+        a:hover {
+          color: var(--primary);
+        }
+        
+        /* Header styling */
+        .page-header {
+          background: var(--bg-header);
+          background: linear-gradient(135deg, var(--neutral-900), var(--neutral-800));
+          border-bottom: none;
+          box-shadow: var(--shadow-lg);
+        }
+        
+        /* Title styling */
+        .enhanced-title {
+          color: var(--text-light);
+          text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        
+        .enhanced-title::after {
+          background: linear-gradient(45deg, var(--primary-light), var(--secondary-light), var(--primary-light));
+          background-size: 200% auto;
+        }
+        
+        .enhanced-subtitle {
+          color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .title-divider {
+          background: rgba(255, 255, 255, 0.5);
+        }
+        
+        /* Card styling */
+        .card {
+          background-color: var(--bg-card);
+          border: none;
+          box-shadow: var(--shadow);
+          transition: box-shadow 0.3s ease, transform 0.3s ease;
+          border-radius: 10px;
+        }
+        
+        .card:hover {
+          box-shadow: var(--shadow-md);
+        }
+        
+        .card-header {
+          background-color: var(--primary);
+          color: var(--text-light);
+          font-weight: 500;
+          border-bottom: none;
+          border-radius: 10px 10px 0 0;
+        }
+        
+        /* Button styling */
+        .btn {
+          font-weight: 500;
+          border-radius: 8px;
+          transition: all 0.2s ease;
+          box-shadow: var(--shadow-sm);
+        }
+        
+        .btn-primary {
+          background: var(--primary);
+          color: white;
+          border: none;
+        }
+        
+        .btn-primary:hover {
+          background: var(--primary-dark);
+          box-shadow: var(--shadow-md);
+          transform: translateY(-1px);
+        }
+        
+        .btn-secondary {
+          background: var(--secondary);
+          color: white;
+          border: none;
+        }
+        
+        .btn-secondary:hover {
+          background: var(--secondary-dark);
+          box-shadow: var(--shadow-md);
+          transform: translateY(-1px);
+        }
+        
+        .btn-success {
+          background: var(--success);
+          color: white;
+          border: none;
+        }
+        
+        /* Sliders */
+        input[type="range"] {
+          appearance: none;
+          background: transparent;
+          width: 100%;
+        }
+        
+        input[type="range"]::-webkit-slider-runnable-track {
+          height: 8px;
+          background: var(--neutral-200);
+          border-radius: 4px;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+          appearance: none;
+          width: 20px;
+          height: 20px;
+          background: var(--primary);
+          border-radius: 50%;
+          margin-top: -6px;
+          border: 2px solid white;
+          cursor: pointer;
+          box-shadow: var(--shadow);
+        }
+        
+        input[type="range"]:focus::-webkit-slider-thumb {
+          background: var(--primary-dark);
+          box-shadow: 0 0 0 3px var(--primary-transparent);
+        }
+        
+        /* Labels and text */
+        .label-text {
+          color: var(--text-secondary);
+          font-weight: 500;
+        }
+        
+        .value-display {
+          color: var(--primary);
+          font-weight: 600;
+        }
+        
+        /* Explanation boxes */
+        .explanation-box {
+          background-color: var(--primary-transparent);
+          border-left: 3px solid var(--primary);
+          border-radius: 0 8px 8px 0;
+        }
+        
+        .explanation-box h4 {
+          color: var(--primary);
+        }
+        
+        /* Footer styling */
+        .modern-footer, .footer, .page-footer {
+          background-color: var(--bg-footer);
+          color: var(--text-light);
+          border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .footer-container {
+          background: linear-gradient(to bottom, var(--neutral-900), var(--neutral-800));
+        }
+        
+        .footer-content h3 {
+          color: var(--text-light);
+        }
+        
+        .footer-content p {
+          color: var(--neutral-300);
+        }
+        
+        .footer-links h4 {
+          color: var(--neutral-200);
+        }
+        
+        .footer-links a {
+          color: var(--neutral-400);
+        }
+        
+        .footer-links a:hover {
+          color: var(--primary-light);
+        }
+        
+        .footer-bottom {
+          background-color: rgba(0, 0, 0, 0.2);
+        }
+        
+        .footer-newsletter input[type="email"] {
+          background-color: rgba(255, 255, 255, 0.05);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          color: var(--text-light);
+        }
+        
+        .footer-newsletter button {
+          background: var(--primary-gradient);
+        }
+        
+        /* Physics animation */
+        .physics-animation-canvas {
+          opacity: 0.5;
+        }
+        
+        .physics-icon svg {
+          fill: var(--text-light);
+          stroke: var(--text-light);
+        }
+        
+        /* Data display */
+        .data-item {
+          border: 1px solid var(--border-light);
+          background-color: var(--neutral-50);
+        }
+        
+        .data-item-label {
+          color: var(--text-tertiary);
+        }
+        
+        .data-item-value {
+          color: var(--primary);
+          font-weight: 600;
+        }
+        
+        /* Fix footer specifically */
+        footer, .footer {
+          background: linear-gradient(135deg, var(--neutral-900), var(--neutral-800));
+          color: var(--text-light);
+          padding: 1.5rem 0;
+          border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        footer a, .footer a {
+          color: var(--primary-light);
+          text-decoration: none;
+        }
+        
+        footer a:hover, .footer a:hover {
+          color: var(--secondary-light);
+          text-decoration: underline;
+        }
+        
+        .footer-copyright {
+          color: var(--neutral-400);
+          font-size: 0.9rem;
+        }
+        
+        .social-links a {
+          color: var(--text-light);
+          background: rgba(255, 255, 255, 0.1);
+          border-radius: 50%;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: 36px;
+          height: 36px;
+          margin-right: 8px;
+          transition: all 0.3s ease;
+        }
+        
+        .social-links a:hover {
+          background: var(--primary);
+          transform: translateY(-2px);
+        }
+        
+        /* Mobile-specific adjustments */
+        @media (max-width: 768px) {
+          .card-header {
+            padding: 0.9rem 1.1rem !important;
+            background-color: var(--primary) !important;
+          }
+          
+          .btn {
+            box-shadow: var(--shadow);
+          }
+          
+          .physics-animation-canvas {
+            opacity: 0.3;
+          }
+          
+          .explanation-box {
+            background-color: var(--primary-transparent) !important;
+            border-left-color: var(--primary) !important;
+            margin-bottom: 1rem !important;
+          }
+          
+          .explanation-box h4 {
+            color: var(--primary) !important;
+          }
+          
+          footer, .footer {
+            text-align: center;
+            padding: 1.5rem 1rem;
+          }
+          
+          .footer-links {
+            margin: 1rem 0;
+          }
+        }
+      `;
+      
+      // Remove any previous color schemes
+      const oldSchemes = document.querySelectorAll('[id$="-color-scheme"]');
+      oldSchemes.forEach(scheme => scheme.remove());
+      
+      // Add the new color scheme
+      document.head.appendChild(cohesiveColorScheme);
+      
+      // Add JavaScript to force color consistency
+      const forceConsistency = () => {
+        // Ensure all card headers are blue
+        document.querySelectorAll('.card-header').forEach(header => {
+          header.style.backgroundColor = '#1e40af';
+          header.style.color = '#ffffff';
+        });
+        
+        // Ensure all buttons follow the color scheme
+        document.querySelectorAll('.btn-primary').forEach(btn => {
+          btn.style.backgroundColor = '#1e40af';
+        });
+        
+        document.querySelectorAll('.btn-secondary').forEach(btn => {
+          btn.style.backgroundColor = '#0ea5e9';
+        });
+        
+        // Ensure explanation boxes follow the color scheme
+        document.querySelectorAll('.explanation-box').forEach(box => {
+          box.style.backgroundColor = 'rgba(30, 64, 175, 0.1)';
+          box.style.borderLeftColor = '#1e40af';
+        });
+        
+        document.querySelectorAll('.explanation-box h4').forEach(heading => {
+          heading.style.color = '#1e40af';
+        });
+        
+        // Fix footer styling
+        const footer = document.querySelector('footer') || document.querySelector('.footer');
+        if (footer) {
+          footer.style.background = 'linear-gradient(135deg, #0f172a, #1e293b)';
+          footer.style.color = '#ffffff';
+          footer.style.borderTop = '1px solid rgba(255, 255, 255, 0.1)';
+        }
+      };
+      
+      // Run the consistency fix after a delay and on DOM changes
+      setTimeout(forceConsistency, 500);
+      
+      // Apply again on DOM changes
+      const observer = new MutationObserver(() => {
+        forceConsistency();
+      });
+      
+      observer.observe(document.body, {
+        childList: true,
+        subtree: true
+      });
+      
+      console.log("COHESIVE BLUE COLOR SCHEME FIX LOADED");
+    });
+  </script>
+  <!-- FOOTER WIDTH FIX -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log("FOOTER WIDTH FIX LOADING");
+      
+      // Create specific footer styles
+      const footerWidthFix = document.createElement('style');
+      footerWidthFix.id = 'footer-width-fix';
+      footerWidthFix.textContent = `
+        /* Full-width footer for desktop */
+        footer, .footer {
+          width: 100vw !important;
+          max-width: 100vw !important;
+          margin-left: calc(-50vw + 50%) !important;
+          margin-right: calc(-50vw + 50%) !important;
+          box-sizing: border-box !important;
+          position: relative !important;
+          left: 0 !important;
+          right: 0 !important;
+          padding-left: 0 !important;
+          padding-right: 0 !important;
+          background: linear-gradient(135deg, var(--neutral-900), var(--neutral-800)) !important;
+        }
+        
+        /* Ensure footer content is properly centered within full-width footer */
+        footer > .container, 
+        .footer > .container,
+        .footer-container {
+          width: 100% !important;
+          max-width: 1200px !important;
+          margin-left: auto !important;
+          margin-right: auto !important;
+          padding-left: 2rem !important;
+          padding-right: 2rem !important;
+          box-sizing: border-box !important;
+        }
+        
+        /* Desktop-specific adjustments */
+        @media (min-width: 769px) {
+          footer, .footer {
+            padding-top: 3rem !important;
+            padding-bottom: 3rem !important;
+          }
+          
+          .footer-content {
+            display: flex !important;
+            justify-content: space-between !important;
+            align-items: flex-start !important;
+            flex-wrap: wrap !important;
+          }
+          
+          .footer-branding {
+            flex: 0 0 25% !important;
+          }
+          
+          .footer-links {
+            flex: 1 !important;
+            display: flex !important;
+            justify-content: space-between !important;
+            padding-left: 3rem !important;
+          }
+          
+          .footer-links-column {
+            flex: 0 0 auto !important;
+            margin-right: 2rem !important;
+          }
+          
+          .footer-bottom {
+            margin-top: 2rem !important;
+            padding-top: 1.5rem !important;
+            border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+            display: flex !important;
+            justify-content: space-between !important;
+            align-items: center !important;
+          }
+          
+          .social-links {
+            display: flex !important;
+            gap: 0.75rem !important;
+          }
+        }
+        
+        /* Fix for any DOM nesting issues */
+        body > footer,
+        body > .footer {
+          position: relative !important;
+        }
+        
+        /* Ensure mobile styling remains untouched */
+        @media (max-width: 768px) {
+          footer > .container, 
+          .footer > .container,
+          .footer-container {
+            padding-left: 1rem !important;
+            padding-right: 1rem !important;
+          }
+        }
+      `;
+      document.head.appendChild(footerWidthFix);
+      
+      // Function to force footer to full width
+      const fixFooterWidth = () => {
+        const footer = document.querySelector('footer') || document.querySelector('.footer');
+        
+        if (footer) {
+          // Force full width
+          footer.style.width = '100vw';
+          footer.style.maxWidth = '100vw';
+          footer.style.marginLeft = 'calc(-50vw + 50%)';
+          footer.style.marginRight = 'calc(-50vw + 50%)';
+          footer.style.boxSizing = 'border-box';
+          footer.style.position = 'relative';
+          footer.style.left = '0';
+          footer.style.right = '0';
+          
+          // Ensure container inside is proper width
+          const footerContainer = footer.querySelector('.container') || 
+                                 footer.querySelector('.footer-container') ||
+                                 footer.firstElementChild;
+          
+          if (footerContainer) {
+            footerContainer.style.width = '100%';
+            footerContainer.style.maxWidth = '1200px';
+            footerContainer.style.marginLeft = 'auto';
+            footerContainer.style.marginRight = 'auto';
+            footerContainer.style.paddingLeft = window.innerWidth > 768 ? '2rem' : '1rem';
+            footerContainer.style.paddingRight = window.innerWidth > 768 ? '2rem' : '1rem';
+            footerContainer.style.boxSizing = 'border-box';
+          }
+          
+          // Fix background color
+          footer.style.background = 'linear-gradient(135deg, #0f172a, #1e293b)';
+          
+          console.log("Footer width fixed");
+        }
+      };
+      
+      // Run after a delay and on resize
+      setTimeout(fixFooterWidth, 500);
+      window.addEventListener('resize', fixFooterWidth);
+      
+      // Also apply after DOM changes
+      const observer = new MutationObserver(() => {
+        fixFooterWidth();
+      });
+      
+      observer.observe(document.body, {
+        childList: true,
+        subtree: true
+      });
+      
+      console.log("FOOTER WIDTH FIX LOADED");
+    });
+  </script>
+</body>
+</html>

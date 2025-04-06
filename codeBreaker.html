@@ -1,0 +1,1891 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeBreaker - Test Your Deductive Skills</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --rich-black: #0d1b2a;
+            --oxford-blue: #1b263b;
+            --yinmn-blue: #415a77;
+            --silver-lake-blue: #778da9;
+            --platinum: #e0e1dd;
+            --success: #2ecc71;
+            --error: #e74c3c;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--rich-black);
+            color: var(--platinum);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes titleGlow {
+            0%, 100% {
+                text-shadow: 0 0 5px rgba(119, 141, 169, 0.5);
+            }
+            50% {
+                text-shadow: 0 0 20px rgba(119, 141, 169, 0.8);
+            }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes headingUnderline {
+            from { width: 0; }
+            to { width: 100px; }
+        }
+
+        /* Navbar Styles */
+        .navbar {
+            background: var(--oxford-blue);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .navbar-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--platinum);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .logo:hover {
+            color: var(--silver-lake-blue);
+            transform: scale(1.05);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--platinum);
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--silver-lake-blue);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after,
+        .nav-links a.active::after {
+            width: 100%;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--silver-lake-blue);
+        }
+
+        .nav-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--platinum);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .nav-toggle:hover {
+            color: var(--silver-lake-blue);
+        }
+
+        /* Section Styles */
+        .section {
+            padding: 5rem 2rem;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            scroll-margin-top: 80px;
+            background: var(--rich-black);
+            position: relative;
+        }
+
+        .section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at top right, rgba(65, 90, 119, 0.1), transparent 70%);
+            pointer-events: none;
+        }
+
+        .section-container {
+            max-width: 1400px;
+            width: 100%;
+            margin: 0 auto;
+            animation: fadeIn 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+            z-index: 1;
+        }
+
+        .section-title {
+            font-family: 'Roboto Mono', monospace;
+            font-size: 2.5rem;
+            color: var(--silver-lake-blue);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 3rem;
+            text-align: center;
+            position: relative;
+            padding-bottom: 1rem;
+            animation: titleGlow 3s ease-in-out infinite;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--silver-lake-blue), transparent);
+            animation: headingUnderline 1.5s ease-out forwards;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 3rem 2rem;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            width: 100%;
+            max-width: 1400px;
+            animation: fadeIn 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .panel {
+            background: rgba(27, 38, 59, 0.5);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 2rem;
+            border: 1px solid rgba(119, 141, 169, 0.2);
+            transform: translateY(20px);
+            opacity: 0;
+            animation: slideUp 0.6s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+            animation-delay: 0.3s;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .game-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        h1 {
+            font-family: 'Roboto Mono', monospace;
+            font-size: 2.5rem;
+            color: var(--silver-lake-blue);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            animation: titleGlow 3s ease-in-out infinite;
+            transform-origin: center;
+            position: relative;
+            padding-bottom: 0.5rem;
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--silver-lake-blue), transparent);
+            animation: headingUnderline 1.5s ease-out forwards;
+        }
+
+        .game-info {
+            text-align: center;
+            color: var(--platinum);
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            line-height: 1.8;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .input-group input {
+            flex: 1;
+            padding: 0.9rem 1.2rem;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 1.2rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--yinmn-blue);
+            border-radius: 6px;
+            color: var(--platinum);
+            text-align: center;
+            letter-spacing: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: var(--silver-lake-blue);
+            box-shadow: 0 0 0 3px rgba(119, 141, 169, 0.2);
+        }
+
+        .input-group button, #restartButton {
+            padding: 0.9rem 1.5rem;
+            background: var(--yinmn-blue);
+            color: var(--platinum);
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .input-group button::after, #restartButton::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                120deg,
+                transparent,
+                rgba(255, 255, 255, 0.2),
+                transparent
+            );
+            transition: 0.6s;
+        }
+
+        .input-group button:hover::after, #restartButton:hover::after {
+            left: 100%;
+        }
+
+        .input-group button:hover, #restartButton:hover {
+            background: var(--silver-lake-blue);
+            transform: translateY(-2px);
+        }
+
+        #feedback {
+            padding: 1rem;
+            border-radius: 6px;
+            font-family: 'Poppins', sans-serif;
+            text-align: center;
+            transition: all 0.3s ease;
+            background: rgba(119, 141, 169, 0.1);
+            border-left: 4px solid var(--silver-lake-blue);
+        }
+
+        .side-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .history, .leaderboard {
+            flex: 1;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .history h3, .leaderboard h3 {
+            font-family: 'Roboto Mono', monospace;
+            color: var(--silver-lake-blue);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+            position: relative;
+            display: inline-block;
+            padding-bottom: 0.5rem;
+        }
+
+        .history h3::after, .leaderboard h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background: var(--silver-lake-blue);
+        }
+
+        .history-list, .leaderboard ul {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0.5rem;
+            margin: 0;
+            list-style: none;
+            scrollbar-width: thin;
+            scrollbar-color: var(--yinmn-blue) transparent;
+        }
+
+        .history-list::-webkit-scrollbar, .leaderboard ul::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .history-list::-webkit-scrollbar-track, .leaderboard ul::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .history-list::-webkit-scrollbar-thumb, .leaderboard ul::-webkit-scrollbar-thumb {
+            background-color: var(--yinmn-blue);
+            border-radius: 6px;
+        }
+
+        .history-item {
+            padding: 0.8rem;
+            margin-bottom: 0.8rem;
+            background: rgba(65, 90, 119, 0.1);
+            border-radius: 6px;
+            border-left: 3px solid var(--silver-lake-blue);
+            transition: transform 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .history-item:hover {
+            transform: translateX(5px);
+        }
+
+        .history-item strong {
+            color: var(--silver-lake-blue);
+            font-weight: 600;
+            margin-right: 8px;
+            font-family: 'Roboto Mono', monospace;
+            letter-spacing: 2px;
+        }
+
+        .leaderboard ul li {
+            padding: 0.8rem;
+            margin-bottom: 0.8rem;
+            background: rgba(65, 90, 119, 0.1);
+            border-radius: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: transform 0.3s ease;
+        }
+
+        .leaderboard ul li:hover {
+            transform: translateX(5px);
+        }
+
+        .leaderboard ul li span:first-child {
+            color: var(--silver-lake-blue);
+            font-weight: 600;
+        }
+
+        .invalid {
+            animation: shake 0.4s ease;
+        }
+
+        #restartButton {
+            animation: pulse 2s infinite;
+        }
+
+        /* How to Play Styles */
+        .how-to-play-content {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .step {
+            display: flex;
+            gap: 1.5rem;
+            align-items: flex-start;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: slideUp 0.6s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+        }
+
+        .step:nth-child(1) { animation-delay: 0.1s; }
+        .step:nth-child(2) { animation-delay: 0.2s; }
+        .step:nth-child(3) { animation-delay: 0.3s; }
+        .step:nth-child(4) { animation-delay: 0.4s; }
+        .step:nth-child(5) { animation-delay: 0.5s; }
+
+        .step-number {
+            background: var(--yinmn-blue);
+            color: var(--platinum);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .step-content {
+            flex: 1;
+        }
+
+        .step-content h3 {
+            margin-bottom: 0.5rem;
+            color: var(--silver-lake-blue);
+            font-family: 'Roboto Mono', monospace;
+            position: relative;
+            display: inline-block;
+        }
+
+        .step-content h3::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--silver-lake-blue);
+            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .step:hover .step-content h3::after {
+            width: 100%;
+        }
+
+        .step-content p, .step-content ul {
+            color: var(--platinum);
+            opacity: 0.9;
+            line-height: 1.6;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 300;
+        }
+
+        .step-content ul {
+            margin-left: 1.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .example-panel {
+            margin-top: 3rem;
+            padding: 1.5rem;
+            background: rgba(65, 90, 119, 0.1);
+            border-radius: 8px;
+            border-left: 4px solid var(--silver-lake-blue);
+            transform: translateY(20px);
+            opacity: 0;
+            animation: slideUp 0.6s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+            animation-delay: 0.6s;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .example-panel h3 {
+            margin-bottom: 1rem;
+            color: var(--silver-lake-blue);
+            font-family: 'Roboto Mono', monospace;
+        }
+
+        .example-panel p, .example-panel ul {
+            color: var(--platinum);
+            opacity: 0.9;
+            line-height: 1.6;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 300;
+        }
+
+        .example-panel ul {
+            margin-left: 1.5rem;
+            margin-top: 0.5rem;
+        }
+
+        /* Challenges Styles */
+        .challenges-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .challenge-card {
+            background: rgba(27, 38, 59, 0.5);
+            border-radius: 12px;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid rgba(119, 141, 169, 0.2);
+            backdrop-filter: blur(10px);
+            opacity: 0;
+            transform: translateY(30px);
+            animation: slideUp 0.6s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .challenge-card:nth-child(1) { animation-delay: 0.1s; }
+        .challenge-card:nth-child(2) { animation-delay: 0.2s; }
+        .challenge-card:nth-child(3) { animation-delay: 0.3s; }
+        .challenge-card:nth-child(4) { animation-delay: 0.4s; }
+
+        .challenge-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .challenge-icon {
+            font-size: 2.5rem;
+            color: var(--silver-lake-blue);
+            margin-bottom: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .challenge-card:hover .challenge-icon {
+            transform: scale(1.1);
+        }
+
+        .challenge-card h3 {
+            margin-bottom: 1rem;
+            color: var(--silver-lake-blue);
+            font-family: 'Roboto Mono', monospace;
+        }
+
+        .challenge-card p {
+            color: var(--platinum);
+            opacity: 0.9;
+            margin-bottom: 1.5rem;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 300;
+        }
+
+        .difficulty {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .difficulty-label {
+            color: var(--platinum);
+            opacity: 0.7;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9rem;
+        }
+
+        .difficulty-dots {
+            display: flex;
+            gap: 0.3rem;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(119, 141, 169, 0.2);
+            transition: background 0.3s ease;
+        }
+
+        .dot.filled {
+            background: var(--silver-lake-blue);
+        }
+
+        .challenge-button {
+            padding: 0.8rem 1.5rem;
+            background: var(--yinmn-blue);
+            color: var(--platinum);
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .challenge-button::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                120deg,
+                transparent,
+                rgba(255, 255, 255, 0.2),
+                transparent
+            );
+            transition: 0.6s;
+        }
+
+        .challenge-button:hover::after {
+            left: 100%;
+        }
+
+        .challenge-button:hover {
+            background: var(--silver-lake-blue);
+            transform: translateY(-2px);
+        }
+
+        /* Leaderboard Styles */
+        .leaderboard-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .tab-button {
+            padding: 0.8rem 1.5rem;
+            background: rgba(27, 38, 59, 0.5);
+            color: var(--platinum);
+            border: 1px solid rgba(119, 141, 169, 0.2);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .tab-button.active, .tab-button:hover {
+            background: var(--yinmn-blue);
+            border-color: var(--silver-lake-blue);
+        }
+
+        .leaderboard-table {
+            width: 100%;
+            border-collapse: collapse;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: slideUp 0.6s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+            animation-delay: 0.3s;
+        }
+
+        .leaderboard-table th, .leaderboard-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(119, 141, 169, 0.1);
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .leaderboard-table th {
+            color: var(--silver-lake-blue);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-family: 'Roboto Mono', monospace;
+        }
+
+        .leaderboard-table tbody tr {
+            transition: background 0.3s ease;
+        }
+
+        .leaderboard-table tbody tr:hover {
+            background: rgba(119, 141, 169, 0.05);
+        }
+
+        /* About Styles */
+        .about-panel {
+            padding: 3rem;
+        }
+
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 3rem;
+        }
+
+        .about-image {
+            position: relative;
+            width: 100%;
+            height: 350px;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .about-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .about-image img:hover {
+            transform: scale(1.03);
+        }
+
+        .about-text {
+            position: relative;
+        }
+
+        .about-text h3 {
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            color: var(--silver-lake-blue);
+            font-family: 'Roboto Mono', monospace;
+        }
+
+        .about-text p {
+            color: var(--platinum);
+            opacity: 0.9;
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .team-members {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            margin-top: 1.5rem;
+        }
+
+        .team-member {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: transform 0.3s ease;
+        }
+
+        .team-member:hover {
+            transform: translateX(10px);
+        }
+
+        .team-member-avatar {
+            font-size: 2.5rem;
+            color: var(--silver-lake-blue);
+        }
+
+        .team-member-info h4 {
+            color: var(--platinum);
+            margin-bottom: 0.3rem;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .team-member-info p {
+            color: var(--silver-lake-blue);
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9rem;
+        }
+
+        /* Contact Styles */
+        .contact-panel {
+            padding: 3rem;
+        }
+
+        .contact-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+        }
+
+        .contact-info h3, .contact-form h3 {
+            margin-bottom: 1.5rem;
+            color: var(--silver-lake-blue);
+            font-family: 'Roboto Mono', monospace;
+        }
+
+        .contact-info p {
+            color: var(--platinum);
+            opacity: 0.9;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .contact-methods {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .contact-method {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: transform 0.3s ease;
+        }
+
+        .contact-method:hover {
+            transform: translateX(10px);
+        }
+
+        .contact-method i {
+            font-size: 1.5rem;
+            color: var(--silver-lake-blue);
+        }
+
+        .contact-method h4 {
+            color: var(--platinum);
+            margin-bottom: 0.3rem;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .contact-method p {
+            color: var(--platinum);
+            opacity: 0.8;
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9rem;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(119, 141, 169, 0.1);
+            color: var(--platinum);
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+
+        .social-link:hover {
+            background: var(--silver-lake-blue);
+            transform: translateY(-3px);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--platinum);
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 0.9rem 1.2rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--yinmn-blue);
+            border-radius: 6px;
+            color: var(--platinum);
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: var(--silver-lake-blue);
+            box-shadow: 0 0 0 3px rgba(119, 141, 169, 0.2);
+        }
+
+        .submit-button {
+            padding: 0.9rem 2rem;
+            background: var(--yinmn-blue);
+            color: var(--platinum);
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            display: inline-block;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .submit-button::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                120deg,
+                transparent,
+                rgba(255, 255, 255, 0.2),
+                transparent
+            );
+            transition: 0.6s;
+        }
+
+        .submit-button:hover::after {
+            left: 100%;
+        }
+
+        .submit-button:hover {
+            background: var(--silver-lake-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .submit-button:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Footer Styles - Enhanced Professional Version */
+        .footer {
+            background: linear-gradient(to bottom, var(--oxford-blue), #0a1522);
+            padding: 4rem 2rem 2rem;
+            color: var(--platinum);
+            font-family: 'Poppins', sans-serif;
+            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--silver-lake-blue), transparent);
+        }
+
+        .footer-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 3rem;
+        }
+
+        .footer-column {
+            flex: 1;
+            min-width: 250px;
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+
+        .footer-column:nth-child(1) { animation-delay: 0.1s; }
+        .footer-column:nth-child(2) { animation-delay: 0.2s; }
+        .footer-column:nth-child(3) { animation-delay: 0.3s; }
+        .footer-column:nth-child(4) { animation-delay: 0.4s; }
+
+        .footer-title {
+            font-family: 'Roboto Mono', monospace;
+            font-size: 1.5rem;
+            color: var(--silver-lake-blue);
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-bottom: 0.8rem;
+            display: inline-block;
+        }
+
+        .footer-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background: var(--silver-lake-blue);
+            transition: width 0.3s ease;
+        }
+
+        .footer-column:hover .footer-title::after {
+            width: 100%;
+        }
+
+        .footer-about {
+            font-size: 0.95rem;
+            line-height: 1.7;
+            opacity: 0.9;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-link {
+            display: block;
+            color: var(--platinum);
+            text-decoration: none;
+            margin-bottom: 0.8rem;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            position: relative;
+            padding-left: 0;
+        }
+
+        .footer-link:hover {
+            color: var(--silver-lake-blue);
+            padding-left: 8px;
+        }
+
+        .footer-link::before {
+            content: '›';
+            position: absolute;
+            left: -10px;
+            opacity: 0;
+            transition: all 0.3s ease;
+            color: var(--silver-lake-blue);
+        }
+
+        .footer-link:hover::before {
+            left: 0;
+            opacity: 1;
+        }
+
+        .footer-contact {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+            transition: transform 0.3s ease;
+        }
+
+        .footer-contact:hover {
+            transform: translateX(5px);
+        }
+
+        .footer-contact i {
+            color: var(--silver-lake-blue);
+            font-size: 1.1rem;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .social-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(119, 141, 169, 0.1);
+            color: var(--platinum);
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .social-icon::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--silver-lake-blue);
+            border-radius: 50%;
+            transform: scale(0);
+            transition: transform 0.3s ease;
+            z-index: -1;
+        }
+
+        .social-icon:hover {
+            color: var(--platinum);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .social-icon:hover::after {
+            transform: scale(1);
+        }
+
+        .footer-bottom {
+            width: 100%;
+            text-align: center;
+            padding-top: 2rem;
+            margin-top: 3rem;
+            border-top: 1px solid rgba(119, 141, 169, 0.1);
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+
+        .footer-bottom a {
+            color: var(--silver-lake-blue);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-bottom a:hover {
+            color: var(--platinum);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="#home" class="logo">
+                <i class="fas fa-lock-open"></i> CodeBreaker
+            </a>
+            <ul class="nav-links">
+                <li><a href="#home" class="active">Home</a></li>
+                <li><a href="#how-to-play">How to Play</a></li>
+                <li><a href="#challenges">Challenges</a></li>
+                <li><a href="#leaderboard-section">Leaderboard</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <button class="nav-toggle" aria-label="Toggle navigation">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Home Section -->
+    <section id="home" class="section">
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="container">
+                <div class="panel game-panel">
+                    <h1>Code Breaker</h1>
+                    <div class="game-info">
+                        Attempts remaining: <span id="attempts">5</span>
+                        <br>
+                        Decipher the 4-digit code (0000-9999)
+                    </div>
+                    <div class="input-group">
+                        <input type="text" id="guessInput" maxlength="4" placeholder="0000">
+                        <button onclick="checkGuess()">Submit</button>
+                    </div>
+                    <div id="feedback"></div>
+                    <button id="restartButton" style="display:none;" onclick="restartGame()">Restart</button>
+                </div>
+                <div class="panel side-panel">
+                    <div class="history">
+                        <h3>History</h3>
+                        <div class="history-list" id="historyList"></div>
+                    </div>
+                    <div class="leaderboard">
+                        <h3>Leaderboard</h3>
+                        <ul id="leaderboardList"></ul>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </section>
+
+    <!-- How to Play Section -->
+    <section id="how-to-play" class="section">
+        <div class="section-container">
+            <h2 class="section-title">How to Play</h2>
+            <div class="panel">
+                <div class="how-to-play-content">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h3>Understand the Goal</h3>
+                            <p>Your mission is to crack a randomly generated 4-digit code (0000-9999) within 5 attempts.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h3>Make a Guess</h3>
+                            <p>Enter a 4-digit number in the input field and click "Submit" or press Enter.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h3>Interpret Feedback</h3>
+                            <p>After each guess, you'll receive feedback:</p>
+                            <ul>
+                                <li><strong>Exact positions:</strong> Digits that match both value and position</li>
+                                <li><strong>Correct digits:</strong> Digits that exist in the code but are in the wrong position</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h3>Use Deductive Reasoning</h3>
+                            <p>Use the feedback from previous guesses to narrow down possibilities and make more informed guesses.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">5</div>
+                        <div class="step-content">
+                            <h3>Win the Game</h3>
+                            <p>Crack the code within 5 attempts to win! The fewer attempts you use, the higher your score on the leaderboard.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="example-panel">
+                    <h3>Example</h3>
+                    <p>If the secret code is <strong>1234</strong> and you guess <strong>1356</strong>:</p>
+                    <ul>
+                        <li>Exact positions: 1 (the digit "1" is in the correct position)</li>
+                        <li>Correct digits: 1 (the digit "3" is in the code but in the wrong position)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Challenges Section -->
+    <section id="challenges" class="section">
+        <div class="section-container">
+            <h2 class="section-title">Challenges</h2>
+            <div class="challenges-grid">
+                <div class="challenge-card">
+                    <div class="challenge-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h3>Speed Run</h3>
+                    <p>Crack the code in under 60 seconds</p>
+                    <div class="difficulty">
+                        <span class="difficulty-label">Difficulty:</span>
+                        <span class="difficulty-dots">
+                            <span class="dot filled"></span>
+                            <span class="dot filled"></span>
+                            <span class="dot"></span>
+                        </span>
+                    </div>
+                    <button class="challenge-button">Start Challenge</button>
+                </div>
+                <div class="challenge-card">
+                    <div class="challenge-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3>Master Mode</h3>
+                    <p>Crack a 5-digit code with only 6 attempts</p>
+                    <div class="difficulty">
+                        <span class="difficulty-label">Difficulty:</span>
+                        <span class="difficulty-dots">
+                            <span class="dot filled"></span>
+                            <span class="dot filled"></span>
+                            <span class="dot filled"></span>
+                        </span>
+                    </div>
+                    <button class="challenge-button">Start Challenge</button>
+                </div>
+                <div class="challenge-card">
+                    <div class="challenge-icon">
+                        <i class="fas fa-stopwatch"></i>
+                    </div>
+                    <h3>Time Attack</h3>
+                    <p>Crack as many codes as possible in 5 minutes</p>
+                    <div class="difficulty">
+                        <span class="difficulty-label">Difficulty:</span>
+                        <span class="difficulty-dots">
+                            <span class="dot filled"></span>
+                            <span class="dot filled"></span>
+                            <span class="dot"></span>
+                        </span>
+                    </div>
+                    <button class="challenge-button">Start Challenge</button>
+                </div>
+                <div class="challenge-card">
+                    <div class="challenge-icon">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <h3>Perfect Solver</h3>
+                    <p>Crack the code in exactly 3 attempts</p>
+                    <div class="difficulty">
+                        <span class="difficulty-label">Difficulty:</span>
+                        <span class="difficulty-dots">
+                            <span class="dot filled"></span>
+                            <span class="dot filled"></span>
+                            <span class="dot filled"></span>
+                        </span>
+                    </div>
+                    <button class="challenge-button">Start Challenge</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Leaderboard Section -->
+    <section id="leaderboard-section" class="section">
+        <div class="section-container">
+            <h2 class="section-title">Leaderboard</h2>
+            <div class="panel">
+                <div class="leaderboard-tabs">
+                    <button class="tab-button active" data-tab="global">Global</button>
+                    <button class="tab-button" data-tab="weekly">Weekly</button>
+                    <button class="tab-button" data-tab="daily">Daily</button>
+                </div>
+                <div class="leaderboard-content">
+                    <table class="leaderboard-table">
+                        <thead>
+                            <tr>
+                                <th>Rank</th>
+                                <th>Player</th>
+                                <th>Score</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody id="leaderboardTableBody">
+                            <!-- Will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="section">
+        <div class="section-container">
+            <h2 class="section-title">About CodeBreaker</h2>
+            <div class="panel about-panel">
+                <div class="about-content">
+                    <div class="about-image">
+                        <img src="https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" 
+                             alt="Code Breaker Development" 
+                             onerror="this.onerror=null; this.src='https://via.placeholder.com/500x350/415a77/e0e1dd?text=CodeBreaker'; this.alt='CodeBreaker Placeholder'">
+                    </div>
+                    <div class="about-text">
+                        <h3>Our Story</h3>
+                        <p>CodeBreaker was born from a passion for logic puzzles and a desire to create an engaging, brain-teasing experience for players of all skill levels. What started as a simple coding exercise has evolved into a sophisticated game that challenges your deductive reasoning and pattern recognition abilities.</p>
+                        
+                        <h3>Our Mission</h3>
+                        <p>We believe that logical thinking and problem-solving are essential skills in today's world. Our mission is to provide an entertaining way to sharpen these skills while having fun. CodeBreaker is designed to be both challenging and rewarding, pushing you to think critically with each guess.</p>
+                        
+                        <h3>Meet The Team</h3>
+                        <div class="team-members">
+                            <div class="team-member">
+                                <div class="team-member-avatar">
+                                    <i class="fas fa-user-circle"></i>
+                                </div>
+                                <div class="team-member-info">
+                                    <h4>Dev One</h4>
+                                    <p>Lead Developer</p>
+                                </div>
+                            </div>
+                            <div class="team-member">
+                                <div class="team-member-avatar">
+                                    <i class="fas fa-user-circle"></i>
+                                </div>
+                                <div class="team-member-info">
+                                    <h4>Dev Two</h4>
+                                    <p>UI/UX Designer</p>
+                                </div>
+                            </div>
+                            <div class="team-member">
+                                <div class="team-member-avatar">
+                                    <i class="fas fa-user-circle"></i>
+                                </div>
+                                <div class="team-member-info">
+                                    <h4>Dev Three</h4>
+                                    <p>Game Logic Specialist</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="section">
+        <div class="section-container">
+            <h2 class="section-title">Contact Us</h2>
+            <div class="panel contact-panel">
+                <div class="contact-content">
+                    <div class="contact-info">
+                        <h3>Get in Touch</h3>
+                        <p>Have questions, feedback, or suggestions? We'd love to hear from you!</p>
+                        
+                        <div class="contact-methods">
+                            <div class="contact-method">
+                                <i class="fas fa-envelope"></i>
+                                <div>
+                                    <h4>Email</h4>
+                                    <p>contact@codebreaker.com</p>
+                                </div>
+                            </div>
+                            <div class="contact-method">
+                                <i class="fas fa-phone"></i>
+                                <div>
+                                    <h4>Phone</h4>
+                                    <p>+1 (555) 123-4567</p>
+                                </div>
+                            </div>
+                            <div class="contact-method">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <div>
+                                    <h4>Address</h4>
+                                    <p>123 Game Street, Puzzle City</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="social-links">
+                            <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                            <a href="#" class="social-link"><i class="fab fa-github"></i></a>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-form">
+                        <h3>Send a Message</h3>
+                        <form id="contactForm">
+                            <div class="form-group">
+                                <label for="name">Name</label>
+                                <input type="text" id="name" name="name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input type="email" id="email" name="email" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="subject">Subject</label>
+                                <input type="text" id="subject" name="subject" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="message">Message</label>
+                                <textarea id="message" name="message" rows="5" required></textarea>
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" class="submit-button">
+                                    <i class="fas fa-paper-plane"></i> Send Message
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-column">
+                <h4 class="footer-title">CodeBreaker</h4>
+                <p class="footer-about">
+                    CodeBreaker is an addictive puzzle game that challenges your deductive reasoning skills. Try to break the secret code in as few attempts as possible!
+                </p>
+                <div class="social-icons">
+                    <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-github"></i></a>
+                </div>
+            </div>
+            <div class="footer-column">
+                <h4 class="footer-title">Quick Links</h4>
+                <a href="#home" class="footer-link">Home</a>
+                <a href="#how-to-play" class="footer-link">How to Play</a>
+                <a href="#challenges" class="footer-link">Challenges</a>
+                <a href="#leaderboard-section" class="footer-link">Leaderboard</a>
+                <a href="#about" class="footer-link">About Us</a>
+                <a href="#contact" class="footer-link">Contact</a>
+            </div>
+            <div class="footer-column">
+                <h4 class="footer-title">More Games</h4>
+                <a href="#" class="footer-link">Number Puzzle</a>
+                <a href="#" class="footer-link">Word Master</a>
+                <a href="#" class="footer-link">Memory Match</a>
+                <a href="#" class="footer-link">Logic Puzzles</a>
+                <a href="#" class="footer-link">Strategy Games</a>
+            </div>
+            <div class="footer-column">
+                <h4 class="footer-title">Contact Us</h4>
+                <div class="footer-contact">
+                    <i class="fas fa-envelope"></i>
+                    <span>contact@codebreaker.com</span>
+                </div>
+                <div class="footer-contact">
+                    <i class="fas fa-phone"></i>
+                    <span>+1 (555) 123-4567</span>
+                </div>
+                <div class="footer-contact">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>123 Game Street, Puzzle City</span>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 CodeBreaker. All Rights Reserved. | <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+        </div>
+    </footer>
+
+    <audio id="correctSound" src="https://www.soundjay.com/buttons/beep-01a.mp3"></audio>
+    <audio id="wrongSound" src="https://www.soundjay.com/buttons/beep-02.mp3"></audio>
+
+    <script>
+        let secretCode = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
+        let attemptsLeft = 5;
+        let guessHistory = [];
+        let leaderboard = JSON.parse(localStorage.getItem('codeBreakerLeaderboard')) || [];
+
+        const correctSound = document.getElementById('correctSound');
+        const wrongSound = document.getElementById('wrongSound');
+
+        function checkGuess() {
+            const guess = document.getElementById('guessInput').value.trim();
+            const feedback = document.getElementById('feedback');
+
+            if (!/^\d{4}$/.test(guess)) {
+                showFeedback('Invalid Entry: Please enter exactly 4 digits (0-9)', 'error');
+                wrongSound.play();
+                return;
+            }
+
+            attemptsLeft--;
+            document.getElementById('attempts').textContent = attemptsLeft;
+
+            let exactMatches = 0;
+            let numberMatches = 0;
+            let secretDigits = secretCode.split('');
+            let guessDigits = guess.split('');
+
+            for (let i = 0; i < 4; i++) {
+                if (secretDigits[i] === guessDigits[i]) {
+                    exactMatches++;
+                    secretDigits[i] = guessDigits[i] = null;
+                }
+            }
+
+            for (let i = 0; i < 4; i++) {
+                if (guessDigits[i] !== null) {
+                    let index = secretDigits.indexOf(guessDigits[i]);
+                    if (index !== -1) {
+                        numberMatches++;
+                        secretDigits[index] = null;
+                    }
+                }
+            }
+
+            guessHistory.push({ guess, exact: exactMatches, numbers: numberMatches });
+
+            if (exactMatches === 4) {
+                showFeedback(`Code Cracked! Solution: ${secretCode} (${5 - attemptsLeft} attempts)`, 'success');
+                correctSound.play();
+                updateLeaderboard(5 - attemptsLeft);
+                disableGame();
+            } else if (attemptsLeft === 0) {
+                showFeedback(`Game Over - Code was: ${secretCode}`, 'error');
+                wrongSound.play();
+                disableGame();
+            } else {
+                showFeedback(`Hint: ${exactMatches} exact positions, ${numberMatches} correct digits`, 'info');
+                wrongSound.play();
+            }
+
+            updateHistory();
+            document.getElementById('guessInput').value = '';
+        }
+
+        function showFeedback(message, type) {
+            const feedback = document.getElementById('feedback');
+            feedback.textContent = message;
+            feedback.style.backgroundColor = 
+                type === 'success' ? 'rgba(46, 204, 113, 0.1)' :
+                type === 'error' ? 'rgba(231, 76, 60, 0.1)' :
+                'rgba(119, 141, 169, 0.1)';
+            feedback.style.borderLeft = `4px solid ${
+                type === 'success' ? 'var(--success)' :
+                type === 'error' ? 'var(--error)' :
+                'var(--silver-lake-blue)'
+            }`;
+
+            if (type === 'error') {
+                document.getElementById('guessInput').classList.add('invalid');
+                setTimeout(() => {
+                    document.getElementById('guessInput').classList.remove('invalid');
+                }, 500);
+            }
+        }
+
+        function updateHistory() {
+            const historyList = document.getElementById('historyList');
+            historyList.innerHTML = guessHistory.map(h => 
+                `<div class="history-item">
+                    <strong>${h.guess}</strong><br>
+                    ${h.exact} Exact ${h.numbers} Correct
+                </div>`
+            ).join('');
+            
+            void historyList.offsetWidth;
+        }
+
+        function updateLeaderboard(score) {
+            const playerName = prompt('Enter your name:', 'Code Master');
+            if (playerName) {
+                leaderboard.push({ name: playerName, score });
+                leaderboard.sort((a, b) => a.score - b.score);
+                leaderboard = leaderboard.slice(0, 5);
+                localStorage.setItem('codeBreakerLeaderboard', JSON.stringify(leaderboard));
+                displayLeaderboard();
+            }
+        }
+
+        function displayLeaderboard() {
+            const leaderboardList = document.getElementById('leaderboardList');
+            leaderboardList.innerHTML = leaderboard.map((entry, index) => 
+                `<li>${index + 1}. ${entry.name}<span>${entry.score}</span></li>`
+            ).join('');
+        }
+
+        function disableGame() {
+            document.getElementById('guessInput').disabled = true;
+            document.querySelector('button').disabled = true;
+            document.getElementById('restartButton').style.display = 'block';
+        }
+
+        function restartGame() {
+            secretCode = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
+            attemptsLeft = 5;
+            guessHistory = [];
+            document.getElementById('guessInput').disabled = false;
+            document.querySelector('button').disabled = false;
+            document.getElementById('restartButton').style.display = 'none';
+            document.getElementById('feedback').textContent = '';
+            document.getElementById('attempts').textContent = attemptsLeft;
+            updateHistory();
+        }
+
+        // Navbar toggle functionality for mobile
+        document.querySelector('.nav-toggle').addEventListener('click', function() {
+            document.querySelector('.nav-links').classList.toggle('active');
+        });
+
+        displayLeaderboard();
+
+        document.getElementById('guessInput').addEventListener('keypress', e => {
+            if (e.key === 'Enter') checkGuess();
+        });
+
+        document.getElementById('guessInput').addEventListener('input', function(e) {
+            this.value = this.value.replace(/[^0-9]/g, '');
+            if (this.value.length > 4) this.value = this.value.slice(0, 4);
+        });
+
+        document.querySelectorAll('.leaderboard li').forEach(item => {
+            item.addEventListener('mouseenter', () => {
+                item.style.transform = 'translateX(8px)';
+            });
+            item.addEventListener('mouseleave', () => {
+                item.style.transform = 'translateX(0)';
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Smooth scrolling for navigation links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+                    
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80, // Adjust for navbar height
+                            behavior: 'smooth'
+                        });
+                        
+                        // Update active link
+                        document.querySelectorAll('.nav-links a').forEach(link => {
+                            link.classList.remove('active');
+                        });
+                        this.classList.add('active');
+                        
+                        // Close mobile menu if open
+                        document.querySelector('.nav-links').classList.remove('active');
+                    }
+                });
+            });
+            
+            // Leaderboard tabs functionality
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active class from all tabs
+                    document.querySelectorAll('.tab-button').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    
+                    // Add active class to clicked tab
+                    this.classList.add('active');
+                    
+                    // Here you would normally load different leaderboard data
+                    // For now, we'll just simulate it with placeholder data
+                    const tabType = this.getAttribute('data-tab');
+                    populateLeaderboardTable(tabType);
+                });
+            });
+            
+            // Contact form submission
+            document.getElementById('contactForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                alert('Thank you for your message! We will get back to you soon.');
+                this.reset();
+            });
+            
+            // Challenge buttons
+            document.querySelectorAll('.challenge-button').forEach(button => {
+                button.addEventListener('click', function() {
+                    alert('Challenge mode coming soon!');
+                });
+            });
+            
+            // Populate leaderboard table with sample data
+            populateLeaderboardTable('global');
+            
+            // Update active nav link based on scroll position
+            window.addEventListener('scroll', updateActiveNavLink);
+        });
+        
+        // Function to populate leaderboard table with sample data
+        function populateLeaderboardTable(tabType) {
+            const leaderboardData = {
+                global: [
+                    { rank: 1, player: 'John Doe', score: 3, date: '2025-04-01' },
+                    { rank: 2, player: 'Jane Smith', score: 4, date: '2025-04-02' },
+                    { rank: 3, player: 'Bob Johnson', score: 5, date: '2025-04-03' }
+                ],
+                weekly: [
+                    { rank: 1, player: 'Alice Brown', score: 2, date: '2025-04-04' },
+                    { rank: 2, player: 'Charlie Davis', score: 3, date: '2025-04-05' },
+                    { rank: 3, player: 'Eve Green', score: 4, date: '2025-04-06' }
+                ],
+                daily: [
+                    { rank: 1, player: 'Grace Hill', score: 1, date: '2025-04-07' },
+                    { rank: 2, player: 'Ian Johnson', score: 2, date: '2025-04-08' },
+                    { rank: 3, player: 'Julia Lee', score: 3, date: '2025-04-09' }
+                ]
+            };
+
+            const leaderboardTableBody = document.getElementById('leaderboardTableBody');
+            leaderboardTableBody.innerHTML = '';
+
+            leaderboardData[tabType].forEach((entry, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${entry.player}</td>
+                    <td>${entry.score}</td>
+                    <td>${entry.date}</td>
+                `;
+                leaderboardTableBody.appendChild(row);
+            });
+        }
+
+        function updateActiveNavLink() {
+            const sections = document.querySelectorAll('section');
+            let activeLink = null;
+            let minDistance = Infinity;
+
+            sections.forEach(section => {
+                const rect = section.getBoundingClientRect();
+                const distance = Math.abs(rect.top + rect.height / 2 - (window.innerHeight || document.documentElement.clientHeight) / 2);
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    activeLink = section.getAttribute('id');
+                }
+            });
+
+            if (activeLink) {
+                document.querySelectorAll('.nav-links a').forEach(link => {
+                    if (link.getAttribute('href') === `#${activeLink}`) {
+                        link.classList.add('active');
+                    } else {
+                        link.classList.remove('active');
+                    }
+                });
+            }
+        }
+    </script>
+</body>
+</html>

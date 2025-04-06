@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Physics Simulation</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        font-family: "Arial", sans-serif;
+        background: linear-gradient(to bottom, #1a1a2e, #16213e);
+        color: #fff;
+        transition: background 0.3s, color 0.3s;
+      }
+      body.light-mode {
+        background: linear-gradient(to bottom, #f0f0f0, #d9d9d9);
+        color: #333;
+      }
+      #background-canvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+      }
+      .section {
+        scroll-margin-top: 80px;
+      }
+      .card {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+      .light-mode .card {
+        background: rgba(255, 255, 255, 0.8);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+      }
+      .nav-links {
+        display: flex;
+      }
+      .hamburger-menu {
+        display: none;
+      }
+      @media (max-width: 768px) {
+        .nav-links {
+          display: none;
+          flex-direction: column;
+          background: #333;
+          position: absolute;
+          top: 60px;
+          left: 0;
+          width: 100%;
+        }
+        .nav-links.active {
+          display: flex;
+        }
+        .hamburger-menu {
+          display: block;
+        }
+        #home {
+          min-height: auto;
+        }
+      }
+    </style>
+  </head>
+  <body class="dark:text-white light-mode:text-gray-800">
+    <canvas id="background-canvas"></canvas>
+    <header
+      class="fixed top-0 left-0 w-full bg-gray-800 bg-opacity-70 backdrop-blur-md text-white p-4 flex justify-between items-center z-10"
+    >
+      <div class="logo flex items-center text-xl">
+        <i class="fas fa-atom mr-2"></i> Physics Sim
+      </div>
+      <nav class="nav-links space-y-2 md:space-y-0 md:flex md:space-x-4">
+        <a href="#home" class="hover:underline">Home</a>
+        <a href="#simulation" class="hover:underline">Simulation</a>
+        <a href="#about" class="hover:underline">About</a>
+        <a href="#theory" class="hover:underline">Theory</a>
+        <a href="#contact" class="hover:underline">Contact</a>
+      </nav>
+      <div class="flex items-center space-x-4">
+        <button
+          id="try-now"
+          class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
+        >
+          Try it now
+        </button>
+        <i
+          id="theme-toggle"
+          class="fas fa-moon cursor-pointer text-2xl"
+          aria-label="Toggle dark/light mode"
+        ></i>
+        <i
+          class="fas fa-bars hamburger-menu cursor-pointer text-2xl"
+          aria-label="Menu"
+          onclick="toggleMenu()"
+        ></i>
+      </div>
+    </header>
+    <main class="pt-20 px-5">
+      <section
+        id="home"
+        class="section min-h-screen md:min-h-screen flex items-center justify-center text-center"
+      >
+        <div>
+          <h1 class="text-4xl font-bold">Welcome to the Physics Simulation</h1>
+          <p class="mt-4 text-lg">
+            Explore fundamental mechanics concepts in real time.
+          </p>
+          <button
+            id="start-exploring"
+            class="mt-6 bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded"
+          >
+            Start Exploring
+          </button>
+        </div>
+      </section>
+      <section id="simulation" class="section card p-6 mt-10">
+        <h2 class="text-2xl font-semibold">Simulation</h2>
+        <canvas
+          id="canvas"
+          class="w-full h-96 mt-4 rounded-lg border border-gray-300"
+        ></canvas>
+        <div id="controls" class="flex flex-wrap justify-center mt-4 space-x-4">
+          <label class="flex flex-col items-center"
+            >Gravity (m/s²):
+            <input
+              type="range"
+              id="g"
+              min="0"
+              max="20"
+              step="0.1"
+              value="9.8"
+              class="w-32"
+            />
+            <span id="g-value">9.8</span></label
+          >
+          <label class="flex flex-col items-center"
+            >Mass (kg):
+            <input
+              type="range"
+              id="m"
+              min="0.1"
+              max="10"
+              step="0.1"
+              value="1"
+              class="w-32"
+            />
+            <span id="m-value">1</span></label
+          >
+          <label class="flex flex-col items-center"
+            >Friction (kg/s):
+            <input
+              type="range"
+              id="k"
+              min="0"
+              max="5"
+              step="0.1"
+              value="0"
+              class="w-32"
+            />
+            <span id="k-value">0</span></label
+          >
+          <button
+            id="reset"
+            class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded mt-2"
+          >
+            Reset
+          </button>
+        </div>
+      </section>
+      <section id="about" class="mb-10 rounded-lg px-5 py-10">
+        <h2 class="text-center mb-10">About the Simulation</h2>
+        <!-- Use grid, single column by default, 3 columns from md breakpoint upwards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <div class="card rounded-lg p-6">
+            <h3>Purpose</h3>
+            <p>
+              This simulation aims to provide an interactive way to understand
+              classical mechanics concepts through visual experimentation and
+              real-time feedback.
+            </p>
+          </div>
+          <div class="card rounded-lg p-6">
+            <h3>Features</h3>
+            <p>
+              Adjust gravity, mass, and friction to see real-time effects on
+              particle motion. Click anywhere on the canvas to add new
+              particles.
+            </p>
+          </div>
+          <div class="card rounded-lg p-6">
+            <h3>Target Audience</h3>
+            <p>
+              Students, educators, and anyone interested in physics. Perfect for
+              classroom demonstrations or self-paced learning.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section id="theory" class="mb-10 rounded-lg px-5 py-10">
+        <h2 class="text-center mb-10">Theory Behind the Simulation</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <div class="card rounded-lg p-6">
+            <h3>Equations of Motion</h3>
+            <p>
+              The simulation uses the following equations:<br /><br />
+              aₓ = - (k / m) * vₓ<br />
+              aᵧ = g - (k / m) * vᵧ<br /><br />
+              Where a is acceleration, v is velocity, k is friction coefficient,
+              m is mass, and g is gravity.
+            </p>
+          </div>
+          <div class="card rounded-lg p-6">
+            <h3>Gravity</h3>
+            <p>
+              Gravity is modeled as a constant downward acceleration (g). On
+              Earth, this is approximately 9.8 m/s², but you can adjust it to
+              simulate other environments.
+            </p>
+          </div>
+          <div class="card rounded-lg p-6">
+            <h3>Friction</h3>
+            <p>
+              Friction opposes motion and is proportional to velocity. The
+              friction coefficient (k) determines how quickly objects slow down.
+              Set to 0 for frictionless motion.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section id="contact" class="section card p-6 mt-10 w-3/5 mx-auto">
+        <h2 class="text-2xl font-semibold">Contact Us</h2>
+        <form class="mt-4 space-y-4">
+          <div>
+            <label for="name" class="block">Name:</label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              class="w-full p-2 rounded border border-gray-300"
+              placeholder="Your name"
+            />
+          </div>
+          <div>
+            <label for="email" class="block">Email:</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              class="w-full p-2 rounded border border-gray-300"
+              placeholder="Your email"
+            />
+          </div>
+          <div>
+            <label for="message" class="block">Message:</label>
+            <textarea
+              id="message"
+              name="message"
+              class="w-full p-2 rounded border border-gray-300"
+              placeholder="Your message"
+            ></textarea>
+          </div>
+          <button
+            type="submit"
+            class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded"
+          >
+            Send
+          </button>
+        </form>
+      </section>
+    </main>
+    <footer class="bg-gray-800 text-white text-center p-4 mt-10">
+      <p>
+        &copy; <span id="year"></span> Physics Simulation. All rights reserved.
+      </p>
+    </footer>
+    <script>
+      document.getElementById("year").textContent = new Date().getFullYear();
+      document
+        .getElementById("start-exploring")
+        .addEventListener("click", () => {
+          document
+            .getElementById("simulation")
+            .scrollIntoView({ behavior: "smooth" });
+        });
+      document.getElementById("try-now").addEventListener("click", () => {
+        document
+          .getElementById("simulation")
+          .scrollIntoView({ behavior: "smooth" });
+      });
+      const themeToggle = document.getElementById("theme-toggle");
+      themeToggle.addEventListener("click", () => {
+        document.body.classList.toggle("light-mode");
+        if (document.body.classList.contains("light-mode")) {
+          themeToggle.classList.replace("fa-moon", "fa-sun");
+          themeToggle.style.color = "#333";
+        } else {
+          themeToggle.classList.replace("fa-sun", "fa-moon");
+          themeToggle.style.color = "#fff";
+        }
+      });
+
+      function toggleMenu() {
+        const nav = document.querySelector(".nav-links");
+        nav.classList.toggle("active");
+      }
+
+      // Background canvas animation
+      const bgCanvas = document.getElementById("background-canvas");
+      const bgCtx = bgCanvas.getContext("2d");
+      let bgParticles = [];
+      function createBgParticles() {
+        bgParticles = [];
+        for (let i = 0; i < 50; i++) {
+          bgParticles.push({
+            x: Math.random() * bgCanvas.width,
+            y: Math.random() * bgCanvas.height,
+            vx: (Math.random() - 0.5) * 0.5,
+            vy: (Math.random() - 0.5) * 0.5,
+          });
+        }
+      }
+      function updateBgParticles() {
+        for (let p of bgParticles) {
+          p.x += p.vx;
+          p.y += p.vy;
+          if (p.x < 0 || p.x > bgCanvas.width) p.vx = -p.vx;
+          if (p.y < 0 || p.y > bgCanvas.height) p.vy = -p.vy;
+        }
+      }
+      function drawBgParticles() {
+        bgCtx.clearRect(0, 0, bgCanvas.width, bgCanvas.height);
+        const isLightMode = document.body.classList.contains("light-mode");
+        bgCtx.fillStyle = isLightMode
+          ? "rgba(0, 0, 0, 0.5)"
+          : "rgba(255, 255, 255, 0.5)";
+        bgCtx.strokeStyle = isLightMode
+          ? "rgba(0, 0, 0, 0.1)"
+          : "rgba(255, 255, 255, 0.1)";
+        for (let p of bgParticles) {
+          bgCtx.beginPath();
+          bgCtx.arc(p.x, p.y, 2, 0, 2 * Math.PI);
+          bgCtx.fill();
+        }
+        for (let i = 0; i < bgParticles.length; i++) {
+          for (let j = i + 1; j < bgParticles.length; j++) {
+            let dx = bgParticles[i].x - bgParticles[j].x;
+            let dy = bgParticles[i].y - bgParticles[j].y;
+            let dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < 100) {
+              bgCtx.beginPath();
+              bgCtx.moveTo(bgParticles[i].x, bgParticles[i].y);
+              bgCtx.lineTo(bgParticles[j].x, bgParticles[j].y);
+              bgCtx.stroke();
+            }
+          }
+        }
+      }
+      function animateBg() {
+        updateBgParticles();
+        drawBgParticles();
+        requestAnimationFrame(animateBg);
+      }
+      window.addEventListener("resize", () => {
+        bgCanvas.width = window.innerWidth;
+        bgCanvas.height = window.innerHeight;
+        createBgParticles();
+      });
+      bgCanvas.width = window.innerWidth;
+      bgCanvas.height = window.innerHeight;
+      createBgParticles();
+      animateBg();
+
+      // Simulation canvas
+      const canvas = document.getElementById("canvas");
+      const ctx = canvas.getContext("2d");
+      canvas.width = canvas.clientWidth;
+      canvas.height = canvas.clientHeight;
+      const pixelsPerMeter = 100;
+      let canvasWidthInMeters = canvas.width / pixelsPerMeter;
+      let canvasHeightInMeters = canvas.height / pixelsPerMeter;
+      const radiusInMeters = 0.1;
+      const radiusInPixels = radiusInMeters * pixelsPerMeter;
+      let g = 9.8;
+      let m = 1;
+      let k = 0;
+      let particles = [];
+      function addParticle(x, y) {
+        particles.push({ x, y, vx: 0, vy: 0 });
+      }
+      function update(dt) {
+        const dtSec = dt / 1000;
+        for (let p of particles) {
+          const ax = -(k / m) * p.vx;
+          const ay = g - (k / m) * p.vy;
+          p.vx += ax * dtSec;
+          p.vy += ay * dtSec;
+          p.x += p.vx * dtSec;
+          p.y += p.vy * dtSec;
+          if (p.x < radiusInMeters) {
+            p.x = radiusInMeters;
+            p.vx = -p.vx * 0.8;
+          } else if (p.x > canvasWidthInMeters - radiusInMeters) {
+            p.x = canvasWidthInMeters - radiusInMeters;
+            p.vx = -p.vx * 0.8;
+          }
+          if (p.y < radiusInMeters) {
+            p.y = radiusInMeters;
+            p.vy = -p.vy * 0.8;
+          } else if (p.y > canvasHeightInMeters - radiusInMeters) {
+            p.y = canvasHeightInMeters - radiusInMeters;
+            p.vy = -p.vy * 0.8;
+          }
+        }
+      }
+      function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        for (let p of particles) {
+          const pixelX = p.x * pixelsPerMeter;
+          const pixelY = p.y * pixelsPerMeter;
+          ctx.beginPath();
+          ctx.arc(pixelX, pixelY, radiusInPixels, 0, 2 * Math.PI);
+          ctx.fillStyle = "#add8e6";
+          ctx.fill();
+        }
+      }
+      let lastTime = 0;
+      function animate(time) {
+        const dt = time - lastTime;
+        lastTime = time;
+        update(dt);
+        draw();
+        requestAnimationFrame(animate);
+      }
+      requestAnimationFrame(animate);
+      canvas.addEventListener("click", (event) => {
+        const mouseX = event.offsetX;
+        const mouseY = event.offsetY;
+        const x = mouseX / pixelsPerMeter;
+        const y = mouseY / pixelsPerMeter;
+        addParticle(x, y);
+      });
+      const gInput = document.getElementById("g");
+      const gValue = document.getElementById("g-value");
+      gInput.addEventListener("input", () => {
+        g = parseFloat(gInput.value);
+        gValue.textContent = g.toFixed(1);
+      });
+      const mInput = document.getElementById("m");
+      const mValue = document.getElementById("m-value");
+      mInput.addEventListener("input", () => {
+        m = parseFloat(mInput.value);
+        mValue.textContent = m.toFixed(1);
+      });
+      const kInput = document.getElementById("k");
+      const kValue = document.getElementById("k-value");
+      kInput.addEventListener("input", () => {
+        k = parseFloat(kInput.value);
+        kValue.textContent = k.toFixed(1);
+      });
+      const resetButton = document.getElementById("reset");
+      resetButton.addEventListener("click", () => {
+        particles = [];
+      });
+    </script>
+  </body>
+</html>

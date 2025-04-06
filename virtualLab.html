@@ -1,0 +1,2695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Science Laboratory</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Roboto+Mono&display=swap">
+    <style>
+        /* Professional scientific design system */
+        :root {
+            /* Primary colors */
+            --primary: #0f4c81; /* Scientific blue */
+            --primary-light: #3a6ea5;
+            --primary-dark: #0a3258;
+            --primary-contrast: #ffffff;
+            
+            /* Secondary colors */
+            --secondary: #16a085; /* Teal */
+            --secondary-light: #1abc9c;
+            --secondary-dark: #0e6655;
+            --secondary-contrast: #ffffff;
+            
+            /* Accent colors */
+            --accent: #e74c3c; /* Scientific red */
+            --accent-light: #f06560;
+            --accent-dark: #c0392b;
+            
+            /* Neutral colors */
+            --neutral-50: #f8fafc;
+            --neutral-100: #f1f5f9;
+            --neutral-200: #e2e8f0;
+            --neutral-300: #cbd5e1;
+            --neutral-400: #94a3b8;
+            --neutral-500: #64748b;
+            --neutral-600: #475569;
+            --neutral-700: #334155;
+            --neutral-800: #1e293b;
+            --neutral-900: #0f172a;
+            
+            /* UI elements */
+            --radius-sm: 3px;
+            --radius: 6px;
+            --radius-lg: 12px;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --transition: all 0.2s ease;
+            
+            /* Spacing */
+            --spacing-1: 0.25rem;
+            --spacing-2: 0.5rem;
+            --spacing-3: 0.75rem;
+            --spacing-4: 1rem;
+            --spacing-5: 1.25rem;
+            --spacing-6: 1.5rem;
+            --spacing-8: 2rem;
+            --spacing-10: 2.5rem;
+            --spacing-12: 3rem;
+            --spacing-16: 4rem;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+        
+        body {
+            background-color: var(--neutral-100);
+            color: var(--neutral-800);
+            line-height: 1.5;
+            font-size: 16px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* Typography */
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 600;
+            line-height: 1.25;
+            color: var(--neutral-900);
+            margin-bottom: var(--spacing-4);
+        }
+        
+        h1 {
+            font-size: 1.875rem;
+            letter-spacing: -0.025em;
+        }
+        
+        h2 {
+            font-size: 1.5rem;
+            letter-spacing: -0.025em;
+        }
+        
+        h3 {
+            font-size: 1.25rem;
+        }
+        
+        p {
+            margin-bottom: var(--spacing-4);
+        }
+        
+        .mono {
+            font-family: 'Roboto Mono', monospace;
+        }
+        
+        /* Layout */
+        .container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* Navbar */
+        .navbar {
+            background-color: var(--primary);
+            color: var(--primary-contrast);
+            padding: 0;
+            box-shadow: var(--shadow-md);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .navbar-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 var(--spacing-6);
+            max-width: 1400px;
+            margin: 0 auto;
+            height: 70px;
+        }
+        
+        .navbar-logo {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-3);
+            text-decoration: none;
+            color: var(--primary-contrast);
+        }
+        
+        .navbar-logo h1 {
+            font-size: 1.5rem;
+            margin: 0;
+            color: var(--primary-contrast);
+        }
+        
+        .navbar-logo-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: var(--primary-contrast);
+            border-radius: 50%;
+        }
+        
+        .navbar-logo-icon svg {
+            width: 24px;
+            height: 24px;
+            fill: var(--primary);
+        }
+        
+        .navbar-links {
+            display: flex;
+            gap: var(--spacing-6);
+        }
+        
+        .navbar-link {
+            color: var(--primary-contrast);
+            text-decoration: none;
+            font-weight: 500;
+            padding: var(--spacing-2) 0;
+            position: relative;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+        
+        .navbar-link:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--primary-contrast);
+            transition: var(--transition);
+        }
+        
+        .navbar-link:hover:after,
+        .navbar-link.active:after {
+            width: 100%;
+        }
+        
+        /* Main layout */
+        .main-wrapper {
+            display: flex;
+            flex: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+            padding: var(--spacing-6);
+            gap: var(--spacing-6);
+        }
+        
+        .sidebar {
+            width: 280px;
+            background-color: white;
+            box-shadow: var(--shadow);
+            border-radius: var(--radius);
+            padding: var(--spacing-6);
+            height: fit-content;
+            position: sticky;
+            top: 86px;
+        }
+        
+        .content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* Components */
+        .card {
+            background-color: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: var(--spacing-4);
+            margin-bottom: var(--spacing-4);
+            transition: var(--transition);
+            border-left: 3px solid transparent;
+            cursor: pointer;
+        }
+        
+        .card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+        
+        .card.active {
+            border-left-color: var(--primary);
+            background-color: var(--neutral-50);
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border-radius: 9999px;
+            background-color: var(--secondary);
+            color: white;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: var(--radius);
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        .btn-primary:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+        
+        .btn-outline {
+            background-color: white;
+            border: 1px solid var(--neutral-300);
+            color: var(--neutral-700);
+        }
+        
+        .btn-outline:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        
+        .btn-success {
+            background-color: var(--secondary);
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background-color: var(--secondary-dark);
+        }
+        
+        .btn-danger {
+            background-color: var(--accent);
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: var(--accent-dark);
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .btn-group .btn {
+            flex: 1;
+        }
+        
+        .btn-icon {
+            padding: 0.5rem;
+            border-radius: 50%;
+        }
+        
+        /* Lab workspace */
+        .lab-workspace {
+            flex: 1;
+            background-color: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+            min-height: 500px;
+            margin-bottom: var(--spacing-6);
+        }
+        
+        .experiment-view {
+            display: none;
+            height: 100%;
+            width: 100%;
+            position: relative;
+        }
+        
+        .experiment-view.active {
+            display: block;
+        }
+        
+        /* Lab controls */
+        .lab-controls {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-4);
+            background-color: white;
+            padding: var(--spacing-4);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+        
+        .progress-container {
+            flex: 1;
+            background-color: var(--neutral-200);
+            height: 0.5rem;
+            border-radius: 9999px;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background-color: var(--secondary);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        /* Instruction panel */
+        .instruction-panel {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: var(--spacing-6);
+            background-color: rgba(255, 255, 255, 0.95);
+            border-top: 1px solid var(--neutral-200);
+            max-height: 200px;
+            overflow-y: auto;
+            box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+        
+        /* Tabs */
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid var(--neutral-200);
+            margin-bottom: var(--spacing-4);
+        }
+        
+        .tab {
+            padding: var(--spacing-2) var(--spacing-4);
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: var(--transition);
+            color: var(--neutral-600);
+            font-weight: 500;
+        }
+        
+        .tab:hover {
+            color: var(--primary);
+        }
+        
+        .tab.active {
+            border-bottom-color: var(--primary);
+            color: var(--primary);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        /* Lab equipment */
+        .lab-item {
+            position: absolute;
+            user-select: none;
+            cursor: move;
+            transition: transform 0.2s ease;
+        }
+        
+        .beaker {
+            width: 120px;
+            height: 150px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border: 2px solid var(--neutral-700);
+            border-radius: 0 0 20px 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .beaker::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: 0;
+            right: 0;
+            height: 10px;
+            background-color: var(--neutral-700);
+            border-radius: 10px 10px 0 0;
+        }
+        
+        .liquid {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 75%;
+            transition: height 1s ease, background-color 1s ease;
+        }
+        
+        .acid-liquid {
+            background-color: rgba(239, 68, 68, 0.6);
+        }
+        
+        .base-liquid {
+            background-color: rgba(59, 130, 246, 0.6);
+        }
+        
+        .water-liquid {
+            background-color: rgba(186, 230, 253, 0.4);
+        }
+        
+        .test-tube {
+            width: 40px;
+            height: 150px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border: 2px solid var(--neutral-700);
+            border-radius: 0 0 20px 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .bunsen-burner {
+            width: 80px;
+            height: 120px;
+            position: relative;
+        }
+        
+        .bunsen-base {
+            width: 80px;
+            height: 20px;
+            background-color: var(--neutral-600);
+            border-radius: 5px;
+        }
+        
+        .bunsen-tube {
+            width: 20px;
+            height: 80px;
+            background-color: var(--neutral-500);
+            margin: 0 auto;
+        }
+        
+        .bunsen-flame {
+            width: 30px;
+            height: 0;
+            background: linear-gradient(to top, #f59e0b, #fbbf24);
+            margin: 0 auto;
+            border-radius: 50% 50% 0 0;
+            transition: height 0.5s ease;
+        }
+        
+        .bunsen-burner.active .bunsen-flame {
+            height: 40px;
+        }
+        
+        .thermometer {
+            width: 20px;
+            height: 150px;
+            background-color: white;
+            border: 2px solid var(--neutral-700);
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .thermometer-bulb {
+            width: 40px;
+            height: 40px;
+            background-color: var(--accent);
+            border: 2px solid var(--neutral-700);
+            border-radius: 50%;
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .thermometer-level {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 8px;
+            height: 0%;
+            background-color: var(--accent);
+            transition: height 1s ease;
+        }
+        
+        /* Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        
+        .modal.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        .modal-content {
+            background-color: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
+            width: 100%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: var(--spacing-8);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-6);
+            padding-bottom: var(--spacing-4);
+            border-bottom: 1px solid var(--neutral-200);
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--neutral-500);
+        }
+        
+        /* Certificate */
+        .certificate {
+            border: 8px solid var(--primary);
+            padding: var(--spacing-8);
+            text-align: center;
+            background-color: var(--neutral-50);
+            position: relative;
+            margin-top: var(--spacing-8);
+        }
+        
+        .certificate::before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            bottom: 10px;
+            border: 2px solid var(--neutral-800);
+            pointer-events: none;
+        }
+        
+        .certificate h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--neutral-900);
+        }
+        
+        .certificate .seal {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background-color: var(--accent);
+            margin: 1rem auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        
+        /* Section views */
+        .section-view {
+            display: none;
+            padding: var(--spacing-6);
+            background-color: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-bottom: var(--spacing-6);
+        }
+        
+        .section-view.active {
+            display: block;
+        }
+        
+        /* Footer */
+        .footer {
+            background-color: var(--neutral-800);
+            color: var(--neutral-200);
+            padding: var(--spacing-8) 0;
+            margin-top: auto;
+        }
+        
+        .footer-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 var(--spacing-6);
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--spacing-8);
+        }
+        
+        .footer-column h3 {
+            color: white;
+            margin-bottom: var(--spacing-4);
+            font-size: 1.1rem;
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-link {
+            margin-bottom: var(--spacing-2);
+        }
+        
+        .footer-link a {
+            color: var(--neutral-300);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        
+        .footer-link a:hover {
+            color: white;
+        }
+        
+        .footer-bottom {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: var(--spacing-6);
+            border-top: 1px solid var(--neutral-700);
+            margin-top: var(--spacing-8);
+            text-align: center;
+            color: var(--neutral-400);
+            font-size: 0.875rem;
+        }
+        
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .main-wrapper {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                position: static;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .navbar-links {
+                display: none;
+            }
+            
+            .lab-controls {
+                flex-wrap: wrap;
+            }
+            
+            .lab-controls .btn {
+                flex: 1;
+            }
+            
+            .footer-container {
+                grid-template-columns: 1fr;
+                gap: var(--spacing-6);
+            }
+        }
+
+        /* Icons */
+        .icon {
+            display: inline-block;
+            width: 1em;
+            height: 1em;
+            stroke-width: 0;
+            stroke: currentColor;
+            fill: currentColor;
+            vertical-align: middle;
+        }
+        
+        .icon-sm {
+            width: 0.875em;
+            height: 0.875em;
+        }
+        
+        .icon-audio {
+            stroke: currentColor;
+            stroke-width: 2;
+            fill: none;
+        }
+        
+        .mr-2 {
+            margin-right: 0.5rem;
+        }
+        
+        .ml-2 {
+            margin-left: 0.5rem;
+        }
+        
+        .flex {
+            display: flex;
+        }
+        
+        .items-center {
+            align-items: center;
+        }
+        
+        .justify-between {
+            justify-content: space-between;
+        }
+        
+        .mb-4 {
+            margin-bottom: var(--spacing-4);
+        }
+        
+        .mb-2 {
+            margin-bottom: var(--spacing-2);
+        }
+        
+        .mt-4 {
+            margin-top: var(--spacing-4);
+        }
+        
+        .list-disc {
+            list-style-type: disc;
+            padding-left: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Professional Navbar -->
+        <nav class="navbar">
+            <div class="navbar-container">
+                <a href="#" class="navbar-logo">
+                    <div class="navbar-logo-icon">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M9 22H15C20 22 22 20 22 15V9C22 4 20 2 15 2H9C4 2 2 4 2 9V15C2 20 4 22 9 22Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                            <path d="M9 10C10.1046 10 11 9.10457 11 8C11 6.89543 10.1046 6 9 6C7.89543 6 7 6.89543 7 8C7 9.10457 7.89543 10 9 10Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                            <path d="M2.67 18.95L7.6 15.64C8.39 15.11 9.53 15.17 10.24 15.78L10.57 16.07C11.35 16.74 12.61 16.74 13.39 16.07L17.55 12.5C18.33 11.83 19.59 11.83 20.37 12.5L22 13.9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                        </svg>
+                    </div>
+                    <h1>Interactive Science Laboratory</h1>
+                </a>
+                <div class="navbar-links">
+                    <div class="navbar-link active" data-section="home">Home</div>
+                    <div class="navbar-link" data-section="experiments">Experiments</div>
+                    <div class="navbar-link" data-section="resources">Resources</div>
+                    <div class="navbar-link" data-section="about">About</div>
+                    <div class="navbar-link" data-section="contact">Contact</div>
+                </div>
+            </div>
+        </nav>
+
+        <div class="main-content">
+            <!-- Home Section (Lab) -->
+            <div id="home-section" class="section-view active">
+                <div class="main-wrapper">
+                    <!-- Sidebar -->
+                    <div class="sidebar">
+                        <div class="btn-group mb-4">
+                            <button class="btn btn-primary" id="beginner-btn" data-level="beginner">Beginner</button>
+                            <button class="btn btn-outline" id="intermediate-btn" data-level="intermediate">Intermediate</button>
+                        </div>
+                        
+                        <h2 class="mb-2">Experiments</h2>
+                        <div id="experiment-list">
+                            <div class="card active" data-experiment="acid-base">
+                                <div class="flex items-center justify-between">
+                                    <span>Acid-Base Reactions</span>
+                                    <span class="badge" id="acid-base-badge" style="display: none;">Completed</span>
+                                </div>
+                            </div>
+                            <div class="card" data-experiment="heat-transfer">
+                                <div class="flex items-center justify-between">
+                                    <span>Heat Transfer</span>
+                                    <span class="badge" id="heat-transfer-badge" style="display: none;">Completed</span>
+                                </div>
+                            </div>
+                            <div class="card" data-experiment="density">
+                                <div class="flex items-center justify-between">
+                                    <span>Density and Buoyancy</span>
+                                    <span class="badge" id="density-badge" style="display: none;">Completed</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-4">
+                            <h3>Your Progress</h3>
+                            <p>Experiments completed: <span id="completed-count">0</span>/3</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Main Content -->
+                    <div class="content">
+                        <div class="lab-workspace">
+                            <!-- Acid-Base Experiment View -->
+                            <div class="experiment-view active" id="acid-base-experiment">
+                                <!-- Equipment will be added by JavaScript -->
+                            </div>
+                            
+                            <!-- Heat Transfer Experiment View -->
+                            <div class="experiment-view" id="heat-transfer-experiment">
+                                <!-- Equipment will be added by JavaScript -->
+                            </div>
+                            
+                            <!-- Density Experiment View -->
+                            <div class="experiment-view" id="density-experiment">
+                                <!-- Equipment will be added by JavaScript -->
+                            </div>
+                            
+                            <div class="instruction-panel">
+                                <div class="tabs">
+                                    <div class="tab active" data-tab="instructions">Instructions</div>
+                                    <div class="tab" data-tab="theory">Theory</div>
+                                    <div class="tab" data-tab="safety">Safety</div>
+                                </div>
+                                
+                                <div class="tab-content active" id="instructions-content">
+                                    <h3>Current Step</h3>
+                                    <p id="current-instruction">Welcome to the Interactive Science Lab! Select an experiment to begin.</p>
+                                </div>
+                                
+                                <div class="tab-content" id="theory-content">
+                                    <h3>Scientific Background</h3>
+                                    <p id="theory-text">Select an experiment to see relevant theory.</p>
+                                </div>
+                                
+                                <div class="tab-content" id="safety-content">
+                                    <h3>Safety Guidelines</h3>
+                                    <p id="safety-text">Always follow proper laboratory safety procedures.</p>
+                                </div>
+                            </div>
+                            
+                            <div style="position: absolute; top: 1rem; right: 1rem;">
+                                <button class="btn btn-outline btn-icon" id="toggle-audio" title="Toggle audio">
+                                    <svg class="icon icon-audio" viewBox="0 0 24 24">
+                                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                                        <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="lab-controls">
+                            <button class="btn btn-outline" id="prev-btn" disabled>
+                                <svg class="icon icon-sm mr-2" viewBox="0 0 24 24">
+                                    <polyline points="15 18 9 12 15 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></polyline>
+                                </svg>
+                                Previous
+                            </button>
+                            
+                            <div class="progress-container">
+                                <div class="progress-bar" id="experiment-progress"></div>
+                            </div>
+                            
+                            <button class="btn btn-success" id="next-btn">
+                                Next
+                                <svg class="icon icon-sm ml-2" viewBox="0 0 24 24">
+                                    <polyline points="9 18 15 12 9 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></polyline>
+                                </svg>
+                            </button>
+                            
+                            <button class="btn btn-danger" id="reset-btn">
+                                <svg class="icon icon-sm mr-2" viewBox="0 0 24 24">
+                                    <path d="M23 4v6h-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                    <path d="M1 20v-6h6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                    <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                </svg>
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Experiments Section -->
+            <div id="experiments-section" class="section-view">
+                <h2>All Available Experiments</h2>
+                <p>Explore our collection of interactive scientific experiments designed for educational purposes.</p>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;">
+                    <div class="card">
+                        <h3>Acid-Base Reactions</h3>
+                        <p>Learn about acid-base neutralization and observe color changes during chemical reactions.</p>
+                        <button class="btn btn-primary" data-experiment="acid-base">Start Experiment</button>
+                    </div>
+                    
+                    <div class="card">
+                        <h3>Heat Transfer</h3>
+                        <p>Explore the principles of thermal energy transfer through conduction, convection, and radiation.</p>
+                        <button class="btn btn-primary" data-experiment="heat-transfer">Start Experiment</button>
+                    </div>
+                    
+                    <div class="card">
+                        <h3>Density and Buoyancy</h3>
+                        <p>Discover why some objects float while others sink by understanding density principles.</p>
+                        <button class="btn btn-primary" data-experiment="density">Start Experiment</button>
+                    </div>
+                    
+                    <div class="card">
+                        <h3>Electricity (Coming Soon)</h3>
+                        <p>Build circuits and understand electrical principles in this interactive simulation.</p>
+                        <button class="btn btn-outline" disabled>Coming Soon</button>
+                    </div>
+                    
+                    <div class="card">
+                        <h3>Magnetism (Coming Soon)</h3>
+                        <p>Explore magnetic fields and their interactions with various materials.</p>
+                        <button class="btn btn-outline" disabled>Coming Soon</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Resources Section -->
+            <div id="resources-section" class="section-view">
+                <h2>Educational Resources</h2>
+                <p>Enhance your learning with these supplementary materials and resources.</p>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;">
+                    <div class="card">
+                        <h3>Chemistry Fundamentals</h3>
+                        <p>Basic principles and concepts in chemistry for beginners.</p>
+                        <button class="btn btn-primary">Download PDF</button>
+                    </div>
+                    
+                    <div class="card">
+                        <h3>Physics Handbook</h3>
+                        <p>Comprehensive guide to physics principles with practical examples.</p>
+                        <button class="btn btn-primary">Download PDF</button>
+                    </div>
+                    
+                    <div class="card">
+                        <h3>Laboratory Safety Guide</h3>
+                        <p>Essential safety procedures and protocols for scientific experiments.</p>
+                        <button class="btn btn-primary">Download PDF</button>
+                    </div>
+                    
+                    <div class="card">
+                        <h3>Video Tutorials</h3>
+                        <p>Step-by-step video guides for conducting scientific experiments.</p>
+                        <button class="btn btn-primary">Watch Videos</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- About Section -->
+            <div id="about-section" class="section-view">
+                <h2>About Interactive Science Laboratory</h2>
+                <p>The Interactive Science Laboratory is a virtual platform designed to provide hands-on scientific learning experiences for students of all ages. Our mission is to make science education accessible, engaging, and interactive.</p>
+                
+                <h3>Our Mission</h3>
+                <p>We believe that practical experimentation is essential for understanding scientific concepts. Our virtual laboratory allows students to explore scientific principles through interactive simulations, providing a safe and accessible environment for learning.</p>
+                
+                <h3>Our Team</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px;">
+                    <div class="card" style="text-align: center;">
+                        <div style="width: 100px; height: 100px; background-color: var(--neutral-300); border-radius: 50%; margin: 0 auto 15px;"></div>
+                        <h4>Dr. Jane Smith</h4>
+                        <p>Scientific Director</p>
+                    </div>
+                    
+                    <div class="card" style="text-align: center;">
+                        <div style="width: 100px; height: 100px; background-color: var(--neutral-300); border-radius: 50%; margin: 0 auto 15px;"></div>
+                        <h4>Prof. John Davis</h4>
+                        <p>Educational Consultant</p>
+                    </div>
+                    
+                    <div class="card" style="text-align: center;">
+                        <div style="width: 100px; height: 100px; background-color: var(--neutral-300); border-radius: 50%; margin: 0 auto 15px;"></div>
+                        <h4>Sarah Johnson</h4>
+                        <p>Lead Developer</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact Section -->
+            <div id="contact-section" class="section-view">
+                <h2>Contact Us</h2>
+                <p>Have questions or feedback? We'd love to hear from you!</p>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+                    <div>
+                        <h3>Contact Information</h3>
+                        <p><strong>Email:</strong> info@sciencelab.edu</p>
+                        <p><strong>Phone:</strong> +1 (555) 123-4567</p>
+                        <p><strong>Address:</strong> 123 Science Way, Research Park, CA 94025</p>
+                        
+                        <h3 class="mt-4">Office Hours</h3>
+                        <p>Monday - Friday: 9:00 AM - 5:00 PM</p>
+                        <p>Saturday: 10:00 AM - 2:00 PM</p>
+                        <p>Sunday: Closed</p>
+                    </div>
+                    
+                    <div>
+                        <h3>Send Us a Message</h3>
+                        <div style="margin-bottom: 15px;">
+                            <label style="display: block; margin-bottom: 5px;">Name</label>
+                            <input type="text" style="width: 100%; padding: 8px; border: 1px solid var(--neutral-300); border-radius: var(--radius);">
+                        </div>
+                        
+                        <div style="margin-bottom: 15px;">
+                            <label style="display: block; margin-bottom: 5px;">Email</label>
+                            <input type="email" style="width: 100%; padding: 8px; border: 1px solid var(--neutral-300); border-radius: var(--radius);">
+                        </div>
+                        
+                        <div style="margin-bottom: 15px;">
+                            <label style="display: block; margin-bottom: 5px;">Message</label>
+                            <textarea style="width: 100%; padding: 8px; border: 1px solid var(--neutral-300); border-radius: var(--radius); min-height: 150px;"></textarea>
+                        </div>
+                        
+                        <button class="btn btn-primary">Send Message</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Professional Footer -->
+        <footer class="footer">
+            <div class="footer-container">
+                <div class="footer-column">
+                    <h3>Interactive Science Lab</h3>
+                    <p>A virtual laboratory for scientific experiments and educational purposes. Explore scientific concepts through interactive simulations.</p>
+                </div>
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li class="footer-link"><a href="#" data-section="home">Home</a></li>
+                        <li class="footer-link"><a href="#" data-section="experiments">Experiments</a></li>
+                        <li class="footer-link"><a href="#" data-section="resources">Resources</a></li>
+                        <li class="footer-link"><a href="#" data-section="about">About Us</a></li>
+                        <li class="footer-link"><a href="#" data-section="contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Experiments</h3>
+                    <ul class="footer-links">
+                        <li class="footer-link"><a href="#" data-experiment="acid-base">Acid-Base Reactions</a></li>
+                        <li class="footer-link"><a href="#" data-experiment="heat-transfer">Heat Transfer</a></li>
+                        <li class="footer-link"><a href="#" data-experiment="density">Density and Buoyancy</a></li>
+                        <li class="footer-link"><a href="#">Electricity</a></li>
+                        <li class="footer-link"><a href="#">Magnetism</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Contact Us</h3>
+                    <ul class="footer-links">
+                        <li class="footer-link">Email: info@sciencelab.edu</li>
+                        <li class="footer-link">Phone: +1 (555) 123-4567</li>
+                        <li class="footer-link">Address: 123 Science Way, Research Park, CA 94025</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2023 Interactive Science Laboratory. All rights reserved.</p>
+            </div>
+        </footer>
+    </div>
+    
+    <div class="modal" id="completion-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Experiment Completed!</h2>
+                <button class="modal-close" id="modal-close">&times;</button>
+            </div>
+            
+            <div>
+                <p>Congratulations! You've successfully completed the experiment.</p>
+                <p>Here's what you've learned:</p>
+                <ul class="list-disc mb-4">
+                    <li>The principles of <span id="certificate-title">Science Experiment</span></li>
+                    <li>How to safely conduct scientific experiments</li>
+                    <li>The importance of following proper procedures</li>
+                </ul>
+                
+                <div class="certificate">
+                    <h2>Certificate of Completion</h2>
+                    <p>This certifies that</p>
+                    <p style="font-size: 1.5rem; font-weight: bold; margin: 0.5rem 0;">Science Explorer</p>
+                    <p>has successfully completed the</p>
+                    <p style="font-size: 1.25rem; margin: 0.5rem 0;" id="certificate-experiment-name">Science Experiment</p>
+                    <p>Date: <span id="certificate-date"></span></p>
+                    <div class="seal">PASSED</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Main application code
+        document.addEventListener('DOMContentLoaded', function() {
+            // Global variables
+            let currentExperiment = 'acid-base';
+            let currentLevel = 'beginner';
+            let audioEnabled = true;
+            let currentStep = 0;
+            let completedExperiments = {
+                'acid-base': false,
+                'heat-transfer': false,
+                'density': false
+            };
+            
+            // DOM Elements
+            const experimentProgress = document.getElementById('experiment-progress');
+            const currentInstructionEl = document.getElementById('current-instruction');
+            const theoryTextEl = document.getElementById('theory-text');
+            const safetyTextEl = document.getElementById('safety-text');
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            const resetBtn = document.getElementById('reset-btn');
+            const toggleAudioBtn = document.getElementById('toggle-audio');
+            const completedCountEl = document.getElementById('completed-count');
+            const completionModal = document.getElementById('completion-modal');
+            const modalClose = document.getElementById('modal-close');
+            const certificateExperimentName = document.getElementById('certificate-experiment-name');
+            const certificateTitle = document.getElementById('certificate-title');
+            const certificateDate = document.getElementById('certificate-date');
+            const beginnerBtn = document.getElementById('beginner-btn');
+            const intermediateBtn = document.getElementById('intermediate-btn');
+            
+            // Set current date for certificate
+            certificateDate.textContent = new Date().toLocaleDateString();
+            
+            // Initialize experiment data
+            const experimentData = {
+                'acid-base': {
+                    beginner: {
+                        title: 'Acid-Base Reactions',
+                        steps: [
+                            {
+                                instruction: 'Welcome to the Acid-Base Reactions experiment! In this experiment, you will observe how acids and bases react together. Click Next to begin.',
+                                action: 'setup',
+                                equipment: ['beaker-acid', 'beaker-base']
+                            },
+                            {
+                                instruction: 'Observe the two beakers. The left beaker contains an acid solution (hydrochloric acid, HCl), and the right beaker contains a base solution (sodium hydroxide, NaOH).',
+                                action: 'observe'
+                            },
+                            {
+                                instruction: 'Drag the acid beaker close to the base beaker to prepare for mixing.',
+                                action: 'drag',
+                                target: 'beaker-acid',
+                                position: { x: 150, y: 150 }
+                            },
+                            {
+                                instruction: 'Now, imagine pouring the acid into the base. Click the acid beaker to pour it into the base beaker.',
+                                action: 'click',
+                                target: 'beaker-acid'
+                            },
+                            {
+                                instruction: 'Look at the reaction! The acid and base have neutralized each other, forming water and a salt (sodium chloride). Notice the color change indicating the reaction is complete.',
+                                action: 'observe'
+                            },
+                            {
+                                instruction: 'Congratulations! You have successfully completed the acid-base neutralization experiment. The balanced equation for this reaction is: HCl + NaOH → NaCl + H2O',
+                                action: 'complete'
+                            }
+                        ],
+                        theory: 'Acids and bases are common substances with opposite properties. Acids have a pH less than 7, while bases have a pH greater than 7. When mixed, they undergo a neutralization reaction, forming water and a salt. This is represented by the equation: Acid + Base → Salt + Water',
+                        safety: 'While working with acids and bases, always handle with care. In a real laboratory setting, you would need to wear safety goggles, gloves, and a lab coat. Never mix unknown chemicals, and always add acid to water, not water to acid.'
+                    },
+                    intermediate: {
+                        title: 'pH Indicators and Titration',
+                        steps: [
+                            {
+                                instruction: 'Welcome to the intermediate Acid-Base experiment! In this experiment, you will perform a titration to determine the concentration of an acid. Click Next to begin.',
+                                action: 'setup',
+                                equipment: ['beaker-acid', 'beaker-base', 'test-tube', 'dropper']
+                            },
+                            {
+                                instruction: 'First, let\'s add a pH indicator to our acid solution. Drag the dropper to the acid beaker.',
+                                action: 'drag',
+                                target: 'dropper',
+                                position: { x: 100, y: 150 }
+                            },
+                            {
+                                instruction: 'Click the dropper to add the phenolphthalein indicator to the acid.',
+                                action: 'click',
+                                target: 'dropper'
+                            },
+                            {
+                                instruction: 'Now, we need to slowly add the base solution to neutralize the acid. Drag the base beaker close to the acid beaker.',
+                                action: 'drag',
+                                target: 'beaker-base',
+                                position: { x: 170, y: 150 }
+                            },
+                            {
+                                instruction: 'Click the base beaker to add a small amount of the base solution to the acid.',
+                                action: 'click',
+                                target: 'beaker-base'
+                            },
+                            {
+                                instruction: 'Notice the temporary color change as the base is added. Continue adding more base by clicking the base beaker again.',
+                                action: 'click',
+                                target: 'beaker-base'
+                            },
+                            {
+                                instruction: 'Keep adding base until you observe a permanent pink color, indicating that the endpoint of the titration has been reached.',
+                                action: 'complete'
+                            }
+                        ],
+                        theory: 'Titration is a technique where a solution of known concentration is used to determine the concentration of an unknown solution. Acid-base titrations use a pH indicator to show when the acid and base have been mixed in exactly the right proportions.',
+                        safety: 'Always wear proper protective equipment when handling acids and bases. Add acids to water slowly and with constant stirring to prevent splashing.'
+                    }
+                },
+                'heat-transfer': {
+                    beginner: {
+                        title: 'Heat Transfer Basics',
+                        steps: [
+                            {
+                                instruction: 'Welcome to the Heat Transfer experiment! In this experiment, you will observe how heat moves between objects. Click Next to begin.',
+                                action: 'setup',
+                                equipment: ['beaker-water', 'bunsen-burner', 'thermometer']
+                            },
+                            {
+                                instruction: 'First, let\'s set up our experiment. The beaker contains water at room temperature.',
+                                action: 'observe'
+                            },
+                            {
+                                instruction: 'Place the beaker above the Bunsen burner to heat the water.',
+                                action: 'drag',
+                                target: 'beaker-water',
+                                position: { x: 200, y: 150 }
+                            },
+                            {
+                                instruction: 'Click the Bunsen burner to turn it on and start heating the water.',
+                                action: 'click',
+                                target: 'bunsen-burner'
+                            },
+                            {
+                                instruction: 'Observe the thermometer. Notice how the temperature rises as heat is transferred to the water.',
+                                action: 'observe'
+                            },
+                            {
+                                instruction: 'Congratulations! You have successfully completed the heat transfer experiment. You observed how thermal energy moves from a higher temperature (flame) to a lower temperature (water).',
+                                action: 'complete'
+                            }
+                        ],
+                        theory: 'Heat transfer occurs in three ways: conduction (direct contact), convection (through fluids), and radiation (electromagnetic waves). Temperature is a measure of the average kinetic energy of particles in a substance.',
+                        safety: 'When working with heat sources, always be careful not to touch hot surfaces. In a real lab, you would use heat-resistant gloves and keep flammable materials away from heat sources.'
+                    }
+                },
+                'density': {
+                    beginner: {
+                        title: 'Density and Buoyancy',
+                        steps: [
+                            {
+                                instruction: 'Welcome to the Density and Buoyancy experiment! In this experiment, you will explore why some objects float and others sink. Click Next to begin.',
+                                action: 'setup',
+                                equipment: ['beaker-water', 'cube-wood', 'cube-metal']
+                            },
+                            {
+                                instruction: 'First, let\'s observe our materials. We have a beaker of water and two cubes of equal size but different materials: wood and metal.',
+                                action: 'observe'
+                            },
+                            {
+                                instruction: 'Drag the wooden cube into the water.',
+                                action: 'drag',
+                                target: 'cube-wood',
+                                position: { x: 200, y: 150 }
+                            },
+                            {
+                                instruction: 'Notice that the wooden cube floats. This is because wood has a lower density than water.',
+                                action: 'observe'
+                            },
+                            {
+                                instruction: 'Now, drag the metal cube into the water.',
+                                action: 'drag',
+                                target: 'cube-metal',
+                                position: { x: 200, y: 150 }
+                            },
+                            {
+                                instruction: 'Observe that the metal cube sinks. This is because metal has a higher density than water.',
+                                action: 'complete'
+                            }
+                        ],
+                        theory: 'Density is mass per unit volume (D = m/v). Objects with a density lower than water will float, while those with a higher density will sink. This principle explains buoyancy - the upward force exerted by a fluid on an immersed object.',
+                        safety: 'While this experiment is generally safe, always be careful when handling glass containers. In a real lab setting, clean up any spills immediately to prevent slipping.'
+                    }
+                }
+            };
+            
+            // Setup audio context
+            let audioContext;
+            let currentAudio = null;
+            
+            function initAudio() {
+                try {
+                    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                } catch(e) {
+                    console.warn('Web Audio API not supported');
+                    audioEnabled = false;
+                }
+            }
+            
+            function playSound(frequency, duration) {
+                if (!audioEnabled || !audioContext) return;
+                
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.type = 'sine';
+                oscillator.frequency.value = frequency;
+                gainNode.gain.value = 0.3;
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.start();
+                
+                setTimeout(() => {
+                    oscillator.stop();
+                }, duration);
+            }
+            
+            function playSuccessSound() {
+                playSound(800, 100);
+                setTimeout(() => playSound(1000, 100), 100);
+                setTimeout(() => playSound(1200, 200), 200);
+            }
+            
+            function playErrorSound() {
+                playSound(300, 200);
+                setTimeout(() => playSound(200, 200), 200);
+            }
+            
+            function speakText(text) {
+                if (!audioEnabled) return;
+                
+                // Stop any currently playing speech
+                if (window.speechSynthesis) {
+                    window.speechSynthesis.cancel();
+                }
+                
+                if ('speechSynthesis' in window) {
+                    const utterance = new SpeechSynthesisUtterance(text);
+                    window.speechSynthesis.speak(utterance);
+                }
+            }
+            
+            // Get current experiment data
+            function getCurrentExperimentData() {
+                return experimentData[currentExperiment]?.[currentLevel] || {};
+            }
+            
+            // Get current step data
+            function getCurrentStepData() {
+                const data = getCurrentExperimentData();
+                return data.steps?.[currentStep] || {};
+            }
+            
+            // Update UI based on current experiment and step
+            function updateUI() {
+                const data = getCurrentExperimentData();
+                const stepData = getCurrentStepData();
+                
+                // Update instruction text
+                currentInstructionEl.textContent = stepData.instruction || 'Welcome to the Interactive Science Lab! Select an experiment to begin.';
+                
+                // Update theory and safety text
+                theoryTextEl.textContent = data.theory || 'Select an experiment to see relevant theory.';
+                safetyTextEl.textContent = data.safety || 'Always follow proper laboratory safety procedures.';
+                
+                // Update progress bar
+                const progressPercentage = data.steps ? (currentStep / (data.steps.length - 1)) * 100 : 0;
+                experimentProgress.style.width = `${progressPercentage}%`;
+                
+                // Update buttons
+                prevBtn.disabled = currentStep === 0;
+                
+                // Update experiment views
+                document.querySelectorAll('.experiment-view').forEach(view => {
+                    view.classList.remove('active');
+                });
+                document.getElementById(`${currentExperiment}-experiment`).classList.add('active');
+                
+                // Update equipment based on current step
+                updateEquipment();
+            }
+            
+            // Update equipment in the workspace
+            function updateEquipment() {
+                // Clear current equipment
+                document.querySelectorAll('.experiment-view').forEach(view => {
+                    view.innerHTML = '';
+                });
+                
+                const experimentView = document.getElementById(`${currentExperiment}-experiment`);
+                const stepData = getCurrentStepData();
+                
+                if (currentExperiment === 'acid-base') {
+                    if (stepData.action === 'setup' || currentStep > 0) {
+                        // Add acid beaker
+                        const acidBeaker = document.createElement('div');
+                        acidBeaker.className = 'lab-item';
+                        acidBeaker.id = 'beaker-acid';
+                        acidBeaker.style.left = '100px';
+                        acidBeaker.style.top = '100px';
+                        acidBeaker.innerHTML = `
+                            <div class="beaker">
+                                <div class="liquid acid-liquid"></div>
+                            </div>
+                            <p style="text-align: center; margin-top: 0.5rem;">HCl</p>
+                        `;
+                        acidBeaker.addEventListener('click', () => {
+                            if (stepData.action === 'click' && stepData.target === 'beaker-acid') {
+                                handleNextStep();
+                            }
+                        });
+                        experimentView.appendChild(acidBeaker);
+                        
+                        // Add base beaker
+                        const baseBeaker = document.createElement('div');
+                        baseBeaker.className = 'lab-item';
+                        baseBeaker.id = 'beaker-base';
+                        baseBeaker.style.left = '300px';
+                        baseBeaker.style.top = '100px';
+                        baseBeaker.innerHTML = `
+                            <div class="beaker">
+                                <div class="liquid base-liquid"></div>
+                            </div>
+                            <p style="text-align: center; margin-top: 0.5rem;">NaOH</p>
+                        `;
+                        baseBeaker.addEventListener('click', () => {
+                            if (stepData.action === 'click' && stepData.target === 'beaker-base') {
+                                handleNextStep();
+                            }
+                        });
+                        experimentView.appendChild(baseBeaker);
+                        
+                        // Add test tube for intermediate level
+                        if (currentLevel === 'intermediate') {
+                            const testTube = document.createElement('div');
+                            testTube.className = 'lab-item';
+                            testTube.id = 'test-tube';
+                            testTube.style.left = '200px';
+                            testTube.style.top = '300px';
+                            testTube.innerHTML = `
+                                <div class="test-tube"></div>
+                            `;
+                            experimentView.appendChild(testTube);
+                        }
+                    }
+                } else if (currentExperiment === 'heat-transfer') {
+                    if (stepData.action === 'setup' || currentStep > 0) {
+                        // Add water beaker
+                        const waterBeaker = document.createElement('div');
+                        waterBeaker.className = 'lab-item';
+                        waterBeaker.id = 'beaker-water';
+                        waterBeaker.style.left = '200px';
+                        waterBeaker.style.top = '100px';
+                        waterBeaker.innerHTML = `
+                            <div class="beaker">
+                                <div class="liquid water-liquid"></div>
+                            </div>
+                            <p style="text-align: center; margin-top: 0.5rem;">Water</p>
+                        `;
+                        experimentView.appendChild(waterBeaker);
+                        
+                        // Add bunsen burner
+                        const bunsenBurner = document.createElement('div');
+                        bunsenBurner.className = 'lab-item';
+                        bunsenBurner.id = 'bunsen-burner';
+                        bunsenBurner.style.left = '200px';
+                        bunsenBurner.style.top = '300px';
+                        bunsenBurner.innerHTML = `
+                            <div class="bunsen-burner ${currentStep > 3 ? 'active' : ''}">
+                                <div class="bunsen-base"></div>
+                                <div class="bunsen-tube"></div>
+                                <div class="bunsen-flame"></div>
+                            </div>
+                        `;
+                        bunsenBurner.addEventListener('click', () => {
+                            if (stepData.action === 'click' && stepData.target === 'bunsen-burner') {
+                                handleNextStep();
+                                bunsenBurner.querySelector('.bunsen-burner').classList.add('active');
+                            }
+                        });
+                        experimentView.appendChild(bunsenBurner);
+                        
+                        // Add thermometer
+                        const thermometer = document.createElement('div');
+                        thermometer.className = 'lab-item';
+                        thermometer.id = 'thermometer';
+                        thermometer.style.left = '350px';
+                        thermometer.style.top = '100px';
+                        thermometer.innerHTML = `
+                            <div class="thermometer">
+                                <div class="thermometer-level" style="height: ${currentStep * 20}%;"></div>
+                                <div class="thermometer-bulb"></div>
+                            </div>
+                        `;
+                        experimentView.appendChild(thermometer);
+                    }
+                } else if (currentExperiment === 'density') {
+                    if (stepData.action === 'setup' || currentStep > 0) {
+                        // Add water beaker
+                        const waterBeaker = document.createElement('div');
+                        waterBeaker.className = 'lab-item';
+                        waterBeaker.id = 'beaker-water';
+                        waterBeaker.style.left = '200px';
+                        waterBeaker.style.top = '100px';
+                        waterBeaker.innerHTML = `
+                            <div class="beaker" style="height: 200px; width: 150px;">
+                                <div class="liquid water-liquid"></div>
+                            </div>
+                        `;
+                        experimentView.appendChild(waterBeaker);
+                        
+                        // Add wooden cube
+                        if (currentStep >= 2) {
+                            const woodCube = document.createElement('div');
+                            woodCube.className = 'lab-item';
+                            woodCube.id = 'cube-wood';
+                            woodCube.style.left = currentStep >= 3 ? '200px' : '100px';
+                            woodCube.style.top = currentStep >= 3 ? '150px' : '300px';
+                            woodCube.innerHTML = `
+                                <div style="width: 50px; height: 50px; background-color: #b45309; border: 2px solid #78350f;"></div>
+                                <p style="text-align: center; margin-top: 0.5rem;">Wood</p>
+                            `;
+                            woodCube.addEventListener('click', () => {
+                                if (stepData.action === 'drag' && stepData.target === 'cube-wood') {
+                                    handleNextStep();
+                                    woodCube.style.left = '200px';
+                                    woodCube.style.top = '150px';
+                                }
+                            });
+                            experimentView.appendChild(woodCube);
+                        }
+                        
+                        // Add metal cube
+                        if (currentStep >= 4) {
+                            const metalCube = document.createElement('div');
+                            metalCube.className = 'lab-item';
+                            metalCube.id = 'cube-metal';
+                            metalCube.style.left = currentStep >= 5 ? '200px' : '300px';
+                            metalCube.style.top = currentStep >= 5 ? '250px' : '300px';
+                            metalCube.innerHTML = `
+                                <div style="width: 50px; height: 50px; background-color: #6b7280; border: 2px solid #374151;"></div>
+                                <p style="text-align: center; margin-top: 0.5rem;">Metal</p>
+                            `;
+                            metalCube.addEventListener('click', () => {
+                                if (stepData.action === 'drag' && stepData.target === 'cube-metal') {
+                                    handleNextStep();
+                                    metalCube.style.left = '200px';
+                                    metalCube.style.top = '250px';
+                                }
+                            });
+                            experimentView.appendChild(metalCube);
+                        }
+                    }
+                }
+                
+                // Make items draggable
+                makeDraggable();
+            }
+            
+            // Make lab items draggable
+            function makeDraggable() {
+                const draggableItems = document.querySelectorAll('.lab-item');
+                
+                draggableItems.forEach(item => {
+                    item.addEventListener('mousedown', startDrag);
+                    item.addEventListener('touchstart', startDrag, { passive: false });
+                });
+                
+                function startDrag(e) {
+                    e.preventDefault();
+                    
+                    const item = this;
+                    const stepData = getCurrentStepData();
+                    
+                    // Only allow dragging if the current step requires it
+                    if (stepData.action === 'drag' && stepData.target === item.id) {
+                        const initialX = e.clientX || e.touches[0].clientX;
+                        const initialY = e.clientY || e.touches[0].clientY;
+                        const initialLeft = parseInt(item.style.left);
+                        const initialTop = parseInt(item.style.top);
+                        
+                        document.addEventListener('mousemove', drag);
+                        document.addEventListener('touchmove', drag, { passive: false });
+                        document.addEventListener('mouseup', stopDrag);
+                        document.addEventListener('touchend', stopDrag);
+                        
+                        function drag(e) {
+                            e.preventDefault();
+                            
+                            const currentX = e.clientX || e.touches[0].clientX;
+                            const currentY = e.clientY || e.touches[0].clientY;
+                            
+                            const newLeft = initialLeft + (currentX - initialX);
+                            const newTop = initialTop + (currentY - initialY);
+                            
+                            item.style.left = `${newLeft}px`;
+                            item.style.top = `${newTop}px`;
+                            
+                            // Check if item is close to target position
+                            if (stepData.position) {
+                                const targetX = stepData.position.x;
+                                const targetY = stepData.position.y;
+                                
+                                if (Math.abs(newLeft - targetX) < 50 && Math.abs(newTop - targetY) < 50) {
+                                    handleNextStep();
+                                    stopDrag();
+                                }
+                            }
+                        }
+                        
+                        function stopDrag() {
+                            document.removeEventListener('mousemove', drag);
+                            document.removeEventListener('touchmove', drag);
+                            document.removeEventListener('mouseup', stopDrag);
+                            document.removeEventListener('touchend', stopDrag);
+                        }
+                    }
+                }
+            }
+            
+            // Handle next step
+            function handleNextStep() {
+                const data = getCurrentExperimentData();
+                
+                if (currentStep < data.steps.length - 1) {
+                    currentStep++;
+                    updateUI();
+                    playSuccessSound();
+                    speakText(getCurrentStepData().instruction);
+                } else {
+                    // Experiment completed
+                    completedExperiments[currentExperiment] = true;
+                    updateCompletionCount();
+                    showCompletionModal();
+                    playSuccessSound();
+                }
+            }
+            
+            // Handle previous step
+            function handlePrevStep() {
+                if (currentStep > 0) {
+                    currentStep--;
+                    updateUI();
+                    speakText(getCurrentStepData().instruction);
+                }
+            }
+            
+            // Reset experiment
+            function resetExperiment() {
+                currentStep = 0;
+                updateUI();
+                speakText(getCurrentStepData().instruction);
+            }
+            
+            // Change experiment
+            function changeExperiment(experiment) {
+                // Stop any currently playing speech
+                if (window.speechSynthesis) {
+                    window.speechSynthesis.cancel();
+                }
+                
+                currentExperiment = experiment;
+                currentStep = 0;
+                updateUI();
+                speakText(getCurrentStepData().instruction);
+                
+                // Update active experiment in sidebar
+                document.querySelectorAll('#experiment-list .card').forEach(card => {
+                    card.classList.remove('active');
+                });
+                document.querySelector(`[data-experiment="${experiment}"]`).classList.add('active');
+                
+                // Show home section (lab)
+                showSection('home');
+            }
+            
+            // Change difficulty level
+            function changeLevel(level) {
+                // Stop any currently playing speech
+                if (window.speechSynthesis) {
+                    window.speechSynthesis.cancel();
+                }
+                
+                currentLevel = level;
+                currentStep = 0;
+                updateUI();
+                speakText(getCurrentStepData().instruction);
+                
+                // Update active level button
+                if (level === 'beginner') {
+                    beginnerBtn.className = 'btn btn-primary';
+                    intermediateBtn.className = 'btn btn-outline';
+                } else {
+                    beginnerBtn.className = 'btn btn-outline';
+                    intermediateBtn.className = 'btn btn-primary';
+                }
+            }
+            
+            // Update completion count
+            function updateCompletionCount() {
+                const count = Object.values(completedExperiments).filter(Boolean).length;
+                completedCountEl.textContent = count;
+                
+                // Update badges
+                document.getElementById('acid-base-badge').style.display = completedExperiments['acid-base'] ? 'inline-block' : 'none';
+                document.getElementById('heat-transfer-badge').style.display = completedExperiments['heat-transfer'] ? 'inline-block' : 'none';
+                document.getElementById('density-badge').style.display = completedExperiments['density'] ? 'inline-block' : 'none';
+            }
+            
+            // Show completion modal
+            function showCompletionModal() {
+                const data = getCurrentExperimentData();
+                certificateExperimentName.textContent = data.title;
+                certificateTitle.textContent = data.title;
+                completionModal.classList.add('active');
+            }
+            
+            // Hide completion modal
+            function hideCompletionModal() {
+                completionModal.classList.remove('active');
+            }
+            
+            // Toggle audio
+            function toggleAudio() {
+                audioEnabled = !audioEnabled;
+                if (audioEnabled && !audioContext) {
+                    initAudio();
+                }
+                
+                // Stop any currently playing speech if audio is disabled
+                if (!audioEnabled && window.speechSynthesis) {
+                    window.speechSynthesis.cancel();
+                }
+            }
+            
+            // Show section
+            function showSection(sectionId) {
+                // Hide all sections
+                document.querySelectorAll('.section-view').forEach(section => {
+                    section.classList.remove('active');
+                });
+                
+                // Show selected section
+                document.getElementById(`${sectionId}-section`).classList.add('active');
+                
+                // Update active navbar link
+                document.querySelectorAll('.navbar-link').forEach(link => {
+                    link.classList.remove('active');
+                });
+                document.querySelector(`.navbar-link[data-section="${sectionId}"]`).classList.add('active');
+            }
+            
+            // Setup event listeners
+            function setupEventListeners() {
+                // Navigation buttons
+                nextBtn.addEventListener('click', handleNextStep);
+                prevBtn.addEventListener('click', handlePrevStep);
+                resetBtn.addEventListener('click', resetExperiment);
+                
+                // Audio toggle
+                toggleAudioBtn.addEventListener('click', toggleAudio);
+                
+                // Experiment selection
+                document.querySelectorAll('#experiment-list .card').forEach(card => {
+                    card.addEventListener('click', () => {
+                        const experiment = card.getAttribute('data-experiment');
+                        changeExperiment(experiment);
+                    });
+                });
+                
+                // Level selection
+                beginnerBtn.addEventListener('click', () => changeLevel('beginner'));
+                intermediateBtn.addEventListener('click', () => changeLevel('intermediate'));
+                
+                // Tab navigation
+                document.querySelectorAll('.tab').forEach(tab => {
+                    tab.addEventListener('click', () => {
+                        const tabId = tab.getAttribute('data-tab');
+                        
+                        // Update active tab
+                        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                        tab.classList.add('active');
+                        
+                        // Update active content
+                        document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+                        document.getElementById(`${tabId}-content`).classList.add('active');
+                    });
+                });
+                
+                // Modal close
+                modalClose.addEventListener('click', hideCompletionModal);
+                
+                // Navbar links
+                document.querySelectorAll('.navbar-link').forEach(link => {
+                    link.addEventListener('click', () => {
+                        const section = link.getAttribute('data-section');
+                        showSection(section);
+                    });
+                });
+                
+                // Footer links
+                document.querySelectorAll('.footer-link a[data-section]').forEach(link => {
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const section = link.getAttribute('data-section');
+                        showSection(section);
+                    });
+                });
+                
+                // Footer experiment links
+                document.querySelectorAll('.footer-link a[data-experiment]').forEach(link => {
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const experiment = link.getAttribute('data-experiment');
+                        if (experiment) {
+                            changeExperiment(experiment);
+                        }
+                    });
+                });
+                
+                // Experiment buttons in experiments section
+                document.querySelectorAll('#experiments-section .btn[data-experiment]').forEach(button => {
+                    button.addEventListener('click', () => {
+                        const experiment = button.getAttribute('data-experiment');
+                        if (experiment) {
+                            changeExperiment(experiment);
+                        }
+                    });
+                });
+            }
+            
+            // Initialize
+            function initialize() {
+                initAudio();
+                setupEventListeners();
+                updateUI();
+                updateCompletionCount();
+            }
+            
+            // Start the application
+            initialize();
+
+            // Track if we've already set up the fix
+            if (window._acidBaseFixApplied) return;
+            window._acidBaseFixApplied = true;
+            
+            console.log("ACID-BASE EXPERIMENT FIX LOADING");
+            
+            // Function to monitor the current step text and add interactions when needed
+            function monitorExperimentSteps() {
+                setInterval(function() {
+                    const currentInstructionEl = document.querySelector('.step-instruction, #current-instruction');
+                    if (!currentInstructionEl) return;
+                    
+                    const instruction = currentInstructionEl.textContent || '';
+                    
+                    // Check if we're on the critical acid pouring step
+                    if (instruction.includes("pour the acid into the base") || 
+                        instruction.includes("Click the acid beaker")) {
+                        console.log("DETECTED ACID POURING STEP!");
+                        setupAcidBeakerInteraction();
+                    }
+                    
+                    // Check if we're on the neutralization step
+                    if (instruction.includes("Look at the reaction") || 
+                        instruction.includes("neutralized each other")) {
+                        console.log("DETECTED NEUTRALIZATION STEP!");
+                        showNeutralizationEffect();
+                    }
+                }, 1000); // Check every second
+            }
+            
+            // Set up the acid beaker to be interactive
+            function setupAcidBeakerInteraction() {
+                // Find all potential acid beakers
+                const acidBeakers = document.querySelectorAll(
+                    '#beaker-acid, .acid-beaker, [id*="acid"], [class*="acid-liquid"]'
+                );
+                
+                if (acidBeakers.length === 0) {
+                    console.log("No acid beakers found, will try again");
+                    return;
+                }
+                
+                acidBeakers.forEach(acidBeaker => {
+                    // Skip if already made interactive
+                    if (acidBeaker._interactive) return;
+                    
+                    console.log("Making acid beaker interactive:", acidBeaker.id || acidBeaker.className);
+                    
+                    // Make it visibly clickable
+                    acidBeaker.style.cursor = 'pointer';
+                    
+                    // Add pulsing effect to make it obvious
+                    if (!document.getElementById('pulse-style')) {
+                        const style = document.createElement('style');
+                        style.id = 'pulse-style';
+                        style.textContent = `
+                            @keyframes acid-pulse {
+                                0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+                                70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+                                100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+                            }
+                            .acid-pulse {
+                                animation: acid-pulse 1.5s infinite;
+                            }
+                        `;
+                        document.head.appendChild(style);
+                    }
+                    
+                    // Add the pulse class
+                    acidBeaker.classList.add('acid-pulse');
+                    
+                    // Add click handler
+                    acidBeaker.addEventListener('click', function() {
+                        console.log("ACID BEAKER CLICKED!");
+                        
+                        // Remove pulse animation
+                        this.classList.remove('acid-pulse');
+                        
+                        // Show pouring action
+                        pourAcidIntoBase();
+                        
+                        // Auto advance to next step after a delay
+                        setTimeout(() => {
+                            const nextBtn = document.querySelector('.btn-primary, .btn-next, button:contains("Next")');
+                            if (nextBtn) {
+                                nextBtn.click();
+                                console.log("Auto-advanced to next step");
+                            }
+                        }, 2000);
+                    });
+                    
+                    acidBeaker._interactive = true;
+                });
+            }
+            
+            // Pour acid into base with animation
+            function pourAcidIntoBase() {
+                // Find the beakers
+                const acidBeaker = document.querySelector('#beaker-acid, .acid-beaker, [id*="acid"]');
+                const baseBeaker = document.querySelector('#beaker-base, .base-beaker, [id*="base"]');
+                
+                if (!acidBeaker || !baseBeaker) {
+                    console.log("Could not find beakers for pour animation");
+                    return;
+                }
+                
+                // Find the liquids
+                const acidLiquid = acidBeaker.querySelector('.liquid') || 
+                                   document.querySelector('.acid-liquid') || 
+                                   acidBeaker;
+                                   
+                const baseLiquid = baseBeaker.querySelector('.liquid') || 
+                                   document.querySelector('.base-liquid') || 
+                                   baseBeaker;
+                
+                console.log("Found liquids for animation:", acidLiquid, baseLiquid);
+                
+                // 1. Animate acid beaker tilting
+                acidBeaker.style.transition = 'transform 1s ease-in-out';
+                acidBeaker.style.transformOrigin = 'top center';
+                acidBeaker.style.transform = 'rotate(-30deg)';
+                
+                // 2. Reduce acid level
+                if (acidLiquid) {
+                    acidLiquid.style.transition = 'height 1.5s ease-in-out';
+                    acidLiquid.style.height = '20%';
+                }
+                
+                // 3. After a delay, show reaction in base beaker
+                setTimeout(() => {
+                    // Return acid beaker to original position
+                    acidBeaker.style.transform = 'rotate(0deg)';
+                    
+                    // Change base to neutralized color (purple)
+                    if (baseLiquid) {
+                        baseLiquid.style.transition = 'background-color 1s ease-in-out, height 1s ease-in-out';
+                        baseLiquid.style.backgroundColor = 'rgba(147, 51, 234, 0.7)'; // Purple
+                        baseLiquid.style.height = '70%'; // Increase level
+                    }
+                    
+                    // Show bubbling effect
+                    addBubblesToBeaker(baseBeaker);
+                }, 1000);
+            }
+            
+            // Show neutralization effect directly (for second step)
+            function showNeutralizationEffect() {
+                const baseBeaker = document.querySelector('#beaker-base, .base-beaker, [id*="base"]');
+                
+                if (!baseBeaker) {
+                    console.log("Could not find base beaker for neutralization effect");
+                    return;
+                }
+                
+                const baseLiquid = baseBeaker.querySelector('.liquid') || 
+                                   document.querySelector('.base-liquid') || 
+                                   baseBeaker;
+                
+                // Ensure the color is changed to purple
+                if (baseLiquid) {
+                    baseLiquid.style.backgroundColor = 'rgba(147, 51, 234, 0.7)'; // Purple
+                    baseLiquid.style.height = '70%'; // Ensure proper level
+                }
+                
+                // Add bubbling effect if not already showing
+                addBubblesToBeaker(baseBeaker);
+            }
+            
+            // Add bubbles to a beaker
+            function addBubblesToBeaker(beaker) {
+                // Add the bubble styles if not present
+                if (!document.getElementById('bubble-style')) {
+                    const style = document.createElement('style');
+                    style.id = 'bubble-style';
+                    style.textContent = `
+                        @keyframes bubble-rise {
+                            0% { transform: translateY(0); opacity: 0.7; }
+                            100% { transform: translateY(-100px); opacity: 0; }
+                        }
+                        .chem-bubble {
+                            position: absolute;
+                            background-color: rgba(255, 255, 255, 0.7);
+                            border-radius: 50%;
+                            z-index: 20;
+                        }
+                    `;
+                    document.head.appendChild(style);
+                }
+                
+                // Create container for bubbles if needed
+                let bubbleContainer = beaker.querySelector('.bubble-container');
+                if (!bubbleContainer) {
+                    bubbleContainer = document.createElement('div');
+                    bubbleContainer.className = 'bubble-container';
+                    bubbleContainer.style.position = 'absolute';
+                    bubbleContainer.style.bottom = '0';
+                    bubbleContainer.style.left = '0';
+                    bubbleContainer.style.width = '100%';
+                    bubbleContainer.style.height = '70%';
+                    bubbleContainer.style.overflow = 'hidden';
+                    bubbleContainer.style.pointerEvents = 'none';
+                    beaker.appendChild(bubbleContainer);
+                }
+                
+                // Clear existing bubbles
+                bubbleContainer.innerHTML = '';
+                
+                // Add flash effect for reaction
+                const flash = document.createElement('div');
+                flash.style.position = 'absolute';
+                flash.style.top = '0';
+                flash.style.left = '0';
+                flash.style.width = '100%';
+                flash.style.height = '100%';
+                flash.style.backgroundColor = 'white';
+                flash.style.opacity = '0.7';
+                flash.style.transition = 'opacity 0.5s';
+                flash.style.pointerEvents = 'none';
+                flash.style.zIndex = '10';
+                bubbleContainer.appendChild(flash);
+                
+                // Fade out flash
+                setTimeout(() => {
+                    flash.style.opacity = '0';
+                    setTimeout(() => flash.remove(), 500);
+                }, 200);
+                
+                // Create multiple bubbles with staggered timing
+                for (let i = 0; i < 20; i++) {
+                    setTimeout(() => {
+                        const bubble = document.createElement('div');
+                        bubble.className = 'chem-bubble';
+                        
+                        // Random properties
+                        const size = 5 + Math.random() * 10;
+                        const left = 10 + Math.random() * 80;
+                        const duration = 1 + Math.random() * 2;
+                        const delay = Math.random() * 0.5;
+                        
+                        bubble.style.width = `${size}px`;
+                        bubble.style.height = `${size}px`;
+                        bubble.style.left = `${left}%`;
+                        bubble.style.bottom = '10%';
+                        bubble.style.animation = `bubble-rise ${duration}s ease-out forwards`;
+                        bubble.style.animationDelay = `${delay}s`;
+                        
+                        bubbleContainer.appendChild(bubble);
+                        
+                        // Remove bubble after animation
+                        setTimeout(() => {
+                            if (bubbleContainer.contains(bubble)) {
+                                bubble.remove();
+                            }
+                        }, (duration + delay) * 1000);
+                    }, i * 100);
+                }
+            }
+            
+            // Start monitoring the experiment steps
+            monitorExperimentSteps();
+            
+            console.log("ACID-BASE EXPERIMENT FIX LOADED");
+
+            // AUTOMATED NARRATION AND INTERMEDIATE SECTION FILTER
+            console.log("AUTOMATED NARRATION AND INTERMEDIATE SECTION FILTER LOADING");
+            
+            // Function to read the current step text aloud
+            function readCurrentStepText() {
+              // Find the current step text
+              const stepElement = document.querySelector('.step-instruction, #current-instruction, .instruction-area p');
+              if (!stepElement) return;
+              
+              const text = stepElement.textContent.trim();
+              if (!text) return;
+              
+              // Use browser's speech synthesis to read it
+              if ('speechSynthesis' in window) {
+                // Cancel any ongoing speech
+                window.speechSynthesis.cancel();
+                
+                // Create new speech utterance
+                const utterance = new SpeechSynthesisUtterance(text);
+                
+                // Speak the text
+                window.speechSynthesis.speak(utterance);
+                console.log("Reading step text");
+              }
+            }
+            
+            // Read current step on page load
+            setTimeout(readCurrentStepText, 1000);
+            
+            // Read when next/back buttons are clicked
+            document.addEventListener('click', function(e) {
+              if (e.target.matches('.btn-next, .btn-back, .btn-primary')) {
+                setTimeout(readCurrentStepText, 500);
+              }
+            });
+            
+            // Check periodically for step changes
+            let lastText = '';
+            setInterval(function() {
+              const stepElement = document.querySelector('.step-instruction, #current-instruction');
+              if (stepElement) {
+                const currentText = stepElement.textContent.trim();
+                if (currentText && currentText !== lastText) {
+                  lastText = currentText;
+                  readCurrentStepText();
+                }
+              }
+            }, 2000);
+            
+            // Function to filter experiments in the intermediate section
+            function filterIntermediateExperiments() {
+              // Find which section is active
+              const activeSection = document.querySelector('.tab.active, .nav-link.active, [data-section].active');
+              const sectionId = activeSection?.getAttribute('data-section') || 
+                                activeSection?.getAttribute('data-tab') || 
+                                activeSection?.id || '';
+              
+              // Check if we're in the intermediate section
+              const isIntermediate = sectionId.toLowerCase().includes('intermediate') || 
+                                    activeSection?.textContent.toLowerCase().includes('intermediate');
+              
+              if (isIntermediate) {
+                console.log("Intermediate section detected, filtering experiments");
+                
+                // Find all experiment options/cards
+                const allExperiments = document.querySelectorAll('.experiment-item, .experiment-card, .experiment-option, li.experiment');
+                
+                // Hide all experiments first
+                allExperiments.forEach(exp => {
+                  exp.style.display = 'none';
+                });
+                
+                // Show only acid-base experiment
+                allExperiments.forEach(exp => {
+                  const text = exp.textContent.toLowerCase();
+                  if (text.includes('acid') && text.includes('base')) {
+                    exp.style.display = '';
+                    console.log("Showing acid-base experiment");
+                  }
+                });
+                
+                // Add "More coming soon" message if not already present
+                const experimentsList = document.querySelector('.experiments-list, #experiments-list, .experiments-container');
+                if (experimentsList && !document.getElementById('more-coming-soon')) {
+                  const comingSoonMsg = document.createElement('div');
+                  comingSoonMsg.id = 'more-coming-soon';
+                  comingSoonMsg.textContent = 'More experiments coming soon!';
+                  comingSoonMsg.style.padding = '15px';
+                  comingSoonMsg.style.margin = '15px 0';
+                  comingSoonMsg.style.textAlign = 'center';
+                  comingSoonMsg.style.color = '#6b7280';
+                  comingSoonMsg.style.fontStyle = 'italic';
+                  comingSoonMsg.style.border = '1px dashed #d1d5db';
+                  comingSoonMsg.style.borderRadius = '6px';
+                  
+                  experimentsList.appendChild(comingSoonMsg);
+                  console.log("Added 'More coming soon' message");
+                }
+              } else {
+                // For other sections, show all experiments
+                const allExperiments = document.querySelectorAll('.experiment-item, .experiment-card, .experiment-option, li.experiment');
+                allExperiments.forEach(exp => {
+                  exp.style.display = '';
+                });
+                
+                // Remove "More coming soon" if present
+                const comingSoonMsg = document.getElementById('more-coming-soon');
+                if (comingSoonMsg) {
+                  comingSoonMsg.remove();
+                }
+              }
+            }
+            
+            // Run filter immediately
+            filterIntermediateExperiments();
+            
+            // Listen for tab/section changes
+            const tabs = document.querySelectorAll('.tab, .nav-link, [data-section], [data-tab]');
+            tabs.forEach(tab => {
+              tab.addEventListener('click', function() {
+                // Wait for DOM to update
+                setTimeout(filterIntermediateExperiments, 100);
+              });
+            });
+            
+            console.log("AUTOMATED NARRATION AND INTERMEDIATE SECTION FILTER LOADED");
+        });
+
+        // AUDIO NARRATION FIX
+        document.addEventListener('DOMContentLoaded', function() {
+          console.log("AUDIO NARRATION FIX LOADING");
+          
+          // Function to properly read step text
+          function readStepText(text) {
+            if (!text || typeof text !== 'string') return;
+            
+            // Cancel any ongoing speech
+            if (window.speechSynthesis) {
+              window.speechSynthesis.cancel();
+            }
+            
+            // Create and configure utterance
+            const utterance = new SpeechSynthesisUtterance(text);
+            
+            // Set preferred voice (English)
+            const voices = window.speechSynthesis.getVoices();
+            const englishVoice = voices.find(voice => 
+              voice.lang.includes('en') && voice.name.includes('Female')
+            );
+            if (englishVoice) {
+              utterance.voice = englishVoice;
+            }
+            
+            // Configure speech parameters
+            utterance.rate = 0.9;  // Slightly slower for clarity
+            utterance.pitch = 1;
+            utterance.volume = 1;
+            
+            // Speak the text
+            window.speechSynthesis.speak(utterance);
+            console.log("Reading step:", text);
+          }
+          
+          // Function to handle step changes
+          function handleStepChange() {
+            // Find current step text from multiple possible sources
+            const stepText = 
+              document.querySelector('.step-instruction')?.textContent ||
+              document.querySelector('#current-instruction')?.textContent ||
+              document.querySelector('.instruction-area p')?.textContent ||
+              document.querySelector('[class*="step"]:not(.step-progress)')?.textContent;
+            
+            if (stepText) {
+              readStepText(stepText.trim());
+            }
+          }
+          
+          // Read initial step after a delay
+          setTimeout(handleStepChange, 1000);
+          
+          // Listen for step changes via button clicks
+          document.addEventListener('click', function(e) {
+            if (e.target.matches('.btn-next, .btn-back, .btn-primary, #next-btn, #prev-btn')) {
+              setTimeout(handleStepChange, 500);
+            }
+          });
+          
+          // Listen for step changes via DOM mutations
+          const stepObserver = new MutationObserver(function(mutations) {
+            for (const mutation of mutations) {
+              if (mutation.type === 'childList' || mutation.type === 'characterData') {
+                handleStepChange();
+                break;
+              }
+            }
+          });
+          
+          // Observe instruction elements for changes
+          const instructionElements = document.querySelectorAll(
+            '.step-instruction, #current-instruction, .instruction-area, .steps-container'
+          );
+          
+          instructionElements.forEach(element => {
+            if (element) {
+              stepObserver.observe(element, {
+                childList: true,
+                characterData: true,
+                subtree: true
+              });
+            }
+          });
+          
+          // Add voice control button
+          const controlsContainer = document.querySelector('.controls-container, .button-container, .nav-buttons');
+          if (controlsContainer) {
+            const voiceButton = document.createElement('button');
+            voiceButton.className = 'btn btn-secondary voice-control';
+            voiceButton.innerHTML = '🔊';
+            voiceButton.title = 'Toggle voice narration';
+            voiceButton.style.marginLeft = '10px';
+            
+            let isVoiceEnabled = true;
+            
+            voiceButton.onclick = function() {
+              isVoiceEnabled = !isVoiceEnabled;
+              voiceButton.innerHTML = isVoiceEnabled ? '🔊' : '🔇';
+              
+              if (!isVoiceEnabled) {
+                window.speechSynthesis.cancel();
+              } else {
+                handleStepChange(); // Read current step when re-enabled
+              }
+            };
+            
+            controlsContainer.appendChild(voiceButton);
+          }
+          
+          console.log("AUDIO NARRATION FIX LOADED");
+        });
+
+        // BUNSEN BURNER ROTATION FIX
+        document.addEventListener('DOMContentLoaded', function() {
+          console.log("BUNSEN BURNER ROTATION FIX LOADING");
+          
+          function rotateBunsenBurner() {
+            // Find the Bunsen burner element using multiple possible selectors
+            const burner = document.querySelector('#bunsen-burner, .bunsen-burner, [id*="burner"], [class*="burner"]');
+            
+            if (burner) {
+              // Check if we're in the heat transfer experiment
+              const currentStepText = document.querySelector('#current-instruction')?.textContent || '';
+              const isHeatExperiment = currentStepText.toLowerCase().includes('heat') || 
+                                      currentStepText.toLowerCase().includes('temperature') ||
+                                      document.querySelector('[data-experiment="heat"]');
+              
+              if (isHeatExperiment) {
+                console.log("Rotating Bunsen burner in heat transfer experiment");
+                
+                // Apply 180-degree rotation
+                burner.style.transform = 'rotate(180deg)';
+                
+                // Adjust position if needed after rotation
+                burner.style.position = 'relative';
+                burner.style.top = '-30px'; // Move up slightly to compensate for rotation
+              }
+            }
+          }
+          
+          // Run initially and when experiment changes
+          setTimeout(rotateBunsenBurner, 1000);
+          
+          // Observe experiment view for changes
+          const experimentView = document.querySelector('.experiment-view, .lab-view, .simulation-area');
+          if (experimentView) {
+            const observer = new MutationObserver(rotateBunsenBurner);
+            observer.observe(experimentView, { childList: true, subtree: true });
+          }
+          
+          console.log("BUNSEN BURNER ROTATION FIX LOADED");
+        });
+
+        // AUDIO AND TYPOGRAPHY ENHANCEMENT
+        document.addEventListener('DOMContentLoaded', function() {
+          console.log("AUDIO AND TYPOGRAPHY ENHANCEMENT LOADING");
+          
+          // Add Google Fonts
+          const fontLink = document.createElement('link');
+          fontLink.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap';
+          fontLink.rel = 'stylesheet';
+          document.head.appendChild(fontLink);
+          
+          // Add modern styling
+          const styleEl = document.createElement('style');
+          styleEl.textContent = `
+            /* Modern Typography System */
+            body {
+              font-family: 'Inter', system-ui, -apple-system, sans-serif;
+              color: #1a2b3b;
+            }
+            
+            h1, h2, h3, h4, h5, h6, .heading {
+              font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+              color: #0f172a;
+              font-weight: 600;
+              letter-spacing: -0.02em;
+            }
+            
+            /* Step Instructions */
+            .step-instruction, #current-instruction, .instruction-area p {
+              font-family: 'Inter', system-ui, -apple-system, sans-serif;
+              font-size: 1.125rem;
+              line-height: 1.6;
+              color: #334155;
+              margin: 1.25rem 0;
+              padding: 1rem;
+              background: #f8fafc;
+              border-radius: 8px;
+              border: 1px solid #e2e8f0;
+              box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+            }
+            
+            /* Theory Text */
+            .theory-text, .experiment-theory {
+              font-family: 'Inter', system-ui, -apple-system, sans-serif;
+              color: #475569;
+              line-height: 1.6;
+              font-size: 1rem;
+            }
+            
+            /* Safety Instructions */
+            .safety-text, .experiment-safety {
+              font-family: 'Inter', system-ui, -apple-system, sans-serif;
+              color: #dc2626;
+              background: #fef2f2;
+              padding: 1rem;
+              border-radius: 6px;
+              border: 1px solid #fee2e2;
+              margin: 1rem 0;
+            }
+            
+            /* Buttons */
+            .btn, button {
+              font-family: 'Inter', system-ui, -apple-system, sans-serif;
+              font-weight: 500;
+              letter-spacing: 0.01em;
+            }
+            
+            /* Progress Text */
+            .progress-text, .step-progress {
+              font-family: 'Inter', system-ui, -apple-system, sans-serif;
+              color: #64748b;
+              font-size: 0.875rem;
+            }
+          `;
+          document.head.appendChild(styleEl);
+          
+          // Fix audio narration
+          function setupAudioNarration() {
+            // Initialize speech synthesis
+            const synth = window.speechSynthesis;
+            let currentUtterance = null;
+            
+            // Function to speak text
+            function speakText(text) {
+              if (!text) return;
+              
+              // Cancel any ongoing speech
+              if (synth.speaking) {
+                synth.cancel();
+              }
+              
+              // Create new utterance
+              const utterance = new SpeechSynthesisUtterance(text);
+              
+              // Configure voice
+              let voices = synth.getVoices();
+              const preferredVoice = voices.find(voice => 
+                voice.lang.startsWith('en') && 
+                (voice.name.includes('Female') || voice.name.includes('Google'))
+              );
+              
+              if (preferredVoice) {
+                utterance.voice = preferredVoice;
+              }
+              
+              // Configure speech properties
+              utterance.rate = 0.9;  // Slightly slower
+              utterance.pitch = 1;
+              utterance.volume = 1;
+              
+              // Store current utterance
+              currentUtterance = utterance;
+              
+              // Speak the text
+              synth.speak(utterance);
+              console.log("Speaking:", text);
+            }
+            
+            // Function to handle step changes
+            function handleStepChange() {
+              const stepElement = document.querySelector('.step-instruction, #current-instruction, .instruction-area p');
+              if (!stepElement) return;
+              
+              const text = stepElement.textContent.trim();
+              if (text) {
+                speakText(text);
+              }
+            }
+            
+            // Listen for step changes via buttons
+            document.addEventListener('click', function(e) {
+              if (e.target.matches('.btn-next, .btn-back, .btn-primary, #next-btn, #prev-btn')) {
+                setTimeout(handleStepChange, 300);
+              }
+            });
+            
+            // Listen for step changes via DOM mutations
+            const observer = new MutationObserver((mutations) => {
+              for (const mutation of mutations) {
+                if (mutation.type === 'childList' || mutation.type === 'characterData') {
+                  setTimeout(handleStepChange, 300);
+                  break;
+                }
+              }
+            });
+            
+            // Observe instruction elements
+            const instructionElements = document.querySelectorAll(
+              '.step-instruction, #current-instruction, .instruction-area'
+            );
+            
+            instructionElements.forEach(element => {
+              if (element) {
+                observer.observe(element, {
+                  childList: true,
+                  characterData: true,
+                  subtree: true
+                });
+              }
+            });
+            
+            // Add voice control button with modern styling
+            const controlsContainer = document.querySelector('.controls-container, .button-container, .nav-buttons');
+            if (controlsContainer) {
+              const voiceButton = document.createElement('button');
+              voiceButton.className = 'btn btn-secondary voice-control';
+              voiceButton.innerHTML = '🔊';
+              voiceButton.title = 'Toggle voice narration';
+              
+              // Modern button styling
+              Object.assign(voiceButton.style, {
+                marginLeft: '10px',
+                padding: '8px 12px',
+                borderRadius: '6px',
+                border: '1px solid #e2e8f0',
+                background: '#f8fafc',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
+                boxShadow: '0 1px 2px rgba(0, 0, 0, 0.05)'
+              });
+              
+              let isVoiceEnabled = true;
+              
+              voiceButton.onclick = function() {
+                isVoiceEnabled = !isVoiceEnabled;
+                voiceButton.innerHTML = isVoiceEnabled ? '🔊' : '🔇';
+                
+                if (!isVoiceEnabled) {
+                  synth.cancel();
+                } else {
+                  handleStepChange();
+                }
+                
+                // Hover effect
+                voiceButton.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                  voiceButton.style.transform = 'scale(1)';
+                }, 100);
+              };
+              
+              controlsContainer.appendChild(voiceButton);
+            }
+            
+            // Initial reading
+            setTimeout(handleStepChange, 1000);
+          }
+          
+          // Initialize audio narration
+          setupAudioNarration();
+          
+          console.log("AUDIO AND TYPOGRAPHY ENHANCEMENT LOADED");
+        });
+
+        // LAYOUT ADJUSTMENT FOR APPARATUS VISIBILITY
+        document.addEventListener('DOMContentLoaded', function() {
+          console.log("LAYOUT ADJUSTMENT LOADING");
+          
+          // Adjust layout to ensure apparatus visibility
+          const styleEl = document.createElement('style');
+          styleEl.textContent = `
+            /* Ensure enough space for apparatus */
+            .experiment-view, .lab-view, .simulation-area {
+              min-height: 400px !important; /* Increase height to ensure visibility */
+              margin-bottom: 50px !important; /* Add more space below simulation */
+            }
+            
+            /* Adjust current step section */
+            .instruction-panel, .step-panel, .instruction-area, .steps-container {
+              margin-top: 20px !important; /* Ensure it doesn't overlap with apparatus */
+            }
+          `;
+          document.head.appendChild(styleEl);
+          
+          console.log("LAYOUT ADJUSTMENT LOADED");
+        });
+    </script>
+</body>
+</html>
