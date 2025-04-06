@@ -16,20 +16,106 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
     />
+    <!-- Custom Font Imports -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
+      /* Font Variables */
+      :root {
+        --font-heading: 'Montserrat', sans-serif;
+        --font-body: 'Poppins', sans-serif;
+        --font-mono: 'Roboto Mono', monospace;
+      }
+      
       html {
         scroll-behavior: smooth;
       }
       body {
-        font-family: "Arial", sans-serif;
+        font-family: var(--font-body);
         background: linear-gradient(to bottom, #1a1a2e, #16213e);
         color: #fff;
         transition: background 0.5s, color 0.5s;
+        font-weight: 300;
+        letter-spacing: 0.01em;
+        line-height: 1.6;
       }
       body.light-mode {
         background: linear-gradient(to bottom, #f0f0f0, #d9d9d9);
         color: #333;
       }
+      
+      /* Typography */
+      h1, h2, h3, h4, .logo {
+        font-family: var(--font-heading);
+        letter-spacing: -0.02em;
+        line-height: 1.3;
+      }
+      
+      h1 {
+        font-weight: 700;
+      }
+      
+      h2 {
+        font-weight: 600;
+      }
+      
+      h3 {
+        font-weight: 500;
+      }
+      
+      /* Navigation */
+      .nav-links {
+        font-family: var(--font-heading);
+        font-weight: 500;
+        letter-spacing: 0.02em;
+      }
+      
+      /* Buttons */
+      button {
+        font-family: var(--font-heading);
+        font-weight: 600;
+        letter-spacing: 0.03em;
+      }
+      
+      /* Mono font for numerical values */
+      .value-animate, 
+      #g-value, 
+      #m-value, 
+      #k-value,
+      #gravity-summary, 
+      #mass-summary, 
+      #friction-summary,
+      #particles-count {
+        font-family: var(--font-mono);
+        font-weight: 500;
+      }
+      
+      /* Equations */
+      .equation {
+        font-family: var(--font-mono);
+        font-weight: 400;
+        letter-spacing: -0.02em;
+      }
+      
+      /* Main text */
+      p {
+        font-weight: 300;
+        letter-spacing: 0.01em;
+      }
+      
+      /* Feature headings */
+      .card h3 {
+        font-weight: 600;
+      }
+      
+      /* Gradient text enhancement */
+      .text-gradient {
+        font-weight: 700;
+      }
+      
       #background-canvas {
         position: fixed;
         top: 0;
@@ -242,6 +328,7 @@
         transition: border 0.3s ease, box-shadow 0.3s ease;
         position: relative;
         background: rgba(255, 255, 255, 0.1);
+        font-family: var(--font-body);
       }
       
       .form-input:focus {
@@ -386,6 +473,10 @@
         #home {
           min-height: auto;
         }
+        
+        h1 {
+          font-size: 2rem;
+        }
       }
     </style>
   </head>
@@ -435,7 +526,7 @@
         class="section min-h-screen md:min-h-screen flex items-center justify-center text-center"
       >
         <div class="animate__animated animate__fadeInUp">
-          <h1 class="text-4xl font-bold mb-4 typing-effect">Welcome to the Physics Simulation</h1>
+          <h1 class="text-5xl font-bold mb-4 typing-effect">Welcome to the Physics Simulation</h1>
           <p class="mt-4 text-lg">
             Explore fundamental mechanics concepts in real time.
           </p>
@@ -446,15 +537,15 @@
             <i class="fas fa-rocket mr-2"></i>
             Start Exploring
           </button>
-          <div class="mt-8 text-sm text-gray-400">
-            <p>Current Date: <span id="current-date">2025-04-06 11:40:14</span></p>
+          <div class="mt-8 text-sm text-gray-400 font-mono">
+            <p>Current Date: <span id="current-date">2025-04-06 12:11:22</span></p>
             <p>Username: <span id="username">prannvat</span></p>
           </div>
         </div>
       </section>
       
       <section id="simulation" class="section card p-6 mt-10">
-        <h2 class="text-2xl font-semibold flex items-center">
+        <h2 class="text-3xl font-semibold flex items-center">
           <i class="fas fa-flask mr-3 text-blue-400 float"></i>
           <span>Simulation</span>
         </h2>
@@ -638,8 +729,8 @@
             </div>
             <p>
               The simulation uses the following equations:<br /><br />
-              <span class="inline-block transform hover:scale-105 transition-transform duration-300">aₓ = - (k / m) * vₓ</span><br />
-              <span class="inline-block transform hover:scale-105 transition-transform duration-300">aᵧ = g - (k / m) * vᵧ</span><br /><br />
+              <span class="inline-block transform hover:scale-105 transition-transform duration-300 equation">aₓ = - (k / m) * vₓ</span><br />
+              <span class="inline-block transform hover:scale-105 transition-transform duration-300 equation">aᵧ = g - (k / m) * vᵧ</span><br /><br />
               Where a is acceleration, v is velocity, k is friction coefficient,
               m is mass, and g is gravity.
             </p>
@@ -733,6 +824,8 @@
         </a>
       </div>
     </footer>
+    
+   
     
     <script>
       // Date constants

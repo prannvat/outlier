@@ -1,0 +1,2848 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LearnHub - Online Learning Platform</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        :root {
+            /* Spacing variables */
+            --space-xs: 0.25rem;
+            --space-sm: 0.5rem;
+            --space-md: 1rem;
+            --space-lg: 1.5rem;
+            --space-xl: 2rem;
+            --space-2xl: 3rem;
+            
+            /* New professional color palette */
+            --bg-color: #F8F9FC;
+            --text-color: #1A2B3C;
+            --text-secondary: #5A6B7D;
+            --card-bg: #FFFFFF;
+            --border-color: #DFE3EB;
+            
+            /* Primary colors */
+            --primary: #2D5F8B;
+            --primary-hover: #1A4265;
+            --primary-light: #EBF2F9;
+            
+            /* Secondary colors */
+            --secondary: #45847C;
+            --secondary-hover: #2E5A54;
+            --secondary-light: #ECF5F4;
+            
+            /* Status colors */
+            --success: #2E7D32;
+            --success-light: #EBF5EB;
+            --warning: #E6840E;
+            --warning-light: #FEF5E9;
+            --error: #C62828;
+            --error-light: #FAEAEA;
+            --info: #2D5F8B;
+            --info-light: #EBF2F9;
+            
+            /* Card shadow with updated color */
+            --card-shadow: 0 4px 6px -1px rgba(26, 43, 60, 0.1), 0 2px 4px -1px rgba(26, 43, 60, 0.06);
+    
+            /* Border radiuses */
+            --radius-sm: 0.25rem;
+            --radius-md: 0.5rem;
+            --radius-lg: 0.75rem;
+            --radius-xl: 1rem;
+            --radius-full: 9999px;
+    
+            --card-padding: var(--space-md);
+        }
+    
+        .page-container {
+            width: 100%;
+            max-width: 1280px;
+            margin: 0 auto;
+            padding-left: var(--space-md);
+            padding-right: var(--space-md);
+        }
+    
+        @media (min-width: 768px) {
+            .page-container {
+                padding-left: var(--space-lg);
+                padding-right: var(--space-lg);
+            }
+        }
+    
+        .section {
+            margin-bottom: var(--space-2xl);
+        }
+    
+        .section-header {
+            margin-bottom: var(--space-lg);
+        }
+    
+        .content-grid {
+            display: grid;
+            gap: var(--space-md);
+            margin-bottom: var(--space-xl);
+        }
+    
+        @media (min-width: 768px) {
+            .content-grid {
+                grid-template-columns: repeat(12, 1fr);
+            }
+    
+            .content-grid-9 {
+                grid-column: span 9;
+            }
+    
+            .content-grid-3 {
+                grid-column: span 3;
+            }
+        }
+    
+        /* Pattern dots for header background */
+        .pattern-dots-lg {
+            background-image: radial-gradient(currentColor 1.5px, transparent 1.5px);
+            background-size: calc(10 * 1.5px) calc(10 * 1.5px);
+        }
+        
+        /* Header animations and effects */
+        @keyframes gradientShift {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+        
+        nav .bg-gradient-to-r {
+            background-size: 200% 200%;
+            animation: gradientShift 15s ease infinite;
+        }
+        
+        /* Header scroll effect */
+        .header-scrolled {
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Dropdown animation */
+        .dropdown-active {
+            transform: scale(1) !important;
+            opacity: 1 !important;
+        }
+        
+        /* Nav link hover effects */
+        #mobile-menu a {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        #mobile-menu a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background-color: white;
+            transition: width 0.3s ease, left 0.3s ease;
+        }
+        
+        #mobile-menu a:hover::after {
+            width: 80%;
+            left: 10%;
+        }
+        
+        /* Fix dark mode backgrounds */
+        .dark-mode.bg-gray-100,
+        .dark-mode .bg-gray-100 {
+            background-color: #1A2235 !important;
+        }
+        
+        /* Dark mode for general backgrounds */
+        body.dark-mode {
+            background-color: #1A2235 !important;
+        }
+        
+        html.dark-mode {
+            background-color: #1A2235 !important;
+        }
+    
+        /* Dark mode styles - comprehensive */
+        .dark-mode .card-custom,
+        .dark-mode .card,
+        .dark-mode .featured-course-card,
+        .dark-mode .quick-action-card {
+            background-color: var(--card-bg);
+            border-color: var(--border-color);
+            color: var(--text-color);
+        }
+        
+        .dark-mode .bg-white,
+        .dark-mode .course-card,
+        .dark-mode #focus-mode-popup {
+            background-color: var(--card-bg) !important;
+            color: var(--text-color);
+        }
+        
+        .dark-mode .text-gray-600,
+        .dark-mode .text-gray-700,
+        .dark-mode .text-gray-800,
+        .dark-mode .font-medium {
+            color: var(--text-secondary);
+        }
+        
+        .dark-mode .text-gray-500, 
+        .dark-mode .text-gray-400 {
+            color: rgba(215, 220, 230, 0.6);
+        }
+        
+        .dark-mode .border,
+        .dark-mode .border-gray-100,
+        .dark-mode .border-gray-200,
+        .dark-mode .border-gray-300 {
+            border-color: var(--border-color);
+        }
+        
+        .dark-mode .border-b {
+            border-bottom-color: var(--border-color);
+        }
+        
+        .dark-mode .border-t {
+            border-top-color: var(--border-color);
+        }
+        
+        .dark-mode .bg-gray-50,
+        .dark-mode .bg-gray-100,
+        .dark-mode .bg-gray-200 {
+            background-color: rgba(30, 38, 55, 0.5);
+        }
+    
+        .dark-mode .progress-bar {
+            background: linear-gradient(to right, var(--primary), #8b5cf6);
+        }
+    
+        .dark-mode .badge {
+            background-color: var(--secondary);
+            color: #e5e7eb;
+        }
+    
+        .dark-mode .btn-primary {
+            background-color: var(--primary);
+        }
+    
+        .dark-mode .btn-primary:hover {
+            background-color: var(--primary-hover);
+        }
+    
+        .dark-mode #welcome-banner {
+            background: linear-gradient(to right, #1E3A5A, #0F2A43);
+        }
+    
+        .dark-mode .module-content {
+            background-color: var(--card-bg);
+        }
+    
+        .dark-mode input,
+        .dark-mode textarea,
+        .dark-mode select {
+            background-color: #374151;
+            color: #f9fafb;
+            border-color: #4b5563;
+        }
+    
+        .dark-mode input::placeholder,
+        .dark-mode textarea::placeholder {
+            color: #9ca3af;
+        }
+    
+        .dark-mode .progress-circle::before {
+            background-color: var(--card-bg);
+        }
+    
+        .dark-mode #notification {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* Dark mode for new components */
+        .dark-mode .quick-action-card {
+            background-color: rgba(30, 41, 59, 0.5);
+        }
+        
+        .dark-mode .quick-action-card:hover {
+            background-color: rgba(30, 41, 59, 0.8);
+        }
+        
+        .dark-mode .featured-course-card {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+        
+        .dark-mode .featured-course-card:hover {
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.4);
+        }
+        
+        /* Popular categories in dark mode */
+        .dark-mode .grid.grid-cols-1.md\:grid-cols-2.lg\:grid-cols-4 > div {
+            background-color: var(--card-bg);
+        }
+        
+        .dark-mode .grid.grid-cols-1.md\:grid-cols-2.lg\:grid-cols-4 > div:hover {
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.4);
+        }
+        
+        /* Focus mode in dark mode */
+        .dark-mode #focus-mode-popup {
+            background-color: #283142;
+            border: 1px solid #3E4A5C;
+        }
+        
+        .dark-mode #focus-mode-popup h3 {
+            color: #E7EBF0;
+        }
+        
+        .dark-mode #focus-mode-popup p {
+            color: #A3AFC2;
+        }
+        
+        .dark-mode #focus-mode-popup #exit-focus-mode-btn {
+            color: #3B82F6;
+        }
+        
+        .dark-mode #focus-mode-popup #exit-focus-mode-btn:hover {
+            color: #60A5FA;
+        }
+        
+        /* Category cards in dark mode */
+        .dark-mode .bg-blue-50 { background-color: rgba(37, 99, 235, 0.1); }
+        .dark-mode .bg-purple-50 { background-color: rgba(124, 58, 237, 0.1); }
+        .dark-mode .bg-green-50 { background-color: rgba(16, 185, 129, 0.1); }
+        .dark-mode .bg-amber-50 { background-color: rgba(245, 158, 11, 0.1); }
+        .dark-mode .bg-indigo-50 { background-color: rgba(99, 102, 241, 0.1); }
+        .dark-mode .bg-red-50 { background-color: rgba(239, 68, 68, 0.1); }
+        
+        /* Fix scrollbars for dark mode */
+        .dark-mode .featured-courses::-webkit-scrollbar-track {
+            background: #283142;
+        }
+        
+        .dark-mode .featured-courses::-webkit-scrollbar-thumb {
+            background: #4B5563;
+        }
+        
+        .dark-mode .featured-courses::-webkit-scrollbar-thumb:hover {
+            background: #6B7280;
+        }
+    
+        /* Improved contrast for light mode */
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background-color 0.3s ease, color 0.3s ease;
+            line-height: 1.5;
+        }
+        
+        /* Enhanced text contrast for light mode */
+        .text-gray-500 {
+            color: #64748b !important; /* Darker gray for better contrast */
+        }
+        
+        .text-gray-600 {
+            color: #475569 !important; /* Darker for better legibility */
+        }
+        
+        /* Improve contrast for badges */
+        .badge {
+            font-weight: 600;
+        }
+        
+        /* Enhanced card borders for better distinction */
+        .card {
+            border: 1px solid var(--border-color);
+            box-shadow: var(--card-shadow);
+        }
+        
+        /* Improved button contrast */
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            font-weight: 600;
+        }
+        
+        .btn-secondary {
+            background-color: var(--secondary);
+            color: white;
+            font-weight: 600;
+        }
+        
+        /* Dark mode contrast improvements */
+        .dark-mode {
+            --bg-color: #0F172A; /* Darker background for better contrast */
+            --text-color: #F8FAFC; /* Brighter text */
+            --text-secondary: #CBD5E1; /* Brighter secondary text */
+            --card-bg: #1E293B; /* Darker card background */
+            --border-color: #334155; /* More visible borders */
+            
+            /* Primary colors with better contrast */
+            --primary: #3B82F6;
+            --primary-hover: #2563EB;
+            --primary-light: rgba(59, 130, 246, 0.2);
+            
+            /* Secondary colors with better contrast */
+            --secondary: #10B981;
+            --secondary-hover: #059669;
+            --secondary-light: rgba(16, 185, 129, 0.2);
+            
+            /* Status colors with enhanced contrast */
+            --success: #4ADE80;
+            --success-light: rgba(74, 222, 128, 0.2);
+            --warning: #FB923C;
+            --warning-light: rgba(251, 146, 60, 0.2);
+            --error: #F87171;
+            --error-light: rgba(248, 113, 113, 0.2);
+            
+            /* Card shadow updated for dark mode */
+            --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.6), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* Dark mode text contrast improvements */
+        .dark-mode .text-gray-500 {
+            color: #94A3B8 !important; /* Brighter for better visibility */
+        }
+        
+        .dark-mode .text-gray-600,
+        .dark-mode .text-gray-700,
+        .dark-mode .text-gray-800 {
+            color: #CBD5E1 !important; /* Much brighter for dark backgrounds */
+        }
+        
+        /* Dark mode background contrast fixes */
+        .dark-mode .bg-gray-50,
+        .dark-mode .bg-gray-100 {
+            background-color: #1E293B !important; /* Darker for better contrast */
+        }
+        
+        .dark-mode .bg-gray-200 {
+            background-color: #334155 !important; /* Darker but still distinct */
+        }
+        
+        /* Better card contrast in dark mode */
+        .dark-mode .card,
+        .dark-mode .featured-course-card,
+        .dark-mode .quick-action-card {
+            background-color: #1E293B;
+            border-color: #334155;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+        }
+        
+        /* Improve button contrast in dark mode */
+        .dark-mode .btn-primary {
+            background-color: #3B82F6;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .dark-mode .btn-secondary {
+            background-color: #10B981;
+            color: white;
+            font-weight: 600;
+        }
+        
+        /* Enhanced focus states for accessibility */
+        .btn:focus,
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5);
+        }
+        
+        .dark-mode .btn:focus,
+        .dark-mode input:focus,
+        .dark-mode select:focus,
+        .dark-mode textarea:focus {
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.7);
+        }
+    
+        .card-custom {
+            background-color: var(--card-bg);
+            box-shadow: var(--card-shadow);
+            border-radius: var(--radius-md);
+            padding: var(--card-padding);
+            transition: box-shadow 0.3s ease;
+        }
+    
+        .card {
+            background-color: var(--card-bg);
+            border-radius: var(--radius-md);
+            box-shadow: var(--card-shadow);
+            padding: var(--space-md);
+            margin-bottom: var(--space-md);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid var(--border-color);
+        }
+    
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px -3px rgba(26, 43, 60, 0.1), 0 4px 6px -2px rgba(26, 43, 60, 0.05);
+        }
+    
+        .card-header {
+            padding: var(--space-md);
+            border-bottom: 1px solid var(--border-color);
+            margin: calc(-1 * var(--space-md)) calc(-1 * var(--space-md)) var(--space-md);
+            border-radius: var(--radius-md) var(--radius-md) 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+    
+        .card-compact {
+            padding: var(--space-sm);
+        }
+    
+        .card-footer {
+            margin-top: var(--space-md);
+            padding-top: var(--space-md);
+            border-top: 1px solid var(--border-color);
+        }
+    
+        .module-content {
+            transition: max-height 0.3s ease-in-out;
+            overflow: hidden;
+        }
+    
+        #notification {
+            transition: transform 0.3s ease-in-out;
+        }
+    
+        .slide-in {
+            animation: slideIn 0.5s forwards;
+        }
+    
+        @keyframes slideIn {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+    
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+    
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-md);
+            font-weight: 500;
+            transition: all 0.2s ease;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+        }
+    
+        .btn:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(45, 95, 139, 0.3);
+        }
+    
+        .btn-sm {
+            padding: 0.25rem 0.75rem;
+            font-size: 0.875rem;
+        }
+    
+        .btn-lg {
+            padding: 0.75rem 1.5rem;
+            font-size: 1.125rem;
+        }
+    
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+    
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-1px);
+        }
+    
+        .btn-secondary {
+            background-color: var(--secondary);
+            color: white;
+        }
+    
+        .btn-secondary:hover {
+            background-color: var(--secondary-hover);
+            transform: translateY(-1px);
+        }
+    
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+        }
+    
+        .btn-outline:hover {
+            background-color: var(--primary-light);
+            color: var(--primary);
+        }
+    
+        .btn-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 2.5rem;
+            height: 2.5rem;
+            padding: 0;
+            border-radius: 50%;
+        }
+    
+        .btn-icon-sm {
+            width: 2rem;
+            height: 2rem;
+        }
+    
+        .btn:active {
+            transform: translateY(1px);
+        }
+    
+        .badge {
+            padding: 0.25rem 0.5rem;
+            border-radius: var(--radius-full);
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        
+        /* Status badges */
+        .badge-success {
+            background-color: var(--success-light);
+            color: var(--success);
+        }
+    
+        .badge-warning {
+            background-color: var(--warning-light);
+            color: var(--warning);
+        }
+    
+        .badge-error {
+            background-color: var(--error-light);
+            color: var(--error);
+        }
+    
+        .badge-info {
+            background-color: var(--info-light);
+            color: var(--info);
+        }
+    
+        .progress-container {
+            width: 100%;
+            background-color: var(--secondary-light);
+            border-radius: var(--radius-full);
+            height: 0.5rem;
+            overflow: hidden;
+        }
+    
+        .progress-bar {
+            height: 100%;
+            border-radius: var(--radius-full);
+            background: linear-gradient(to right, var(--primary), #4f46e5);
+            transition: width 0.5s ease-out;
+        }
+    
+        .gap-xs {
+            gap: var(--space-xs);
+        }
+    
+        .gap-sm {
+            gap: var(--space-sm);
+        }
+    
+        .gap-md {
+            gap: var(--space-md);
+        }
+    
+        .gap-lg {
+            gap: var(--space-lg);
+        }
+    
+        .progress-circle {
+            position: relative;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: conic-gradient(var(--primary) var(--progress), #e5e7eb 0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    
+        .progress-circle::before {
+            content: '';
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: white;
+        }
+    
+        .progress-circle span {
+            position: relative;
+            z-index: 1;
+        }
+    
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+    
+            50% {
+                transform: scale(1.1);
+            }
+    
+            100% {
+                transform: scale(1);
+            }
+        }
+    
+        .animate-streak-pulse {
+            animation: pulse 1.5s infinite;
+        }
+    
+        .module-content {
+            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+    
+        .card-custom {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+    
+        .card-custom:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(26, 43, 60, 0.1), 0 4px 6px -2px rgba(26, 43, 60, 0.05);
+        }
+    
+        .btn {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+    
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+    
+        .btn:active {
+            transform: translateY(0);
+        }
+    
+        .badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.025em;
+            display: inline-flex;
+            align-items: center;
+        }
+    
+        .dark-mode .card-custom {
+            background-color: var(--card-bg);
+            border-color: var(--border-color);
+        }
+    
+        .dark-mode .badge {
+            background-color: var(--secondary);
+            color: #e2e8f0;
+        }
+    
+        .dark-mode .btn-primary {
+            background-color: var(--primary);
+        }
+    
+        .dark-mode .btn-primary:hover {
+            background-color: var(--primary-hover);
+        }
+        
+        /* Fix for next up section in dark mode */
+        .dark-mode #next-course-btn {
+            background-color: white;
+            color: var(--primary);
+        }
+        
+        .dark-mode #next-course-btn:hover {
+            background-color: rgba(255, 255, 255, 0.9);
+        }
+    
+        .perspective-1000 {
+            perspective: 1000px;
+        }
+    
+        .transform-style-preserve-3d {
+            transform-style: preserve-3d;
+        }
+    
+        .backface-hidden {
+            backface-visibility: hidden;
+        }
+    
+        .rotate-y-180 {
+            transform: rotateY(180deg);
+        }
+    
+        #flashcard.flipped {
+            transform: rotateY(180deg);
+        }
+    
+        @keyframes slideInDown {
+            from {
+                transform: translate(-50%, -100%);
+                opacity: 0;
+            }
+    
+            to {
+                transform: translate(-50%, 0);
+                opacity: 1;
+            }
+        }
+    
+        @keyframes slideOutUp {
+            from {
+                transform: translate(-50%, 0);
+                opacity: 1;
+            }
+    
+            to {
+                transform: translate(-50%, -100%);
+                opacity: 0;
+            }
+        }
+    
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(45, 95, 139, 0.4);
+            }
+    
+            70% {
+                box-shadow: 0 0 0 10px rgba(45, 95, 139, 0);
+            }
+    
+            100% {
+                box-shadow: 0 0 0 0 rgba(45, 95, 139, 0);
+            }
+        }
+    
+        .form-control {
+            display: block;
+            width: 100%;
+            padding: 0.5rem 0.75rem;
+            background-color: white;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+    
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(45, 95, 139, 0.25);
+        }
+    
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+    
+        .form-group {
+            margin-bottom: var(--space-md);
+        }
+    
+        .dark-mode .form-control {
+            background-color: #374151;
+            border-color: #4b5563;
+            color: #f9fafb;
+        }
+    
+        .form-control::placeholder {
+            color: #9ca3af;
+        }
+        
+        /* Custom gradient backgrounds */
+        .bg-gradient-header {
+            background: linear-gradient(to right, #2D5F8B, #1A4265);
+        }
+    
+        .bg-gradient-banner {
+            background: linear-gradient(to right, #2D5F8B, #45847C);
+        }
+
+        /* Course card grid */
+        .course-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .course-card {
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .course-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Category pill styles */
+        .category-pill {
+            padding: 0.25rem 1rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: white;
+        }
+
+        .category-web {
+            background-color: #3b82f6;
+        }
+
+        .category-data {
+            background-color: #8b5cf6;
+        }
+
+        .category-design {
+            background-color: #ec4899;
+        }
+        
+        .category-business {
+            background-color: #f59e0b;
+        }
+
+        .dark-mode .course-card {
+            background-color: var(--card-bg);
+        }
+
+        /* Featured courses section */
+        .featured-courses {
+            overflow-x: auto;
+            padding: 1rem 0;
+            scrollbar-width: thin;
+        }
+
+        .featured-courses::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        .featured-courses::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .featured-courses::-webkit-scrollbar-thumb {
+            background: #d1d5db;
+            border-radius: 10px;
+        }
+
+        .featured-courses::-webkit-scrollbar-thumb:hover {
+            background: #9ca3af;
+        }
+
+        .featured-course-list {
+            display: flex;
+            gap: 1.5rem;
+            padding: 0.5rem 0;
+        }
+
+        .featured-course-card {
+            min-width: 320px;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .featured-course-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Quick actions grid */
+        .quick-actions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 1rem;
+        }
+
+        .quick-action-card {
+            border-radius: var(--radius-lg);
+            text-align: center;
+            padding: 1.5rem 1rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .quick-action-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .quick-action-icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        /* For focus mode */
+        .focus-mode-active {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .focus-mode-active .focus-hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100">
+    <!-- Achievements Modal -->
+    <div id="achievements-modal"
+        class="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center hidden z-50 p-4">
+        <div class="bg-white rounded-xl shadow-2xl max-w-4xl w-full max-h-90vh overflow-y-auto relative">
+            <button onclick="closeModal('achievements-modal')"
+                class="absolute -top-4 -right-4 bg-red-500 text-white w-8 h-8 rounded-full flex items-center justify-center hover:bg-red-600 transition-colors shadow-lg">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="p-6">
+                <h2 class="text-2xl font-bold mb-6 text-center">Your Achievements</h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="achievements-container">
+                    <!-- Achievements will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Achievement Notification -->
+    <div id="achievement-notification"
+        class="fixed top-20 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-yellow-500 to-amber-500 text-white px-6 py-4 rounded-xl shadow-2xl hidden z-50 w-80">
+        <div class="flex items-center">
+            <div class="w-12 h-12 rounded-full bg-yellow-300 flex items-center justify-center mr-4">
+                <i class="fas fa-trophy text-amber-600 text-xl"></i>
+            </div>
+            <div>
+                <div class="text-sm opacity-80">New Achievement Unlocked!</div>
+                <div class="font-bold text-lg" id="achievement-title">Achievement Title</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation Bar - Redesigned -->
+    <nav class="shadow-lg sticky top-0 z-40 transition-all duration-300">
+        <!-- Gradient background with overlay texture -->
+        <div class="bg-gradient-to-r from-blue-800 to-indigo-900 relative">
+            <!-- Subtle pattern overlay -->
+            <div class="absolute inset-0 opacity-10 pattern-dots-lg"></div>
+            
+            <div class="page-container relative">
+                <div class="container mx-auto py-4">
+                    <!-- Main navbar content -->
+                    <div class="flex flex-wrap items-center justify-between">
+                        <!-- Logo and brand -->
+                        <div class="flex items-center space-x-3">
+                            <div class="relative h-10 w-10 overflow-hidden rounded-lg bg-white/20 p-1 backdrop-blur-sm transition-all hover:bg-white/30">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-full w-full text-white" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                                </svg>
+                            </div>
+                            <div class="flex flex-col">
+                                <h1 class="text-2xl font-bold text-white">LearnHub</h1>
+                                <span class="text-xs text-blue-200">Expand your knowledge</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Search bar - with animation -->
+                        <div class="hidden md:block mx-4 relative flex-grow max-w-xl transition-all duration-300 group">
+                            <input id="search" type="text" placeholder="Search courses, topics, skills..." 
+    class="w-full py-2.5 px-4 pl-12 rounded-full bg-white/10 text-gray-800 dark:text-white placeholder-blue-200 focus:outline-none focus:ring-2 focus:ring-white focus:bg-white/20 backdrop-blur-sm transition-all" />
+                            <span class="absolute left-0 top-0 h-full flex items-center pl-4 text-blue-200 group-focus-within:text-white transition-colors">
+                                <i class="fas fa-search"></i>
+                            </span>
+                            <!-- Quick suggestions -->
+                            <div class="absolute inset-x-0 top-full mt-2 hidden rounded-lg bg-white shadow-lg p-2 group-focus-within:block dark:bg-gray-800 transition-all">
+                                <div class="text-xs text-gray-500 px-2 py-1 dark:text-gray-400">Popular Searches</div>
+                                <div class="grid grid-cols-2 gap-1">
+                                    <a href="#" class="px-3 py-1.5 rounded hover:bg-gray-100 text-sm text-gray-700 dark:text-gray-200 dark:hover:bg-gray-700">Web Development</a>
+                                    <a href="#" class="px-3 py-1.5 rounded hover:bg-gray-100 text-sm text-gray-700 dark:text-gray-200 dark:hover:bg-gray-700">JavaScript</a>
+                                    <a href="#" class="px-3 py-1.5 rounded hover:bg-gray-100 text-sm text-gray-700 dark:text-gray-200 dark:hover:bg-gray-700">Python</a>
+                                    <a href="#" class="px-3 py-1.5 rounded hover:bg-gray-100 text-sm text-gray-700 dark:text-gray-200 dark:hover:bg-gray-700">Data Science</a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Right side actions -->
+                        <div class="flex items-center space-x-1 md:space-x-3">
+                            <!-- Notification counter bubble -->
+                            <div class="relative p-2 rounded-full bg-transparent hover:bg-white/10 transition-colors">
+                                <span class="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs font-bold text-white">3</span>
+                                <i class="fas fa-bell text-white"></i>
+                            </div>
+                            
+                            <!-- Dark mode toggle with animation -->
+                            <button id="dark-mode-toggle" 
+                                class="p-2 rounded-full bg-transparent hover:bg-white/10 transition-colors duration-300">
+                                <i class="fas fa-moon text-white w-5 h-5"></i>
+                            </button>
+                            
+                            <!-- Bookmarks -->
+                            <div class="relative">
+                                <button id="bookmarks-dropdown"
+                                    class="p-2 rounded-full bg-transparent hover:bg-white/10 transition-colors">
+                                    <i class="fas fa-bookmark text-white w-5 h-5"></i>
+                                </button>
+                                <div id="bookmarks-menu"
+                                    class="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-lg hidden z-50 max-h-96 overflow-y-auto dark:bg-gray-800 transition-all duration-200 transform origin-top-right scale-95 opacity-0">
+                                    <div class="p-3 border-b border-gray-100 flex justify-between items-center dark:border-gray-700">
+                                        <h3 class="font-bold text-gray-700 dark:text-gray-300">My Bookmarks</h3>
+                                        <button onclick="clearAllBookmarks()"
+                                            class="text-xs text-red-500 hover:text-red-700">Clear All</button>
+                                    </div>
+                                    <ul id="bookmarks-list" class="py-1">
+                                        <li class="px-4 py-2 text-sm text-gray-600 dark:text-gray-400">No bookmarks yet</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <!-- User profile -->
+                            <div class="relative">
+                                <button id="user-dropdown"
+                                    class="flex items-center space-x-2 p-1 ml-2 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-sm transition-colors duration-300">
+                                    <img src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?w=250&h=250&fit=crop"
+                                        alt="User Avatar" class="w-8 h-8 rounded-full border-2 border-white/50 object-cover" />
+                                    <span class="hidden md:inline font-medium text-white pr-1">Student</span>
+                                    <i class="fas fa-caret-down w-4 h-4 text-blue-200 md:mr-1"></i>
+                                </button>
+                                <div id="user-menu"
+                                    class="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg hidden z-50 overflow-hidden transform origin-top-right transition-all duration-200 scale-95 opacity-0 dark:bg-gray-800">
+                                    <div class="p-3 border-b border-gray-100 dark:border-gray-700">
+                                        <p class="font-medium text-gray-800 dark:text-gray-200">John Smith</p>
+                                        <p class="text-sm text-gray-500 dark:text-gray-400">student@example.com</p>
+                                    </div>
+                                    <a href="#"
+                                        class="flex items-center px-4 py-3 text-gray-800 hover:bg-gray-100 border-b border-gray-100 dark:text-gray-200 dark:hover:bg-gray-700 dark:border-gray-700">
+                                        <i class="fas fa-user mr-3 text-blue-500"></i> My Profile
+                                    </a>
+                                    <a href="#"
+                                        class="flex items-center px-4 py-3 text-gray-800 hover:bg-gray-100 border-b border-gray-100 dark:text-gray-200 dark:hover:bg-gray-700 dark:border-gray-700">
+                                        <i class="fas fa-graduation-cap mr-3 text-blue-500"></i> My Courses
+                                    </a>
+                                    <a href="#"
+                                        class="flex items-center px-4 py-3 text-gray-800 hover:bg-gray-100 border-b border-gray-100 dark:text-gray-200 dark:hover:bg-gray-700 dark:border-gray-700">
+                                        <i class="fas fa-cog mr-3 text-blue-500"></i> Settings
+                                    </a>
+                                    <a href="#" onclick="showAchievements(); return false;"
+                                        class="flex items-center px-4 py-3 text-gray-800 hover:bg-gray-100 border-b border-gray-100 dark:text-gray-200 dark:hover:bg-gray-700 dark:border-gray-700">
+                                        <i class="fas fa-trophy mr-3 text-yellow-500"></i> Achievements
+                                    </a>
+                                    <a href="#" class="flex items-center px-4 py-3 text-red-600 hover:bg-gray-100 dark:hover:bg-gray-700">
+                                        <i class="fas fa-sign-out-alt mr-3"></i> Logout
+                                    </a>
+                                </div>
+                            </div>
+                            
+                            <!-- Mobile menu toggle -->
+                            <button id="menu-toggle"
+                                class="md:hidden p-2 rounded-full bg-transparent hover:bg-white/10 transition-colors duration-300">
+                                <i class="fas fa-bars text-white w-5 h-5"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Navigation links -->
+                    <div id="mobile-menu" 
+                        class="hidden md:block mt-4 md:mt-3 rounded-lg overflow-hidden transition-all duration-300 ease-in-out">
+                        <div class="flex flex-col md:flex-row md:space-x-1">
+                            <a href="#"
+                                class="block px-4 py-2 md:py-1.5 rounded-md hover:bg-white/10 text-white font-medium transition-colors text-center md:text-left">
+                                <i class="fas fa-home mr-2 md:mr-1.5 opacity-80"></i>Home
+                            </a>
+                            <a href="#"
+                                class="block px-4 py-2 md:py-1.5 rounded-md hover:bg-white/10 text-white font-medium transition-colors text-center md:text-left">
+                                <i class="fas fa-book-open mr-2 md:mr-1.5 opacity-80"></i>Courses
+                            </a>
+                            <a href="#"
+                                class="block px-4 py-2 md:py-1.5 rounded-md hover:bg-white/10 text-white font-medium transition-colors text-center md:text-left">
+                                <i class="fas fa-chart-line mr-2 md:mr-1.5 opacity-80"></i>My Progress
+                            </a>
+                            <a href="#" onclick="showCommunityModal(); return false;"
+                                class="block px-4 py-2 md:py-1.5 rounded-md hover:bg-white/10 text-white font-medium transition-colors text-center md:text-left">
+                                <i class="fas fa-users mr-2 md:mr-1.5 opacity-80"></i>Community
+                            </a>
+                            <a href="#"
+                                class="block px-4 py-2 md:py-1.5 rounded-md hover:bg-white/10 text-white font-medium transition-colors text-center md:text-left">
+                                <i class="fas fa-question-circle mr-2 md:mr-1.5 opacity-80"></i>Help
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Loading Animation -->
+    <div id="loading" class="fixed inset-0 bg-white z-50">
+        <nav class="bg-gradient-to-r from-blue-600 to-blue-800 text-white p-4">
+            <div class="container mx-auto flex justify-between items-center">
+                <h1 class="text-2xl font-bold">LearnHub</h1>
+                <div class="flex items-center space-x-4">
+                    <div class="w-8 h-8 bg-gray-300 rounded-full animate-pulse"></div>
+                    <div class="w-8 h-8 bg-gray-300 rounded-full animate-pulse"></div>
+                </div>
+            </div>
+        </nav>
+        <div class="container mx-auto p-4">
+            <div class="w-48 h-8 bg-gray-300 rounded animate-pulse mb-4"></div>
+            <div class="w-full h-10 bg-gray-300 rounded animate-pulse mb-4"></div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div class="bg-white rounded-lg shadow overflow-hidden">
+                    <div class="w-full h-32 bg-gray-300 animate-pulse"></div>
+                    <div class="p-4">
+                        <div class="w-3/4 h-6 bg-gray-300 rounded animate-pulse mb-3"></div>
+                        <div class="w-full h-4 bg-gray-300 rounded animate-pulse mb-3"></div>
+                        <div class="w-full h-4 bg-gray-300 rounded animate-pulse mb-3"></div>
+                        <div class="w-full h-3 bg-gray-300 rounded animate-pulse mb-3"></div>
+                        <div class="w-1/3 h-8 bg-gray-300 rounded animate-pulse mt-4"></div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow overflow-hidden">
+                    <div class="w-full h-32 bg-gray-300 animate-pulse"></div>
+                    <div class="p-4">
+                        <div class="w-3/4 h-6 bg-gray-300 rounded animate-pulse mb-3"></div>
+                        <div class="w-full h-4 bg-gray-300 rounded animate-pulse mb-3"></div>
+                        <div class="w-full h-4 bg-gray-300 rounded animate-pulse mb-3"></div>
+                        <div class="w-full h-3 bg-gray-300 rounded animate-pulse mb-3"></div>
+                        <div class="w-1/3 h-8 bg-gray-300 rounded animate-pulse mt-4"></div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow overflow-hidden">
+                    <div class="w-full h-32 bg-gray-300 animate-pulse"></div>
+                    <div class="p-4">
+                        <div class="w-3/4 h-6 bg-gray-300 rounded animate-pulse mb-3"></div>
+                        <div class="w-full h-4 bg-gray-300 rounded animate-pulse mb-3"></div>
+                        <div class="w-full h-4 bg-gray-300 rounded animate-pulse mb-3"></div>
+                        <div class="w-full h-3 bg-gray-300 rounded animate-pulse mb-3"></div>
+                        <div class="w-1/3 h-8 bg-gray-300 rounded animate-pulse mt-4"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Welcome Banner -->
+    <div class="page-container section">
+        <div id="welcome-banner" class="bg-gradient-banner text-white py-6 px-4 rounded-lg shadow-md slide-in hidden mt-6">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div>
+                    <h2 class="text-2xl font-bold mb-2">Welcome back, Student!</h2>
+                    <p class="opacity-80">Continue your learning journey today.</p>
+                </div>
+                <div class="flex space-x-3 mt-4 md:mt-0">
+                    <button id="focus-mode-btn" 
+                        class="bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-full font-medium transition-colors flex items-center">
+                        <i class="fas fa-focus-circle mr-2"></i>
+                        <span>Focus Mode</span>
+                    </button>
+                    <button id="resume-learning-btn"
+                        class="bg-white text-blue-800 px-6 py-2 rounded-full font-medium hover:bg-blue-100 transition-colors">
+                        Resume Learning
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard Summary Stats -->
+    <div id="dashboard-summary" class="page-container section">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div class="card">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <h3 class="text-lg font-bold text-gray-800">In Progress</h3>
+                        <p class="text-3xl font-bold text-blue-600 mt-2" id="in-progress-count">0</p>
+                    </div>
+                    <div class="p-3 bg-blue-100 rounded-full">
+                        <i class="fas fa-spinner text-blue-500 text-xl"></i>
+                    </div>
+                </div>
+                <p class="text-sm text-gray-500 mt-2">Courses you're currently taking</p>
+            </div>
+
+            <div class="card">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <h3 class="text-lg font-bold text-gray-800">Completed</h3>
+                        <p class="text-3xl font-bold text-green-600 mt-2" id="completed-count">0</p>
+                    </div>
+                    <div class="p-3 bg-green-100 rounded-full">
+                        <i class="fas fa-check-circle text-green-500 text-xl"></i>
+                    </div>
+                </div>
+                <p class="text-sm text-gray-500 mt-2">Courses you've completed</p>
+            </div>
+
+            <div class="card">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <h3 class="text-lg font-bold text-gray-800">Learning Time</h3>
+                        <p class="text-3xl font-bold text-purple-600 mt-2" id="total-learning-time">0h</p>
+                    </div>
+                    <div class="p-3 bg-purple-100 rounded-full">
+                        <i class="fas fa-clock text-purple-500 text-xl"></i>
+                    </div>
+                </div>
+                <p class="text-sm text-gray-500 mt-2">Total time spent learning</p>
+            </div>
+
+            <div class="card">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <h3 class="text-lg font-bold text-gray-800">Certificates</h3>
+                        <p class="text-3xl font-bold text-amber-600 mt-2" id="certificate-count">0</p>
+                    </div>
+                    <div class="p-3 bg-amber-100 rounded-full">
+                        <i class="fas fa-award text-amber-500 text-xl"></i>
+                    </div>
+                </div>
+                <p class="text-sm text-gray-500 mt-2">Earned certificates</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Next Up For You Section -->
+    <div class="page-container section">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold">Next Up For You</h2>
+            <button id="view-all-next" class="text-blue-600 hover:text-blue-800 flex items-center">
+                <span>View All</span>
+                <i class="fas fa-chevron-right ml-2"></i>
+            </button>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+            <!-- Hero course that needs your attention -->
+            <div class="relative">
+                <div class="absolute inset-0 bg-gradient-to-r from-blue-900/70 to-indigo-900/70"></div>
+                <img id="next-course-img" 
+                     src="https://images.unsplash.com/photo-1542831371-29b0f74f9713?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" 
+                     alt="Next Course" 
+                     class="w-full h-52 object-cover">
+                <div class="absolute bottom-0 left-0 p-6 w-full">
+                    <div class="flex flex-col md:flex-row md:items-end justify-between">
+                        <div>
+                            <span id="next-course-category" class="inline-block px-3 py-1 bg-blue-500 text-white rounded-full text-sm font-medium mb-2">
+                                Web Development
+                            </span>
+                            <h3 id="next-course-title" class="text-2xl font-bold text-white mb-1">
+                                Introduction to HTML
+                            </h3>
+                            <div class="flex items-center text-white text-sm">
+                                <div class="flex items-center mr-4">
+                                    <i class="fas fa-layer-group mr-1"></i>
+                                    <span id="next-course-progress">25% Complete</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <i class="fas fa-clock mr-1"></i>
+                                    <span id="next-course-time">1h 15m Left</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-4 md:mt-0">
+                            <button id="next-course-btn" class="bg-white text-blue-700 px-5 py-2.5 rounded-full font-medium hover:bg-blue-50 transition-all flex items-center">
+                                <i class="fas fa-play mr-2"></i>
+                                Continue Learning
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Last Lesson Progress -->
+            <div class="p-5 border-t border-gray-100">
+                <div class="flex justify-between items-center mb-3">
+                    <h4 class="font-medium text-gray-700">Continue where you left off</h4>
+                    <span class="text-sm text-gray-500">Last activity: 2 days ago</span>
+                </div>
+                
+                <div class="bg-gray-50 rounded-lg p-4 border border-gray-100 flex flex-col md:flex-row md:items-center justify-between">
+                    <div>
+                        <p class="font-medium" id="next-lesson-title">Lesson 2: HTML Tags</p>
+                        <p class="text-sm text-gray-600 mt-1" id="next-lesson-module">Module 1: HTML Basics</p>
+                    </div>
+                    <div class="flex items-center mt-3 md:mt-0">
+                        <span class="mr-4 text-sm text-gray-500">
+                            <i class="fas fa-clock mr-1"></i> 15 minutes
+                        </span>
+                        <button class="btn btn-primary px-4 py-2">
+                            Resume
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Featured Courses Section -->
+    <div class="page-container section">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold">Featured Courses</h2>
+            <div class="flex space-x-2">
+                <button id="scroll-left" class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center hover:bg-gray-300 transition-colors">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button id="scroll-right" class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center hover:bg-gray-300 transition-colors">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="featured-courses">
+            <div class="featured-course-list" id="featured-courses">
+                <!-- Featured courses will be populated by JavaScript -->
+                <div class="featured-course-card bg-white shadow-lg">
+                    <div class="relative h-40">
+                        <img src="https://images.unsplash.com/photo-1523437113738-bbd3cc89fb19?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" 
+                             alt="CSS Fundamentals" 
+                             class="w-full h-full object-cover">
+                        <div class="absolute top-3 left-3">
+                            <span class="category-pill category-web">Web Development</span>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-bold text-lg mb-1">CSS Fundamentals</h3>
+                        <p class="text-gray-600 text-sm mb-3 line-clamp-2">Learn how to style your HTML elements with CSS. This course covers selectors, properties, and everything you need to make beautiful websites.</p>
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center text-sm text-gray-500">
+                                <i class="fas fa-clock mr-1"></i> 3 hours
+                            </div>
+                            <button class="btn btn-sm btn-primary">
+                                Enroll Now
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="featured-course-card bg-white shadow-lg">
+                    <div class="relative h-40">
+                        <img src="https://images.unsplash.com/photo-1627398242454-45a1465c2479?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" 
+                             alt="JavaScript Essentials" 
+                             class="w-full h-full object-cover">
+                        <div class="absolute top-3 left-3">
+                            <span class="category-pill category-web">Web Development</span>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-bold text-lg mb-1">JavaScript Essentials</h3>
+                        <p class="text-gray-600 text-sm mb-3 line-clamp-2">Learn the fundamentals of JavaScript programming language. This course will teach you how to add interactivity to your websites.</p>
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center text-sm text-gray-500">
+                                <i class="fas fa-clock mr-1"></i> 5 hours
+                            </div>
+                            <button class="btn btn-sm btn-primary">
+                                Enroll Now
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="featured-course-card bg-white shadow-lg">
+                    <div class="relative h-40">
+                        <img src="https://images.unsplash.com/photo-1515879218367-8466d910aaa4?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" 
+                             alt="Python for Data Science" 
+                             class="w-full h-full object-cover">
+                        <div class="absolute top-3 left-3">
+                            <span class="category-pill category-data">Data Science</span>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-bold text-lg mb-1">Python for Data Science</h3>
+                        <p class="text-gray-600 text-sm mb-3 line-clamp-2">Learn Python programming language for data analysis and visualization. This course covers all the essential libraries for data science.</p>
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center text-sm text-gray-500">
+                                <i class="fas fa-clock mr-1"></i> 8 hours
+                            </div>
+                            <button class="btn btn-sm btn-primary">
+                                Enroll Now
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions Section -->
+    <div class="page-container section">
+        <h2 class="text-2xl font-bold mb-6">Quick Actions</h2>
+        
+        <div class="quick-actions-grid">
+            <div class="quick-action-card bg-blue-50 hover:bg-blue-100">
+                <div class="quick-action-icon text-blue-600">
+                    <i class="fas fa-search"></i>
+                </div>
+                <h3 class="font-medium">Browse Courses</h3>
+            </div>
+            
+            <div class="quick-action-card bg-green-50 hover:bg-green-100">
+                <div class="quick-action-icon text-green-600">
+                    <i class="fas fa-award"></i>
+                </div>
+                <h3 class="font-medium">My Certificates</h3>
+            </div>
+            
+            <div class="quick-action-card bg-purple-50 hover:bg-purple-100">
+                <div class="quick-action-icon text-purple-600">
+                    <i class="fas fa-bookmark"></i>
+                </div>
+                <h3 class="font-medium">Bookmarks</h3>
+            </div>
+            
+            <div class="quick-action-card bg-amber-50 hover:bg-amber-100">
+                <div class="quick-action-icon text-amber-600">
+                    <i class="fas fa-users"></i>
+                </div>
+                <h3 class="font-medium">Community</h3>
+            </div>
+            
+            <div class="quick-action-card bg-red-50 hover:bg-red-100">
+                <div class="quick-action-icon text-red-600">
+                    <i class="fas fa-thumbs-up"></i>
+                </div>
+                <h3 class="font-medium">Recommended</h3>
+            </div>
+            
+            <div class="quick-action-card bg-indigo-50 hover:bg-indigo-100">
+                <div class="quick-action-icon text-indigo-600">
+                    <i class="fas fa-question-circle"></i>
+                </div>
+                <h3 class="font-medium">Help Center</h3>
+            </div>
+        </div>
+    </div>
+
+    <!-- Popular Categories Section -->
+    <div class="page-container section">
+        <h2 class="text-2xl font-bold mb-6">Popular Categories</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="bg-white rounded-xl shadow-md overflow-hidden group hover:shadow-lg transition-all">
+                <div class="h-32 bg-gradient-to-r from-blue-500 to-blue-700 flex items-center justify-center group-hover:from-blue-600 group-hover:to-blue-800 transition-all">
+                    <i class="fas fa-code text-5xl text-white"></i>
+                </div>
+                <div class="p-4">
+                    <h3 class="font-bold text-lg mb-1">Web Development</h3>
+                    <p class="text-gray-600 text-sm mb-3">Learn HTML, CSS, JavaScript and more</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm text-gray-500">12 courses</span>
+                        <i class="fas fa-arrow-right text-blue-500"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow-md overflow-hidden group hover:shadow-lg transition-all">
+                <div class="h-32 bg-gradient-to-r from-purple-500 to-purple-700 flex items-center justify-center group-hover:from-purple-600 group-hover:to-purple-800 transition-all">
+                    <i class="fas fa-chart-bar text-5xl text-white"></i>
+                </div>
+                <div class="p-4">
+                    <h3 class="font-bold text-lg mb-1">Data Science</h3>
+                    <p class="text-gray-600 text-sm mb-3">Python, statistics and visualization</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm text-gray-500">8 courses</span>
+                        <i class="fas fa-arrow-right text-purple-500"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow-md overflow-hidden group hover:shadow-lg transition-all">
+                <div class="h-32 bg-gradient-to-r from-green-500 to-green-700 flex items-center justify-center group-hover:from-green-600 group-hover:to-green-800 transition-all">
+                    <i class="fas fa-mobile-alt text-5xl text-white"></i>
+                </div>
+                <div class="p-4">
+                    <h3 class="font-bold text-lg mb-1">Mobile Development</h3>
+                    <p class="text-gray-600 text-sm mb-3">iOS, Android and cross-platform apps</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm text-gray-500">6 courses</span>
+                        <i class="fas fa-arrow-right text-green-500"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow-md overflow-hidden group hover:shadow-lg transition-all">
+                <div class="h-32 bg-gradient-to-r from-red-500 to-red-700 flex items-center justify-center group-hover:from-red-600 group-hover:to-red-800 transition-all">
+                    <i class="fas fa-laptop-code text-5xl text-white"></i>
+                </div>
+                <div class="p-4">
+                    <h3 class="font-bold text-lg mb-1">Software Engineering</h3>
+                    <p class="text-gray-600 text-sm mb-3">Best practices and architecture</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm text-gray-500">9 courses</span>
+                        <i class="fas fa-arrow-right text-red-500"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Course List -->
+    <div id="course-list" class="page-container hidden">
+        <div class="section">
+            <h1 class="text-3xl font-bold mb-4">Available Courses</h1>
+            <div class="mb-4 flex flex-col md:flex-row gap-2 md:items-center">
+                <div class="flex flex-col md:flex-row gap-2 md:items-center">
+                    <label for="category-filter" class="text-sm font-medium">Category:</label>
+                    <select id="category-filter" class="rounded border-gray-300 py-1 px-3 bg-white">
+                        <option value="">All Categories</option>
+                        <option value="Web Development">Web Development</option>
+                        <option value="Data Science">Data Science</option>
+                        <option value="Programming">Programming</option>
+                    </select>
+                </div>
+
+                <div class="flex flex-col md:flex-row gap-2 md:items-center md:ml-4">
+                    <label for="sort" class="text-sm font-medium">Sort by:</label>
+                    <select id="sort" class="rounded border-gray-300 py-1 px-3 bg-white">
+                        <option value="title">Title (A-Z)</option>
+                        <option value="progress">Progress</option>
+                        <option value="recent">Recently Added</option>
+                    </select>
+                </div>
+            </div>
+            <!-- Filter Pills -->
+            <div class="mb-4">
+                <div class="flex gap-sm overflow-x-auto pb-2">
+                    <button class="badge bg-blue-500 text-white">All Courses</button>
+                    <button class="badge bg-white text-gray-700 hover:bg-gray-100">In Progress</button>
+                    <button class="badge bg-white text-gray-700 hover:bg-gray-100">Completed</button>
+                    <button class="badge bg-white text-gray-700 hover:bg-gray-100">Not Started</button>
+                    <button class="badge bg-white text-gray-700 hover:bg-gray-100">Web Development</button>
+                    <button class="badge bg-white text-gray-700 hover:bg-gray-100">Data Science</button>
+                </div>
+            </div>
+
+            <div id="courses" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+            <div id="no-courses" class="hidden text-gray-600 text-center mt-4 p-8 bg-gray-50 rounded-lg">
+                <i class="fas fa-search text-4xl text-gray-400 mb-4"></i>
+                <p class="text-xl font-medium">No courses found</p>
+                <p class="mt-2">Try adjusting your search or filter criteria</p>
+            </div>
+
+            <div id="pagination" class="flex justify-center mt-8">
+                <button id="prev-page"
+                    class="btn-primary text-white px-4 py-2 rounded-l mx-1 disabled:opacity-50 hover:bg-blue-600">Previous</button>
+                <div id="page-numbers" class="flex"></div>
+                <button id="next-page"
+                    class="btn-primary text-white px-4 py-2 rounded-r mx-1 disabled:opacity-50 hover:bg-blue-600">Next</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Course Details -->
+    <div id="course-details" class="page-container hidden">
+        <div class="section">
+            <div class="text-sm text-gray-600 mb-2">
+                <a href="#" class="hover:underline" onclick="showCourseList()">Courses</a> > <span
+                    id="breadcrumb-title"></span>
+            </div>
+            <div class="relative rounded-lg overflow-hidden shadow-xl">
+                <div class="absolute inset-0 bg-gradient-to-r from-blue-900/70 to-indigo-900/70 mix-blend-multiply">
+                </div>
+                <img id="course-cover" src="" alt="" class="w-full h-72 md:h-80 object-cover">
+                <div
+                    class="absolute bottom-0 left-0 p-6 bg-gradient-to-t from-black/90 via-black/60 to-transparent w-full">
+                    <div class="flex flex-col md:flex-row md:items-end justify-between">
+                        <div>
+                            <span id="course-category"
+                                class="inline-block px-3 py-1 bg-blue-600 text-white rounded-full text-sm font-medium mb-3"></span>
+                            <h1 id="course-title" class="text-3xl md:text-4xl font-bold text-white leading-tight mb-2">
+                            </h1>
+                            <div class="flex items-center text-white/80 text-sm space-x-4">
+                                <span class="flex items-center"><i class="fas fa-book-open mr-2"></i><span
+                                        id="lesson-count"></span> Lessons</span>
+                                <span class="flex items-center"><i class="fas fa-clock mr-2"></i><span
+                                        id="estimated-time"></span></span>
+                                <span class="flex items-center"><i class="fas fa-signal mr-2"></i><span
+                                        id="difficulty-level"></span></span>
+                            </div>
+                        </div>
+                        <div class="mt-4 md:mt-0">
+                            <button id="continue-btn"
+                                class="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-full font-bold shadow-lg transition-colors flex items-center">
+                                <i class="fas fa-play mr-2"></i> Continue Learning
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="learning-path" class="mt-6 p-4 bg-blue-50 rounded-lg shadow-sm border border-blue-100 hidden">
+                <h3 class="text-lg font-bold mb-3 flex items-center">
+                    <i class="fas fa-route mr-2 text-blue-500"></i> Learning Path
+                </h3>
+                <div class="relative">
+                    <div class="absolute left-4 top-0 bottom-0 w-0.5 bg-blue-200"></div>
+                    <div class="space-y-6 relative" id="path-steps">
+                        <!-- Path steps will be added here by JavaScript -->
+                    </div>
+                </div>
+                <button onclick="toggleLearningPath()"
+                    class="mt-4 text-blue-600 text-sm font-medium hover:text-blue-800">
+                    <i class="fas fa-chevron-up"></i> Hide Learning Path
+                </button>
+            </div>
+            <div class="mt-4 flex flex-col lg:flex-row gap-4">
+                <div class="lg:w-2/3">
+                    <p id="course-description" class="mb-4"></p>
+                    <div class="flex gap-2 mb-4">
+                        <button onclick="expandAllModules()"
+                            class="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400">Expand All</button>
+                        <button onclick="collapseAllModules()"
+                            class="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400">Collapse All</button>
+                    </div>
+                    <div id="modules" class="space-y-4"></div>
+                </div>
+                <div class="lg:w-1/3 bg-white p-6 rounded-xl shadow-lg sticky top-20 h-fit">
+                    <h2 class="text-xl font-bold mb-2">Progress Dashboard</h2>
+                    <div id="progress-bar" class="mb-4"></div>
+                    <div id="course-stats" class="text-sm text-gray-600 mb-4"></div>
+
+                    <div id="learning-streak" class="mb-4 p-3 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-lg">
+                        <div class="flex items-center">
+                            <i class="fas fa-fire text-orange-500 mr-2"></i>
+                            <div>
+                                <p class="font-medium">Learning Streak</p>
+                                <p class="text-sm text-gray-600">🔥 <span id="streak-count">0</span> Day Streak! Keep it
+                                    up!
+                                </p>
+                            </div>
+                        </div>
+                        <div class="flex justify-between mt-2" id="streak-days"></div>
+                    </div>
+
+                    <div id="continue-learning" class="mb-4">
+                        <button
+                            class="bg-green-500 text-white px-4 py-2 rounded w-full hover:bg-green-600 transition-colors">Continue
+                            Learning</button>
+                    </div>
+                    <div id="certificate" class="hidden mb-4">
+                        <button onclick="showCertificateModal()"
+                            class="bg-green-500 text-white px-4 py-2 rounded w-full hover:bg-green-600 transition-colors">Download
+                            Certificate</button>
+                    </div>
+                    <div id="resources" class="mb-4">
+                        <h3 class="text-lg font-bold">Resources</h3>
+                        <ul id="resource-list" class="mt-2"></ul>
+                    </div>
+                    <div id="downloads" class="mb-4">
+                        <h3 class="text-lg font-bold mb-3">Download Materials</h3>
+                        <div class="space-y-2">
+                            <button onclick="downloadMaterial('slides')"
+                                class="flex items-center w-full p-3 bg-white rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors">
+                                <div
+                                    class="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center mr-3">
+                                    <i class="fas fa-file-powerpoint"></i>
+                                </div>
+                                <div class="flex-grow">
+                                    <div class="font-medium">Course Slides</div>
+                                    <div class="text-xs text-gray-500">PDF, 2.5MB</div>
+                                </div>
+                                <i class="fas fa-download text-blue-600"></i>
+                            </button>
+
+                            <button onclick="downloadMaterial('notes')"
+                                class="flex items-center w-full p-3 bg-white rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors">
+                                <div
+                                    class="w-10 h-10 rounded-full bg-green-100 text-green-600 flex items-center justify-center mr-3">
+                                    <i class="fas fa-file-alt"></i>
+                                </div>
+                                <div class="flex-grow">
+                                    <div class="font-medium">Course Notes</div>
+                                    <div class="text-xs text-gray-500">PDF, 1.3MB</div>
+                                </div>
+                                <i class="fas fa-download text-blue-600"></i>
+                            </button>
+
+                            <button onclick="downloadMaterial('exercises')"
+                                class="flex items-center w-full p-3 bg-white rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors">
+                                <div
+                                    class="w-10 h-10 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center mr-3">
+                                    <i class="fas fa-laptop-code"></i>
+                                </div>
+                                <div class="flex-grow">
+                                    <div class="font-medium">Practice Exercises</div>
+                                    <div class="text-xs text-gray-500">ZIP, 3.7MB</div>
+                                </div>
+                                <i class="fas fa-download text-blue-600"></i>
+                            </button>
+
+                            <button onclick="downloadMaterial('all')"
+                                class="mt-3 w-full py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center">
+                                <i class="fas fa-download mr-2"></i> Download All Materials
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="course-notes" class="mb-4">
+                        <h3 class="text-lg font-bold mb-3 flex justify-between items-center">
+                            <span>My Notes</span>
+                            <button id="add-note-btn"
+                                class="text-sm bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">
+                                <i class="fas fa-plus mr-1"></i> Add Note
+                            </button>
+                        </h3>
+
+                        <div id="note-editor"
+                            class="mt-2 hidden bg-white p-3 rounded-lg border border-blue-200 shadow-sm">
+                            <input id="note-title" class="w-full border rounded p-2 text-sm mb-2"
+                                placeholder="Note title...">
+                            <textarea id="notes-content" class="w-full border rounded p-2 text-sm" rows="3"
+                                placeholder="Add your notes here..."></textarea>
+
+                            <div class="flex justify-between mt-2">
+                                <div>
+                                    <select id="note-category" class="border rounded p-1 text-sm">
+                                        <option value="">-- Select Category --</option>
+                                        <option value="important">Important</option>
+                                        <option value="concept">Concept</option>
+                                        <option value="question">Question</option>
+                                        <option value="reference">Reference</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <button id="cancel-note-btn"
+                                        class="mr-2 bg-gray-200 text-gray-700 px-3 py-1 rounded text-sm hover:bg-gray-300">
+                                        Cancel
+                                    </button>
+                                    <button id="save-notes-btn"
+                                        class="bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600">
+                                        Save Note
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-3">
+                            <div class="flex mb-3 border-b">
+                                <button id="all-notes-btn"
+                                    class="py-2 px-3 font-medium text-blue-600 border-b-2 border-blue-500">All</button>
+                                <button id="important-notes-btn"
+                                    class="py-2 px-3 text-gray-600 hover:text-gray-800">Important</button>
+                                <button id="concept-notes-btn"
+                                    class="py-2 px-3 text-gray-600 hover:text-gray-800">Concepts</button>
+                                <button id="question-notes-btn"
+                                    class="py-2 px-3 text-gray-600 hover:text-gray-800">Questions</button>
+                                <button id="reference-notes-btn"
+                                    class="py-2 px-3 text-gray-600 hover:text-gray-800">References</button>
+                            </div>
+                            <input id="notes-search" class="w-full border rounded-lg p-2 text-sm mb-3"
+                                placeholder="Search in notes...">
+                            <div id="saved-notes" class="text-sm space-y-3"></div>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <h3 class="text-lg font-bold">Rate this course</h3>
+                        <div id="rating-stars" class="flex mt-1">
+                            <i class="fas fa-star text-gray-300 cursor-pointer hover:text-yellow-500"
+                                data-rating="1"></i>
+                            <i class="fas fa-star text-gray-300 cursor-pointer hover:text-yellow-500"
+                                data-rating="2"></i>
+                            <i class="fas fa-star text-gray-300 cursor-pointer hover:text-yellow-500"
+                                data-rating="3"></i>
+                            <i class="fas fa-star text-gray-300 cursor-pointer hover:text-yellow-500"
+                                data-rating="4"></i>
+                            <i class="fas fa-star text-gray-300 cursor-pointer hover:text-yellow-500"
+                                data-rating="5"></i>
+                        </div>
+                        <span id="current-rating" class="ml-2 text-sm"></span>
+                    </div>
+                    <div>
+                        <p class="text-sm font-bold">Share this course:</p>
+                        <div class="flex gap-2 mt-1">
+                            <a href="#" class="bg-blue-400 text-white p-2 rounded hover:bg-blue-500"><i
+                                    class="fab fa-twitter"></i></a>
+                            <a href="#" class="bg-blue-600 text-white p-2 rounded hover:bg-blue-700"><i
+                                    class="fab fa-facebook"></i></a>
+                            <a href="#" class="bg-green-600 text-white p-2 rounded hover:bg-green-700"><i
+                                    class="fab fa-whatsapp"></i></a>
+                            <a href="#" class="bg-blue-700 text-white p-2 rounded hover:bg-blue-800"><i
+                                    class="fab fa-linkedin"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-8 bg-white rounded-xl shadow-lg p-6">
+                <h2 class="text-2xl font-bold mb-4">Collaborative Learning</h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-blue-50 rounded-lg p-4 border border-blue-100">
+                        <div class="flex items-center mb-4">
+                            <div
+                                class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 mr-3">
+                                <i class="fas fa-user-friends"></i>
+                            </div>
+                            <h3 class="text-lg font-bold">Study Groups</h3>
+                        </div>
+                        <p class="text-gray-600 mb-4">Connect with fellow students who are taking this course. Join
+                            existing
+                            groups or create your own.</p>
+                        <div class="space-y-2 mb-4">
+                            <div class="bg-white rounded-lg p-3 border border-gray-200 hover:shadow-md transition-all">
+                                <div class="flex justify-between items-center">
+                                    <h4 class="font-medium">Evening Study Group</h4>
+                                    <span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">5
+                                        members</span>
+                                </div>
+                                <p class="text-sm text-gray-500 mt-1">Meets every Tuesday at 7:00 PM</p>
+                            </div>
+                            <div class="bg-white rounded-lg p-3 border border-gray-200 hover:shadow-md transition-all">
+                                <div class="flex justify-between items-center">
+                                    <h4 class="font-medium">Weekend Warriors</h4>
+                                    <span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">8
+                                        members</span>
+                                </div>
+                                <p class="text-sm text-gray-500 mt-1">Intensive study sessions on weekends</p>
+                            </div>
+                        </div>
+                        <button
+                            class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                            <i class="fas fa-plus mr-2"></i> Join a Study Group
+                        </button>
+                    </div>
+
+                    <div class="bg-purple-50 rounded-lg p-4 border border-purple-100">
+                        <div class="flex items-center mb-4">
+                            <div
+                                class="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 mr-3">
+                                <i class="fas fa-comments"></i>
+                            </div>
+                            <h3 class="text-lg font-bold">Discussion Board</h3>
+                        </div>
+                        <p class="text-gray-600 mb-4">Ask questions, share insights, and participate in course-specific
+                            discussions.</p>
+                        <div class="space-y-2 mb-4">
+                            <div class="bg-white rounded-lg p-3 border border-gray-200 hover:shadow-md transition-all">
+                                <h4 class="font-medium">How to structure HTML for better SEO?</h4>
+                                <div class="flex items-center text-xs text-gray-500 mt-1">
+                                    <img src="https://randomuser.me/api/portraits/men/32.jpg"
+                                        class="w-4 h-4 rounded-full mr-1">
+                                    <span>DevMaster</span>
+                                    <span class="mx-1">•</span>
+                                    <span>2 days ago</span>
+                                    <span class="mx-1">•</span>
+                                    <span>12 replies</span>
+                                </div>
+                            </div>
+                            <div class="bg-white rounded-lg p-3 border border-gray-200 hover:shadow-md transition-all">
+                                <h4 class="font-medium">Best practices for responsive design</h4>
+                                <div class="flex items-center text-xs text-gray-500 mt-1">
+                                    <img src="https://randomuser.me/api/portraits/women/42.jpg"
+                                        class="w-4 h-4 rounded-full mr-1">
+                                    <span>SarahCoder</span>
+                                    <span class="mx-1">•</span>
+                                    <span>Yesterday</span>
+                                    <span class="mx-1">•</span>
+                                    <span>8 replies</span>
+                                </div>
+                            </div>
+                        </div>
+                        <button
+                            class="w-full bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700 transition-colors">
+                            <i class="fas fa-comment-dots mr-2"></i> Join Discussion
+                        </button>
+                    </div>
+
+                    <div class="bg-amber-50 rounded-lg p-4 border border-amber-100">
+                        <div class="flex items-center mb-4">
+                            <div
+                                class="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center text-amber-600 mr-3">
+                                <i class="fas fa-project-diagram"></i>
+                            </div>
+                            <h3 class="text-lg font-bold">Group Projects</h3>
+                        </div>
+                        <p class="text-gray-600 mb-4">Collaborate with peers on real-world projects to apply what you've
+                            learned.</p>
+                        <div class="space-y-2 mb-4">
+                            <div class="bg-white rounded-lg p-3 border border-gray-200 hover:shadow-md transition-all">
+                                <div class="flex justify-between items-center">
+                                    <h4 class="font-medium">Portfolio Website</h4>
+                                    <span
+                                        class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">Beginner</span>
+                                </div>
+                                <p class="text-sm text-gray-500 mt-1">Build a responsive portfolio website as a team</p>
+                            </div>
+                            <div class="bg-white rounded-lg p-3 border border-gray-200 hover:shadow-md transition-all">
+                                <div class="flex justify-between items-center">
+                                    <h4 class="font-medium">E-commerce Homepage</h4>
+                                    <span
+                                        class="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full">Intermediate</span>
+                                </div>
+                                <p class="text-sm text-gray-500 mt-1">Design and implement an e-commerce homepage</p>
+                            </div>
+                        </div>
+                        <button
+                            class="w-full bg-amber-600 text-white py-2 rounded-lg hover:bg-amber-700 transition-colors">
+                            <i class="fas fa-users mr-2"></i> Find Project Partners
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <button onclick="showCourseList()"
+                class="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors">Back to
+                Courses</button>
+        </div>
+    </div>
+    
+    <!-- Flashcards Modal -->
+    <div id="flashcards-modal"
+        class="fixed inset-0 bg-black bg-opacity-80 flex justify-center items-center hidden z-50 p-4">
+        <div class="bg-white rounded-xl shadow-2xl max-w-4xl w-full max-h-90vh relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-1 bg-gray-200">
+                <div id="flashcard-progress" class="h-full bg-blue-500 transition-all duration-300" style="width: 0%">
+                </div>
+            </div>
+
+            <button onclick="closeFlashcardsModal()"
+                class="absolute -top-4 -right-4 bg-red-500 text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-red-600 transition-colors shadow-lg z-10">
+                <i class="fas fa-times"></i>
+            </button>
+
+            <div class="p-6 pt-8">
+                <div class="flex justify-between items-center mb-6 border-b pb-4">
+                    <h2 id="flashcards-title" class="text-2xl font-bold">Flashcards</h2>
+                    <div class="flex items-center text-gray-600 text-sm">
+                        <span id="current-card-index">1</span>/<span id="total-cards">5</span>
+                    </div>
+                </div>
+
+                <div class="relative perspective-1000">
+                    <div id="flashcard"
+                        class="relative w-full h-72 cursor-pointer transition-transform duration-500 transform-style-preserve-3d">
+                        <div id="flashcard-front"
+                            class="absolute inset-0 backface-hidden bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-6 flex flex-col items-center justify-center border border-blue-100 shadow-md">
+                            <div class="text-xs font-medium text-gray-500 mb-4 self-start">QUESTION</div>
+                            <div id="flashcard-question" class="text-xl font-bold text-center max-w-lg"></div>
+                            <div class="mt-auto text-center text-sm text-blue-500">Click to flip</div>
+                        </div>
+
+                        <div id="flashcard-back"
+                            class="absolute inset-0 backface-hidden bg-gradient-to-br from-indigo-50 to-purple-50 rounded-xl p-6 rotate-y-180 border border-indigo-100 shadow-md flex flex-col items-center justify-center">
+                            <div class="text-xs font-medium text-gray-500 mb-4 self-start">ANSWER</div>
+                            <div id="flashcard-answer" class="text-xl max-w-lg"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-center mt-8">
+                    <div id="rating-container" class="hidden space-x-2 mb-6">
+                        <p class="text-gray-600 mb-2 font-medium">How well did you know this?</p>
+                        <div class="flex space-x-2">
+                            <button data-rating="1"
+                                class="rating-btn px-4 py-2 rounded-lg bg-red-100 text-red-700 hover:bg-red-200 transition-colors">
+                                Didn't know
+                            </button>
+                            <button data-rating="2"
+                                class="rating-btn px-4 py-2 rounded-lg bg-yellow-100 text-yellow-700 hover:bg-yellow-200 transition-colors">
+                                Somewhat knew
+                            </button>
+                            <button data-rating="3"
+                                class="rating-btn px-4 py-2 rounded-lg bg-green-100 text-green-700 hover:bg-green-200 transition-colors">
+                                Knew it well
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-between mt-6">
+                    <button id="prev-card"
+                        class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors flex items-center">
+                        <i class="fas fa-chevron-left mr-2"></i> Previous
+                    </button>
+
+                    <div>
+                        <button id="flip-card"
+                            class="px-4 py-2 bg-indigo-100 text-indigo-700 rounded-lg hover:bg-indigo-200 transition-colors">
+                            <i class="fas fa-sync-alt mr-2"></i> Flip Card
+                        </button>
+                        <button id="shuffle-cards"
+                            class="ml-2 px-4 py-2 bg-purple-100 text-purple-700 rounded-lg hover:bg-purple-200 transition-colors">
+                            <i class="fas fa-random mr-2"></i> Shuffle
+                        </button>
+                    </div>
+
+                    <button id="next-card"
+                        class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center">
+                        Next <i class="fas fa-chevron-right ml-2"></i>
+                    </button>
+                </div>
+
+                <div class="mt-6 pt-4 border-t">
+                    <div class="flex justify-between items-center">
+                        <div class="text-sm text-gray-600">
+                            <i class="fas fa-info-circle mr-1"></i> Tip: Use arrow keys to navigate, spacebar to flip
+                        </div>
+                        <button id="study-session-btn"
+                            class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center">
+                            <i class="fas fa-graduation-cap mr-2"></i> Start Study Session
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Certificate Modal -->
+    <div id="certificate-modal"
+        class="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center hidden z-50 p-4">
+        <div class="bg-white p-6 rounded-xl shadow-2xl max-w-2xl w-full relative">
+            <button onclick="closeModal()"
+                class="absolute -top-4 -right-4 bg-red-500 text-white w-8 h-8 rounded-full flex items-center justify-center hover:bg-red-600 transition-colors shadow-lg">
+                <i class="fas fa-times"></i>
+            </button>
+            <div
+                class="text-center border-8 border-blue-100 p-8 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg">
+                <div class="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
+                    <div class="absolute top-5 right-5 text-6xl text-blue-300 opacity-50 transform rotate-12">
+                        <i class="fas fa-award"></i>
+                    </div>
+                    <div class="absolute bottom-5 left-5 text-6xl text-blue-300 opacity-50 transform -rotate-12">
+                        <i class="fas fa-medal"></i>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Wikimedia-logo.png"
+                        alt="LearnHub Logo" class="h-16 mx-auto mb-2">
+                    <div class="h-px w-48 mx-auto bg-gradient-to-r from-transparent via-blue-300 to-transparent"></div>
+                </div>
+                <h2 class="text-4xl font-bold mb-2 text-blue-800">Certificate of Completion</h2>
+                <p class="text-xl mb-6 text-gray-600">This is to certify that</p>
+                <p class="text-2xl font-bold mb-6 text-indigo-700">Student Name</p>
+                <p class="mb-4 text-gray-600">has successfully completed the course</p>
+                <p class="text-xl font-bold mb-8 text-blue-700" id="certificate-course-title">Course Title</p>
+                <p class="text-gray-600 mb-2">Completed on</p>
+                <p class="font-semibold text-gray-700 mb-8">${new Date().toLocaleDateString('en-US', { year: 'numeric',
+                    month: 'long', day: 'numeric' })}</p>
+                <div class="flex justify-between items-center mt-8">
+                    <div class="text-center">
+                        <div class="border-t-2 border-gray-400 pt-2 w-32 mx-auto">
+                            <p class="text-gray-600">Date</p>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <div class="border-t-2 border-gray-400 pt-2 w-32 mx-auto">
+                            <p class="text-gray-600">Instructor</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="flex justify-center mt-6">
+                <button onclick="downloadCertificate()"
+                    class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors font-semibold shadow-md flex items-center">
+                    <i class="fas fa-download mr-2"></i> Download Certificate
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quiz Modal -->
+    <div id="quiz-container"></div>
+
+    <!-- Notification System -->
+    <div id="notification" class="fixed bottom-4 right-4 p-4 rounded-lg shadow-lg hidden flex items-center gap-2 z-50">
+        <i id="notification-icon" class="fas"></i>
+        <p id="notification-message"></p>
+    </div>
+
+    <!-- Back to Top Button -->
+    <button id="back-to-top"
+        class="fixed bottom-4 left-4 bg-blue-500 text-white p-2 rounded-full shadow-lg hidden hover:bg-blue-600 transition-colors">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+    
+    <!-- Community Modal -->
+    <div id="community-modal"
+        class="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center hidden z-50 p-4">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-6xl max-h-90vh overflow-hidden">
+            <div class="flex flex-col h-full">
+                <div class="bg-blue-600 text-white p-4 flex justify-between items-center">
+                    <h2 class="text-xl font-bold">LearnHub Community</h2>
+                    <button onclick="closeCommunityModal()" class="text-white hover:text-blue-200">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+
+                <div class="flex flex-grow overflow-hidden">
+                    <!-- Sidebar -->
+                    <div class="w-60 bg-gray-100 border-r border-gray-200 p-4 overflow-y-auto">
+                        <div class="mb-6">
+                            <h3 class="text-sm font-medium text-gray-500 mb-2">CATEGORIES</h3>
+                            <ul class="space-y-1">
+                                <li><a href="#"
+                                        class="block px-3 py-2 rounded-md bg-blue-100 text-blue-800 font-medium">General
+                                        Discussion</a></li>
+                                <li><a href="#" class="block px-3 py-2 rounded-md hover:bg-gray-200">Web Development</a>
+                                </li>
+                                <li><a href="#" class="block px-3 py-2 rounded-md hover:bg-gray-200">Data Science</a>
+                                </li>
+                                <li><a href="#" class="block px-3 py-2 rounded-md hover:bg-gray-200">Programming</a>
+                                </li>
+                                <li><a href="#" class="block px-3 py-2 rounded-md hover:bg-gray-200">Study Groups</a>
+                                </li>
+                                <li><a href="#" class="block px-3 py-2 rounded-md hover:bg-gray-200">Career Advice</a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div>
+                            <h3 class="text-sm font-medium text-gray-500 mb-2">YOUR COURSES</h3>
+                            <ul class="space-y-1">
+                                <li><a href="#" class="block px-3 py-2 rounded-md hover:bg-gray-200">Introduction to
+                                        HTML</a></li>
+                                <li><a href="#" class="block px-3 py-2 rounded-md hover:bg-gray-200">CSS
+                                        Fundamentals</a></li>
+                                <li><a href="#" class="block px-3 py-2 rounded-md hover:bg-gray-200">JavaScript
+                                        Essentials</a></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Main content -->
+                    <div class="flex-grow overflow-y-auto p-6">
+                        <div class="flex justify-between items-center mb-6">
+                            <h3 class="text-xl font-bold">General Discussion</h3>
+                            <button
+                                class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                                <i class="fas fa-plus mr-2"></i> New Topic
+                            </button>
+                        </div>
+
+                        <div class="space-y-4 mb-6">
+                            <!-- Sample discussion topics -->
+                            <div class="border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+                                <div class="p-4">
+                                    <div class="flex items-start">
+                                        <img src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?w=250&h=250&fit=crop"
+                                            alt="User Avatar" class="w-10 h-10 rounded-full mr-3 object-cover">
+                                        <div class="flex-grow">
+                                            <h4 class="font-bold text-lg hover:text-blue-600">Tips for learning HTML
+                                                faster?</h4>
+                                            <div class="flex items-center text-sm text-gray-500 mt-1">
+                                                <span>By JohnDoe123</span>
+                                                <span class="mx-2">•</span>
+                                                <span>2 hours ago</span>
+                                                <span class="mx-2">•</span>
+                                                <span>Web Development</span>
+                                            </div>
+                                        </div>
+                                        <div class="text-center">
+                                            <div class="bg-blue-100 text-blue-800 rounded-full px-3 py-1">
+                                                <i class="fas fa-comment mr-1"></i> 12
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <p class="mt-3 text-gray-600">I'm new to HTML and looking for tips on how to learn
+                                        faster. Any advice from experienced developers?</p>
+                                    <div class="flex gap-2 mt-4">
+                                        <span class="text-xs bg-gray-100 px-2 py-1 rounded-full">beginners</span>
+                                        <span class="text-xs bg-gray-100 px-2 py-1 rounded-full">html</span>
+                                        <span class="text-xs bg-gray-100 px-2 py-1 rounded-full">learning</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+                                <div class="p-4">
+                                    <div class="flex items-start">
+                                        <img src="https://randomuser.me/api/portraits/women/42.jpg" alt="User Avatar"
+                                            class="w-10 h-10 rounded-full mr-3 object-cover">
+                                        <div class="flex-grow">
+                                            <h4 class="font-bold text-lg hover:text-blue-600">JavaScript vs Python for
+                                                beginners?</h4>
+                                            <div class="flex items-center text-sm text-gray-500 mt-1">
+                                                <span>By SarahCoder</span>
+                                                <span class="mx-2">•</span>
+                                                <span>Yesterday</span>
+                                                <span class="mx-2">•</span>
+                                                <span>Programming</span>
+                                            </div>
+                                        </div>
+                                        <div class="text-center">
+                                            <div class="bg-blue-100 text-blue-800 rounded-full px-3 py-1">
+                                                <i class="fas fa-comment mr-1"></i> 24
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <p class="mt-3 text-gray-600">I'm trying to decide which language to learn first.
+                                        Any thoughts on whether JavaScript or Python is better for a complete beginner?
+                                    </p>
+                                    <div class="flex gap-2 mt-4">
+                                        <span class="text-xs bg-gray-100 px-2 py-1 rounded-full">javascript</span>
+                                        <span class="text-xs bg-gray-100 px-2 py-1 rounded-full">python</span>
+                                        <span class="text-xs bg-gray-100 px-2 py-1 rounded-full">beginners</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+                                <div class="p-4">
+                                    <div class="flex items-start">
+                                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User Avatar"
+                                            class="w-10 h-10 rounded-full mr-3 object-cover">
+                                        <div class="flex-grow">
+                                            <h4 class="font-bold text-lg hover:text-blue-600">Study group for the CSS
+                                                course</h4>
+                                            <div class="flex items-center text-sm text-gray-500 mt-1">
+                                                <span>By DevMaster</span>
+                                                <span class="mx-2">•</span>
+                                                <span>3 days ago</span>
+                                                <span class="mx-2">•</span>
+                                                <span>Study Groups</span>
+                                            </div>
+                                        </div>
+                                        <div class="text-center">
+                                            <div class="bg-blue-100 text-blue-800 rounded-full px-3 py-1">
+                                                <i class="fas fa-comment mr-1"></i> 8
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <p class="mt-3 text-gray-600">I'm starting a study group for the CSS Fundamentals
+                                        course. We'll meet twice a week to practice together. Who's interested?</p>
+                                    <div class="flex gap-2 mt-4">
+                                        <span class="text-xs bg-gray-100 px-2 py-1 rounded-full">css</span>
+                                        <span class="text-xs bg-gray-100 px-2 py-1 rounded-full">study-group</span>
+                                        <span class="text-xs bg-gray-100 px-2 py-1 rounded-full">collaboration</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-center">
+                            <button
+                                class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors">
+                                Load More Topics
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Focus Mode Popup -->
+    <div id="focus-mode-popup" class="fixed top-4 right-4 bg-white rounded-lg shadow-lg p-4 hidden z-50 transition-all">
+        <div class="flex items-center justify-between mb-2">
+            <h3 class="font-bold text-gray-800">Focus Mode Active</h3>
+            <button id="exit-focus-mode" class="text-gray-500 hover:text-gray-700">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <p class="text-sm text-gray-600 mb-3">Distractions reduced. Stay focused on your learning.</p>
+        <div class="flex justify-between items-center">
+            <div class="text-xs text-gray-500">
+                <i class="fas fa-clock mr-1"></i> Focus time: <span id="focus-time">00:00</span>
+            </div>
+            <button id="exit-focus-mode-btn" class="text-xs text-blue-600 hover:text-blue-800">Exit Focus Mode</button>
+        </div>
+    </div>
+
+    <script>
+        // Sample course data
+        let courses = [
+            {
+                id: 1,
+                title: "Introduction to HTML",
+                description: "Learn the basics of HTML, the backbone of the web. This comprehensive course will take you from a complete beginner to being able to create your own web pages with ease. You'll learn about tags, attributes, and how to structure your content effectively.",
+                cover: "https://images.unsplash.com/photo-1542831371-29b0f74f9713?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                category: "Web Development",
+                status: "Not Started",
+                tags: ["HTML", "Web Development", "Frontend"],
+                difficulty: "Beginner",
+                estimatedTime: "2 hours",
+                timeSpent: "0h",
+                resources: [
+                    { name: "HTML Cheat Sheet", url: "html-cheat-sheet.pdf", type: "PDF", size: "2MB" },
+                    { name: "Web Developer Roadmap", url: "roadmap.pdf", type: "PDF", size: "5MB" }
+                ],
+                rating: 0,
+                modules: [
+                    {
+                        name: "Module 1: HTML Basics",
+                        lessons: [
+                            { name: "Lesson 1: What is HTML?", completed: false, hasQuiz: true },
+                            { name: "Lesson 2: HTML Tags", completed: false, hasQuiz: false },
+                        ],
+                        quiz: {
+                            title: "HTML Basics Quiz",
+                            questions: [
+                                {
+                                    question: "What does HTML stand for?",
+                                    options: ["Hyper Text Markup Language", "Highly Typed Machine Learning", "Home Tool Markup Language", "Hyperlink Text Management Language"],
+                                    correctAnswer: 0
+                                },
+                                {
+                                    question: "Which tag is used for creating a paragraph in HTML?",
+                                    options: ["<paragraph>", "<p>", "<para>", "<pg>"],
+                                    correctAnswer: 1
+                                }
+                            ],
+                            completed: false,
+                            score: 0
+                        }
+                    },
+                    {
+                        name: "Module 2: Working with HTML",
+                        lessons: [
+                            { name: "Lesson 1: HTML Document Structure", completed: false, hasQuiz: false },
+                            { name: "Lesson 2: HTML Forms", completed: false, hasQuiz: true },
+                            { name: "Lesson 3: HTML Tables", completed: false, hasQuiz: false },
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 2,
+                title: "CSS Fundamentals",
+                description: "Learn how to style your HTML elements with CSS. This course covers selectors, properties, and everything you need to make beautiful websites.",
+                cover: "https://images.unsplash.com/photo-1523437113738-bbd3cc89fb19?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                category: "Web Development",
+                status: "Not Started",
+                tags: ["CSS", "Web Development", "Frontend"],
+                difficulty: "Beginner",
+                estimatedTime: "3 hours",
+                timeSpent: "0h",
+                resources: [
+                    { name: "CSS Reference", url: "css-reference.pdf", type: "PDF", size: "3MB" }
+                ],
+                rating: 0,
+                modules: [
+                    {
+                        name: "Module 1: CSS Basics",
+                        lessons: [
+                            { name: "Lesson 1: What is CSS?", completed: false },
+                            { name: "Lesson 2: CSS Selectors", completed: false },
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 3,
+                title: "JavaScript Essentials",
+                description: "Learn the fundamentals of JavaScript programming language. This course will teach you how to add interactivity to your websites.",
+                cover: "https://images.unsplash.com/photo-1627398242454-45a1465c2479?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                category: "Web Development",
+                status: "Not Started",
+                tags: ["JavaScript", "Web Development", "Programming"],
+                difficulty: "Intermediate",
+                estimatedTime: "5 hours",
+                timeSpent: "0h",
+                resources: [
+                    { name: "JavaScript Cheat Sheet", url: "js-cheat-sheet.pdf", type: "PDF", size: "2MB" }
+                ],
+                rating: 0,
+                modules: [
+                    {
+                        name: "Module 1: JS Basics",
+                        lessons: [
+                            { name: "Lesson 1: Introduction to JavaScript", completed: false },
+                            { name: "Lesson 2: Variables and Data Types", completed: false },
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 4,
+                title: "Python for Data Science",
+                description: "Learn Python programming language for data analysis and visualization. This course covers all the essential libraries for data science.",
+                cover: "https://images.unsplash.com/photo-1515879218367-8466d910aaa4?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                category: "Data Science",
+                status: "Not Started",
+                tags: ["Python", "Data Science", "Programming"],
+                difficulty: "Intermediate",
+                estimatedTime: "8 hours",
+                timeSpent: "0h",
+                resources: [
+                    { name: "Python Data Science Handbook", url: "python-ds-handbook.pdf", type: "PDF", size: "8MB" }
+                ],
+                rating: 0,
+                modules: [
+                    {
+                        name: "Module 1: Python Basics",
+                        lessons: [
+                            { name: "Lesson 1: Introduction to Python", completed: false },
+                            { name: "Lesson 2: Data Structures", completed: false },
+                        ]
+                    }
+                ]
+            }
+        ];
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Show welcome banner after loading
+            setTimeout(() => {
+                document.getElementById('loading').classList.add('hidden');
+                document.getElementById('welcome-banner').classList.remove('hidden');
+            }, 1000);
+            
+            // Update dashboard summary
+            updateDashboardSummary();
+            
+            // Set up featured courses scroll functionality
+            setupFeaturedCoursesScroll();
+            
+            // Set up focus mode toggle
+            setupFocusMode();
+            
+            // Header scroll effect
+            window.addEventListener('scroll', function() {
+                const nav = document.querySelector('nav');
+                if (window.scrollY > 20) {
+                    nav.classList.add('header-scrolled');
+                } else {
+                    nav.classList.remove('header-scrolled');
+                }
+            });
+            
+            // Dropdown animations
+            document.getElementById('user-dropdown').addEventListener('click', function(e) {
+                e.preventDefault();
+                const userMenu = document.getElementById('user-menu');
+                
+                if (userMenu.classList.contains('hidden')) {
+                    userMenu.classList.remove('hidden');
+                    setTimeout(() => {
+                        userMenu.classList.add('dropdown-active');
+                    }, 10);
+                } else {
+                    userMenu.classList.remove('dropdown-active');
+                    setTimeout(() => {
+                        userMenu.classList.add('hidden');
+                    }, 300);
+                }
+            });
+            
+            document.getElementById('bookmarks-dropdown').addEventListener('click', function(e) {
+                e.preventDefault();
+                const bookmarksMenu = document.getElementById('bookmarks-menu');
+                
+                if (bookmarksMenu.classList.contains('hidden')) {
+                    bookmarksMenu.classList.remove('hidden');
+                    setTimeout(() => {
+                        bookmarksMenu.classList.add('dropdown-active');
+                    }, 10);
+                } else {
+                    bookmarksMenu.classList.remove('dropdown-active');
+                    setTimeout(() => {
+                        bookmarksMenu.classList.add('hidden');
+                    }, 300);
+                }
+            });
+            
+            // Mobile menu toggle with animation
+            document.getElementById('menu-toggle').addEventListener('click', function() {
+                const mobileMenu = document.getElementById('mobile-menu');
+                
+                if (mobileMenu.classList.contains('hidden')) {
+                    mobileMenu.classList.remove('hidden');
+                    mobileMenu.style.maxHeight = '0px';
+                    setTimeout(() => {
+                        mobileMenu.style.maxHeight = mobileMenu.scrollHeight + 'px';
+                    }, 10);
+                } else {
+                    mobileMenu.style.maxHeight = '0px';
+                    setTimeout(() => {
+                        mobileMenu.classList.add('hidden');
+                    }, 300);
+                }
+            });
+            
+            // Show/hide back to top button
+            window.addEventListener('scroll', function() {
+                const backToTopBtn = document.getElementById('back-to-top');
+                if (window.scrollY > 300) {
+                    backToTopBtn.classList.remove('hidden');
+                } else {
+                    backToTopBtn.classList.add('hidden');
+                }
+            });
+            
+            // Back to top button click
+            document.getElementById('back-to-top').addEventListener('click', function() {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+            
+            // Dark mode toggle
+            document.getElementById('dark-mode-toggle').addEventListener('click', function() {
+                document.body.classList.toggle('dark-mode');
+                const icon = this.querySelector('i');
+                
+                if (document.body.classList.contains('dark-mode')) {
+                    icon.classList.remove('fa-moon');
+                    icon.classList.add('fa-sun');
+                    localStorage.setItem('darkMode', 'enabled');
+                    document.body.style.backgroundColor = '#1A2235';
+                    showNotification('Dark mode enabled', 'info');
+                } else {
+                    icon.classList.remove('fa-sun');
+                    icon.classList.add('fa-moon');
+                    localStorage.setItem('darkMode', 'disabled');
+                    document.body.style.backgroundColor = '';
+                    showNotification('Light mode enabled', 'info');
+                }
+            });
+            
+            // Check dark mode preference
+            if (localStorage.getItem('darkMode') === 'enabled') {
+                document.body.classList.add('dark-mode');
+                document.body.style.backgroundColor = '#1A2235';
+                document.querySelector('#dark-mode-toggle i').classList.remove('fa-moon');
+                document.querySelector('#dark-mode-toggle i').classList.add('fa-sun');
+            }
+            
+            // User dropdown toggle
+            document.getElementById('user-dropdown').addEventListener('click', function() {
+                const userMenu = document.getElementById('user-menu');
+                
+                if (userMenu.classList.contains('hidden')) {
+                    userMenu.classList.remove('hidden');
+                    setTimeout(() => {
+                        userMenu.style.transform = 'scale(1)';
+                        userMenu.style.opacity = '1';
+                    }, 10);
+                } else {
+                    userMenu.style.transform = 'scale(0.95)';
+                    userMenu.style.opacity = '0';
+                    setTimeout(() => {
+                        userMenu.classList.add('hidden');
+                    }, 200);
+                }
+            });
+            
+            // Mobile menu toggle
+            document.getElementById('menu-toggle').addEventListener('click', function() {
+                document.getElementById('mobile-menu').classList.toggle('hidden');
+            });
+            
+            // Outside click handlers for dropdowns
+            document.addEventListener('click', function(e) {
+                // Close user menu when clicking outside
+                const userMenu = document.getElementById('user-menu');
+                const userDropdown = document.getElementById('user-dropdown');
+                
+                if (userMenu && !userMenu.classList.contains('hidden') && 
+                    !userDropdown.contains(e.target) && !userMenu.contains(e.target)) {
+                    userMenu.style.transform = 'scale(0.95)';
+                    userMenu.style.opacity = '0';
+                    setTimeout(() => {
+                        userMenu.classList.add('hidden');
+                    }, 200);
+                }
+                
+                // Close bookmarks menu when clicking outside
+                const bookmarksMenu = document.getElementById('bookmarks-menu');
+                const bookmarksDropdown = document.getElementById('bookmarks-dropdown');
+                
+                if (bookmarksMenu && !bookmarksMenu.classList.contains('hidden') && 
+                    !bookmarksDropdown.contains(e.target) && !bookmarksMenu.contains(e.target)) {
+                    bookmarksMenu.classList.add('hidden');
+                }
+            });
+            
+            // Bookmarks dropdown toggle
+            document.getElementById('bookmarks-dropdown').addEventListener('click', function() {
+                document.getElementById('bookmarks-menu').classList.toggle('hidden');
+            });
+        });
+        
+        function updateDashboardSummary() {
+            // Count courses by status
+            const inProgressCount = courses.filter(course => {
+                const progress = calculateProgress(course);
+                return progress > 0 && progress < 100;
+            }).length;
+            
+            const completedCount = courses.filter(course => {
+                const progress = calculateProgress(course);
+                return progress === 100;
+            }).length;
+            
+            // Update counts in the UI
+            document.getElementById('in-progress-count').textContent = inProgressCount;
+            document.getElementById('completed-count').textContent = completedCount;
+            
+            // Calculate total learning time
+            const totalHours = courses.reduce((total, course) => {
+                const hours = parseInt(course.timeSpent) || 0;
+                return total + hours;
+            }, 0);
+            document.getElementById('total-learning-time').textContent = totalHours + 'h';
+            
+            // Set certificate count (same as completed courses for demo)
+            document.getElementById('certificate-count').textContent = completedCount;
+        }
+        
+        function setupFeaturedCoursesScroll() {
+            const scrollContainer = document.getElementById('featured-courses');
+            const leftBtn = document.getElementById('scroll-left');
+            const rightBtn = document.getElementById('scroll-right');
+            
+            leftBtn.addEventListener('click', () => {
+                scrollContainer.scrollBy({
+                    left: -340,
+                    behavior: 'smooth'
+                });
+            });
+            
+            rightBtn.addEventListener('click', () => {
+                scrollContainer.scrollBy({
+                    left: 340,
+                    behavior: 'smooth'
+                });
+            });
+        }
+        
+        function setupFocusMode() {
+            const focusModeBtn = document.getElementById('focus-mode-btn');
+            const exitFocusModeBtn = document.getElementById('exit-focus-mode-btn');
+            const exitFocusModeX = document.getElementById('exit-focus-mode');
+            const focusModePopup = document.getElementById('focus-mode-popup');
+            
+            let focusInterval;
+            let focusSeconds = 0;
+            
+            focusModeBtn.addEventListener('click', () => {
+                // Enter focus mode
+                document.body.classList.add('focus-mode-active');
+                focusModePopup.classList.remove('hidden');
+                
+                // Reset and start focus timer
+                focusSeconds = 0;
+                updateFocusTimer();
+                focusInterval = setInterval(updateFocusTimer, 1000);
+                
+                // Show notification
+                showNotification('Focus Mode activated. Distractions reduced.', 'success');
+            });
+            
+            function exitFocusMode() {
+                document.body.classList.remove('focus-mode-active');
+                focusModePopup.classList.add('hidden');
+                clearInterval(focusInterval);
+                
+                // Show notification with time spent
+                const minutes = Math.floor(focusSeconds / 60);
+                const seconds = focusSeconds % 60;
+                showNotification(`Focus Mode ended. You stayed focused for ${minutes}m ${seconds}s.`, 'info');
+            }
+            
+            exitFocusModeBtn.addEventListener('click', exitFocusMode);
+            exitFocusModeX.addEventListener('click', exitFocusMode);
+            
+            function updateFocusTimer() {
+                focusSeconds++;
+                const minutes = Math.floor(focusSeconds / 60);
+                const seconds = focusSeconds % 60;
+                document.getElementById('focus-time').textContent = 
+                    `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            }
+        }
+        
+        function showNotification(message, type) {
+            const notification = document.getElementById('notification');
+            const icon = document.getElementById('notification-icon');
+            const messageEl = document.getElementById('notification-message');
+            
+            messageEl.textContent = message;
+            notification.classList.remove('bg-red-500', 'bg-green-500', 'bg-blue-500', 'bg-yellow-500');
+            
+            let bgColor, iconClass;
+            
+            if (type === 'error') {
+                bgColor = 'bg-red-500';
+                iconClass = 'fas fa-times-circle';
+            } else if (type === 'success') {
+                bgColor = 'bg-green-500';
+                iconClass = 'fas fa-check-circle';
+            } else if (type === 'warning') {
+                bgColor = 'bg-yellow-500';
+                iconClass = 'fas fa-exclamation-triangle';
+            } else {
+                bgColor = 'bg-blue-500';
+                iconClass = 'fas fa-info-circle';
+            }
+            
+            notification.className = `fixed bottom-4 right-4 p-4 rounded-lg shadow-lg flex items-center gap-3 z-50 ${bgColor} text-white`;
+            icon.className = iconClass;
+            
+            notification.style.transform = 'translateX(100%)';
+            notification.style.opacity = '0';
+            notification.classList.remove('hidden');
+            
+            // Animate in
+            setTimeout(() => {
+                notification.style.transition = 'transform 0.4s ease-out, opacity 0.4s ease-out';
+                notification.style.transform = 'translateX(0)';
+                notification.style.opacity = '1';
+            }, 10);
+            
+            // Animate out
+            setTimeout(() => {
+                notification.style.transform = 'translateX(100%)';
+                notification.style.opacity = '0';
+                setTimeout(() => notification.classList.add('hidden'), 400);
+            }, 3000);
+        }
+        
+        function calculateProgress(course) {
+            const totalLessons = course.modules.reduce((acc, module) => acc + module.lessons.length, 0);
+            const completedLessons = course.modules.reduce((acc, module) => 
+                acc + module.lessons.filter(lesson => lesson.completed).length, 0);
+            
+            return totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
+        }
+        
+        function showCommunityModal() {
+            document.getElementById('community-modal').classList.remove('hidden');
+        }
+        
+        function closeCommunityModal() {
+            document.getElementById('community-modal').classList.add('hidden');
+        }
+        
+        function showCourseDetails(courseId) {
+            // Implementation for course details page
+            // This would be similar to the original code, just updated for the new design
+        }
+        
+        function showCertificateModal() {
+            document.getElementById('certificate-modal').classList.remove('hidden');
+        }
+        
+        function closeModal() {
+            document.getElementById('certificate-modal').classList.add('hidden');
+        }
+        
+        function downloadCertificate() {
+            showNotification('Certificate downloaded successfully!', 'success');
+            closeModal();
+        }
+    </script>
+</body>
+
+</html>
