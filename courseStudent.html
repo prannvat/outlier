@@ -2506,6 +2506,9 @@
             // Set up focus mode toggle
             setupFocusMode();
             
+            // Set up navigation functionality
+            setupNavigation();
+            
             // Header scroll effect
             window.addEventListener('scroll', function() {
                 const nav = document.querySelector('nav');
@@ -2525,9 +2528,13 @@
                     userMenu.classList.remove('hidden');
                     setTimeout(() => {
                         userMenu.classList.add('dropdown-active');
+                        userMenu.style.transform = 'scale(1)';
+                        userMenu.style.opacity = '1';
                     }, 10);
                 } else {
                     userMenu.classList.remove('dropdown-active');
+                    userMenu.style.transform = 'scale(0.95)';
+                    userMenu.style.opacity = '0';
                     setTimeout(() => {
                         userMenu.classList.add('hidden');
                     }, 300);
@@ -2542,9 +2549,13 @@
                     bookmarksMenu.classList.remove('hidden');
                     setTimeout(() => {
                         bookmarksMenu.classList.add('dropdown-active');
+                        bookmarksMenu.style.transform = 'scale(1)';
+                        bookmarksMenu.style.opacity = '1';
                     }, 10);
                 } else {
                     bookmarksMenu.classList.remove('dropdown-active');
+                    bookmarksMenu.style.transform = 'scale(0.95)';
+                    bookmarksMenu.style.opacity = '0';
                     setTimeout(() => {
                         bookmarksMenu.classList.add('hidden');
                     }, 300);
@@ -2615,30 +2626,6 @@
                 document.querySelector('#dark-mode-toggle i').classList.add('fa-sun');
             }
             
-            // User dropdown toggle
-            document.getElementById('user-dropdown').addEventListener('click', function() {
-                const userMenu = document.getElementById('user-menu');
-                
-                if (userMenu.classList.contains('hidden')) {
-                    userMenu.classList.remove('hidden');
-                    setTimeout(() => {
-                        userMenu.style.transform = 'scale(1)';
-                        userMenu.style.opacity = '1';
-                    }, 10);
-                } else {
-                    userMenu.style.transform = 'scale(0.95)';
-                    userMenu.style.opacity = '0';
-                    setTimeout(() => {
-                        userMenu.classList.add('hidden');
-                    }, 200);
-                }
-            });
-            
-            // Mobile menu toggle
-            document.getElementById('menu-toggle').addEventListener('click', function() {
-                document.getElementById('mobile-menu').classList.toggle('hidden');
-            });
-            
             // Outside click handlers for dropdowns
             document.addEventListener('click', function(e) {
                 // Close user menu when clicking outside
@@ -2660,16 +2647,538 @@
                 
                 if (bookmarksMenu && !bookmarksMenu.classList.contains('hidden') && 
                     !bookmarksDropdown.contains(e.target) && !bookmarksMenu.contains(e.target)) {
-                    bookmarksMenu.classList.add('hidden');
+                    bookmarksMenu.style.transform = 'scale(0.95)';
+                    bookmarksMenu.style.opacity = '0';
+                    setTimeout(() => {
+                        bookmarksMenu.classList.add('hidden');
+                    }, 200);
+                }
+                
+                // Handle notifications dropdown
+                const notificationIcon = document.querySelector('.fa-bell').parentElement;
+                if (notificationIcon && e.target !== notificationIcon && !notificationIcon.contains(e.target)) {
+                    closeNotifications();
                 }
             });
+
+            // Initialize the course list
+            initializeCourseList();
             
-            // Bookmarks dropdown toggle
-            document.getElementById('bookmarks-dropdown').addEventListener('click', function() {
-                document.getElementById('bookmarks-menu').classList.toggle('hidden');
+            // Set up notification functionality
+            document.querySelector('.fa-bell').parentElement.addEventListener('click', toggleNotifications);
+
+            // Set up search functionality
+            document.getElementById('search').addEventListener('keyup', function(e) {
+                if (e.key === 'Enter') {
+                    searchCourses(this.value);
+                }
+            });
+
+            // Handle resume learning button
+            document.getElementById('resume-learning-btn').addEventListener('click', function() {
+                showCourseDetails(1); // Assuming the first course is the one to resume
             });
         });
         
+        // Set up navigation functionality
+        function setupNavigation() {
+            // Get all navigation links
+            const navLinks = document.querySelectorAll('#mobile-menu a');
+            
+            // Add click event listeners to each link
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    // Prevent default only if not already handled by another function
+                    if (!this.getAttribute('onclick')) {
+                        e.preventDefault();
+                    }
+                    
+                    // Get the text content of the link
+                    const linkText = this.textContent.trim();
+                    
+                    // Handle navigation based on the link text
+                    switch(linkText) {
+                        case 'Home':
+                            showHomeDashboard();
+                            break;
+                        case 'Courses':
+                            showAllCourses();
+                            break;
+                        case 'My Progress':
+                            showMyProgress();
+                            break;
+                        case 'Help':
+                            showHelpCenter();
+                            break;
+                        // Community is already handled by onclick attribute
+                    }
+                });
+            });
+            
+            // Handle user dropdown menu items
+            const userMenuLinks = document.querySelectorAll('#user-menu a');
+            userMenuLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    // Prevent default only if not already handled by another function
+                    if (!this.getAttribute('onclick')) {
+                        e.preventDefault();
+                        
+                        // Get the text content of the link
+                        const linkText = this.querySelector('i').nextSibling.textContent.trim();
+                        
+                        // Handle navigation based on the link text
+                        switch(linkText) {
+                            case 'My Profile':
+                                showUserProfile();
+                                break;
+                            case 'My Courses':
+                                showAllCourses();
+                                break;
+                            case 'Settings':
+                                showSettings();
+                                break;
+                            case 'Logout':
+                                handleLogout();
+                                break;
+                            // Achievements already has its own handler
+                        }
+                    }
+                });
+            });
+
+            // Handle quick action cards
+            const quickActionCards = document.querySelectorAll('.quick-action-card');
+            quickActionCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    const actionTitle = this.querySelector('h3').textContent.trim();
+                    
+                    switch(actionTitle) {
+                        case 'Browse Courses':
+                            showAllCourses();
+                            break;
+                        case 'My Certificates':
+                            showCertificates();
+                            break;
+                        case 'Bookmarks':
+                            showBookmarks();
+                            break;
+                        case 'Community':
+                            showCommunityModal();
+                            break;
+                        case 'Recommended':
+                            showRecommendations();
+                            break;
+                        case 'Help Center':
+                            showHelpCenter();
+                            break;
+                    }
+                });
+            });
+
+            // Handle "View All" next up courses button
+            document.getElementById('view-all-next').addEventListener('click', function(e) {
+                e.preventDefault();
+                showAllCourses();
+            });
+
+            // Handle next course button
+            document.getElementById('next-course-btn').addEventListener('click', function() {
+                showCourseDetails(1); // Show the next course (first course in our sample)
+            });
+        }
+        
+        function showHomeDashboard() {
+            // Hide other sections
+            document.getElementById('course-list').classList.add('hidden');
+            document.getElementById('course-details').classList.add('hidden');
+            
+            // Show dashboard sections
+            document.getElementById('welcome-banner').classList.remove('hidden');
+            document.getElementById('dashboard-summary').classList.remove('hidden');
+            
+            // Update the active state in navigation
+            updateActiveNavItem('Home');
+            
+            showNotification('Welcome to your dashboard', 'info');
+        }
+        
+        function showAllCourses() {
+            // If course list section isn't populated yet, initialize it
+            initializeCourseList();
+            
+            // Hide other sections
+            document.getElementById('welcome-banner').classList.add('hidden');
+            document.getElementById('dashboard-summary').classList.add('hidden');
+            document.getElementById('course-details').classList.add('hidden');
+            
+            // Show course list
+            document.getElementById('course-list').classList.remove('hidden');
+            
+            // Update the active state in navigation
+            updateActiveNavItem('Courses');
+            
+            showNotification('Browsing all courses', 'info');
+        }
+        
+        function updateActiveNavItem(itemName) {
+            // Remove active class from all nav items
+            const navItems = document.querySelectorAll('#mobile-menu a');
+            navItems.forEach(item => {
+                item.classList.remove('bg-white/10');
+                item.classList.add('hover:bg-white/10');
+            });
+            
+            // Add active class to the clicked item
+            navItems.forEach(item => {
+                if (item.textContent.trim().includes(itemName)) {
+                    item.classList.add('bg-white/10');
+                    item.classList.remove('hover:bg-white/10');
+                }
+            });
+        }
+        
+        function initializeCourseList() {
+            const courseContainer = document.getElementById('courses');
+            
+            // Clear the container
+            courseContainer.innerHTML = '';
+            
+            // Add each course
+            courses.forEach(course => {
+                const courseCard = document.createElement('div');
+                courseCard.className = 'course-card bg-white rounded-lg shadow overflow-hidden';
+                courseCard.innerHTML = `
+                    <div class="relative">
+                        <img src="${course.cover}" alt="${course.title}" class="w-full h-36 object-cover">
+                        <div class="absolute top-2 left-2">
+                            <span class="category-pill category-${course.category === 'Web Development' ? 'web' : 
+                                      course.category === 'Data Science' ? 'data' : 
+                                      course.category === 'Design' ? 'design' : 'business'}">
+                                ${course.category}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-bold text-lg mb-1">${course.title}</h3>
+                        <p class="text-gray-600 text-sm mb-3 line-clamp-2">${course.description.substring(0, 100)}...</p>
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center text-sm text-gray-500">
+                                <i class="fas fa-clock mr-1"></i> ${course.estimatedTime}
+                            </div>
+                            <button onclick="showCourseDetails(${course.id})" class="btn btn-sm btn-primary">
+                                View Course
+                            </button>
+                        </div>
+                    </div>
+                `;
+                courseContainer.appendChild(courseCard);
+            });
+        }
+        
+        function showCourseDetails(courseId) {
+            // Find the course
+            const course = courses.find(c => c.id === courseId);
+            
+            if (!course) {
+                showNotification('Course not found', 'error');
+                return;
+            }
+            
+            // Hide other sections
+            document.getElementById('welcome-banner').classList.add('hidden');
+            document.getElementById('dashboard-summary').classList.add('hidden');
+            document.getElementById('course-list').classList.add('hidden');
+            
+            // Show course details
+            document.getElementById('course-details').classList.remove('hidden');
+            
+            // Update course details
+            document.getElementById('breadcrumb-title').textContent = course.title;
+            document.getElementById('course-cover').src = course.cover;
+            document.getElementById('course-category').textContent = course.category;
+            document.getElementById('course-title').textContent = course.title;
+            
+            // Count lessons
+            const lessonCount = course.modules.reduce((acc, module) => acc + module.lessons.length, 0);
+            document.getElementById('lesson-count').textContent = lessonCount;
+            
+            document.getElementById('estimated-time').textContent = course.estimatedTime;
+            document.getElementById('difficulty-level').textContent = course.difficulty;
+            document.getElementById('course-description').textContent = course.description;
+            
+            // Populate modules
+            const modulesContainer = document.getElementById('modules');
+            modulesContainer.innerHTML = '';
+            
+            course.modules.forEach((module, moduleIndex) => {
+                const moduleElement = document.createElement('div');
+                moduleElement.className = 'card';
+                
+                const moduleContent = `
+                    <div class="flex justify-between items-center cursor-pointer" onclick="toggleModule(${moduleIndex})">
+                        <h3 class="text-lg font-bold">${module.name}</h3>
+                        <i class="fas fa-chevron-down module-icon-${moduleIndex}"></i>
+                    </div>
+                    <div class="module-content mt-4 hidden" id="module-content-${moduleIndex}">
+                        <ul class="space-y-2">
+                            ${module.lessons.map((lesson, lessonIndex) => `
+                                <li class="p-3 bg-gray-50 rounded flex justify-between items-center">
+                                    <span class="flex items-center">
+                                        ${lesson.completed ? 
+                                          '<i class="fas fa-check-circle text-green-500 mr-2"></i>' : 
+                                          '<i class="far fa-circle text-gray-300 mr-2"></i>'}
+                                        ${lesson.name}
+                                        ${lesson.hasQuiz ? '<span class="ml-2 text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">Quiz</span>' : ''}
+                                    </span>
+                                    <button class="btn-sm btn-outline">Start</button>
+                                </li>
+                            `).join('')}
+                        </ul>
+                        ${module.quiz ? `
+                            <div class="mt-4 p-4 bg-blue-50 rounded-lg border border-blue-100">
+                                <div class="flex justify-between items-center">
+                                    <h4 class="font-bold flex items-center">
+                                        <i class="fas fa-question-circle text-blue-500 mr-2"></i> 
+                                        ${module.quiz.title}
+                                    </h4>
+                                    <button class="btn-sm btn-primary" onclick="startQuiz(${moduleIndex})">Start Quiz</button>
+                                </div>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+                
+                moduleElement.innerHTML = moduleContent;
+                modulesContainer.appendChild(moduleElement);
+            });
+            
+            // Populate resource list
+            const resourceList = document.getElementById('resource-list');
+            resourceList.innerHTML = '';
+            
+            if (course.resources && course.resources.length > 0) {
+                course.resources.forEach(resource => {
+                    const li = document.createElement('li');
+                    li.className = 'mb-2';
+                    li.innerHTML = `
+                        <a href="#" class="flex items-center text-blue-600 hover:underline">
+                            <i class="fas fa-${resource.type === 'PDF' ? 'file-pdf' : 'link'} mr-2"></i>
+                            ${resource.name}
+                        </a>
+                    `;
+                    resourceList.appendChild(li);
+                });
+            } else {
+                resourceList.innerHTML = '<li class="text-gray-500">No resources available</li>';
+            }
+            
+            showNotification(`Viewing ${course.title}`, 'info');
+        }
+        
+        // Function to handle toggling modules
+        window.toggleModule = function(moduleIndex) {
+            const moduleContent = document.getElementById(`module-content-${moduleIndex}`);
+            const moduleIcon = document.querySelector(`.module-icon-${moduleIndex}`);
+            
+            if (moduleContent.classList.contains('hidden')) {
+                moduleContent.classList.remove('hidden');
+                moduleContent.style.maxHeight = moduleContent.scrollHeight + 'px';
+                moduleIcon.classList.remove('fa-chevron-down');
+                moduleIcon.classList.add('fa-chevron-up');
+            } else {
+                moduleContent.style.maxHeight = '0px';
+                setTimeout(() => {
+                    moduleContent.classList.add('hidden');
+                }, 300);
+                moduleIcon.classList.remove('fa-chevron-up');
+                moduleIcon.classList.add('fa-chevron-down');
+            }
+        };
+        
+        // Functions for expanding/collapsing all modules
+        window.expandAllModules = function() {
+            const moduleContents = document.querySelectorAll('[id^="module-content-"]');
+            moduleContents.forEach((moduleContent, index) => {
+                moduleContent.classList.remove('hidden');
+                moduleContent.style.maxHeight = moduleContent.scrollHeight + 'px';
+                const moduleIcon = document.querySelector(`.module-icon-${index}`);
+                if (moduleIcon) {
+                    moduleIcon.classList.remove('fa-chevron-down');
+                    moduleIcon.classList.add('fa-chevron-up');
+                }
+            });
+        };
+        
+        window.collapseAllModules = function() {
+            const moduleContents = document.querySelectorAll('[id^="module-content-"]');
+            moduleContents.forEach((moduleContent, index) => {
+                moduleContent.style.maxHeight = '0px';
+                setTimeout(() => {
+                    moduleContent.classList.add('hidden');
+                }, 300);
+                const moduleIcon = document.querySelector(`.module-icon-${index}`);
+                if (moduleIcon) {
+                    moduleIcon.classList.remove('fa-chevron-up');
+                    moduleIcon.classList.add('fa-chevron-down');
+                }
+            });
+        };
+        
+        function showMyProgress() {
+            // This would typically show a progress tracking page
+            showNotification('Viewing your learning progress', 'info');
+            
+            // For this demo, we'll just show all courses with progress information
+            showAllCourses();
+            
+            // Update the active state in navigation
+            updateActiveNavItem('My Progress');
+        }
+        
+        function showUserProfile() {
+            showNotification('Viewing your profile', 'info');
+            // This would typically show a user profile page
+            // For demo purposes, we just show a notification
+        }
+        
+        function showSettings() {
+            showNotification('Viewing settings', 'info');
+            // This would typically show a settings page
+            // For demo purposes, we just show a notification
+        }
+        
+        function handleLogout() {
+            showNotification('You have been logged out', 'info');
+            // This would typically handle the logout process
+            // For demo purposes, we just show a notification
+        }
+        
+        function showCertificates() {
+            showNotification('Viewing your certificates', 'info');
+            // This would typically show a certificates page
+            // For demo purposes, we just show a notification
+        }
+        
+        function showBookmarks() {
+            showNotification('Viewing your bookmarks', 'info');
+            // This would typically show bookmarks
+            // For demo purposes, we just show a notification
+        }
+        
+        function showRecommendations() {
+            showNotification('Viewing recommended courses', 'info');
+            // This would typically show recommended courses
+            // For demo purposes, we just show a notification
+        }
+        
+        function showHelpCenter() {
+            showNotification('Welcome to the Help Center', 'info');
+            // This would typically show a help center page
+            // For demo purposes, we just show a notification
+        }
+        
+        function toggleNotifications() {
+            // This would typically show/hide a notifications dropdown
+            showNotification('You have 3 unread notifications', 'info');
+        }
+        
+        function closeNotifications() {
+            // This would typically close the notifications dropdown
+        }
+        
+        function searchCourses(query) {
+            showNotification(`Searching for: ${query}`, 'info');
+            
+            // Show the course list
+            showAllCourses();
+            
+            // Filter the courses based on the search query
+            const filteredCourses = courses.filter(course => 
+                course.title.toLowerCase().includes(query.toLowerCase()) || 
+                course.description.toLowerCase().includes(query.toLowerCase()) ||
+                course.category.toLowerCase().includes(query.toLowerCase())
+            );
+            
+            // Update the course list with filtered results
+            const courseContainer = document.getElementById('courses');
+            
+            // Clear the container
+            courseContainer.innerHTML = '';
+            
+            if (filteredCourses.length === 0) {
+                document.getElementById('no-courses').classList.remove('hidden');
+            } else {
+                document.getElementById('no-courses').classList.add('hidden');
+                
+                // Add each filtered course
+                filteredCourses.forEach(course => {
+                    const courseCard = document.createElement('div');
+                    courseCard.className = 'course-card bg-white rounded-lg shadow overflow-hidden';
+                    courseCard.innerHTML = `
+                        <div class="relative">
+                            <img src="${course.cover}" alt="${course.title}" class="w-full h-36 object-cover">
+                            <div class="absolute top-2 left-2">
+                                <span class="category-pill category-${course.category === 'Web Development' ? 'web' : 
+                                          course.category === 'Data Science' ? 'data' : 
+                                          course.category === 'Design' ? 'design' : 'business'}">
+                                    ${course.category}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="font-bold text-lg mb-1">${course.title}</h3>
+                            <p class="text-gray-600 text-sm mb-3 line-clamp-2">${course.description.substring(0, 100)}...</p>
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center text-sm text-gray-500">
+                                    <i class="fas fa-clock mr-1"></i> ${course.estimatedTime}
+                                </div>
+                                <button onclick="showCourseDetails(${course.id})" class="btn btn-sm btn-primary">
+                                    View Course
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    courseContainer.appendChild(courseCard);
+                });
+            }
+        }
+
+        function showAchievements() {
+            document.getElementById('achievements-modal').classList.remove('hidden');
+            
+            // Populate achievements for demo purposes
+            const achievementsContainer = document.getElementById('achievements-container');
+            achievementsContainer.innerHTML = '';
+            
+            const achievements = [
+                { title: 'First Course Completed', icon: 'graduation-cap', color: 'blue', description: 'Completed your first course' },
+                { title: '3-Day Streak', icon: 'fire', color: 'orange', description: 'Learned for 3 consecutive days' },
+                { title: 'Quiz Master', icon: 'award', color: 'yellow', description: 'Scored 100% on a quiz' },
+                { title: 'Early Bird', icon: 'clock', color: 'purple', description: 'Completed a lesson before 7 AM' },
+                { title: 'Community Contributor', icon: 'users', color: 'green', description: 'Made your first forum post' },
+                { title: 'Quick Learner', icon: 'bolt', color: 'red', description: 'Completed a course in record time' }
+            ];
+            
+            achievements.forEach(achievement => {
+                const achievementEl = document.createElement('div');
+                achievementEl.className = 'bg-white rounded-xl shadow-md p-4 border border-gray-100 hover:shadow-lg transition-all';
+                achievementEl.innerHTML = `
+                    <div class="flex items-center mb-3">
+                        <div class="w-12 h-12 rounded-full bg-${achievement.color}-100 flex items-center justify-center mr-4">
+                            <i class="fas fa-${achievement.icon} text-${achievement.color}-500 text-xl"></i>
+                        </div>
+                        <h3 class="font-bold text-lg">${achievement.title}</h3>
+                    </div>
+                    <p class="text-gray-600">${achievement.description}</p>
+                `;
+                achievementsContainer.appendChild(achievementEl);
+            });
+        }
+        
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.add('hidden');
+        }
+
         function updateDashboardSummary() {
             // Count courses by status
             const inProgressCount = courses.filter(course => {
@@ -2696,7 +3205,15 @@
             // Set certificate count (same as completed courses for demo)
             document.getElementById('certificate-count').textContent = completedCount;
         }
-        
+
+        function calculateProgress(course) {
+            const totalLessons = course.modules.reduce((acc, module) => acc + module.lessons.length, 0);
+            const completedLessons = course.modules.reduce((acc, module) => 
+                acc + module.lessons.filter(lesson => lesson.completed).length, 0);
+            
+            return totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
+        }
+
         function setupFeaturedCoursesScroll() {
             const scrollContainer = document.getElementById('featured-courses');
             const leftBtn = document.getElementById('scroll-left');
@@ -2716,7 +3233,7 @@
                 });
             });
         }
-        
+
         function setupFocusMode() {
             const focusModeBtn = document.getElementById('focus-mode-btn');
             const exitFocusModeBtn = document.getElementById('exit-focus-mode-btn');
@@ -2751,18 +3268,25 @@
                 showNotification(`Focus Mode ended. You stayed focused for ${minutes}m ${seconds}s.`, 'info');
             }
             
-            exitFocusModeBtn.addEventListener('click', exitFocusMode);
-            exitFocusModeX.addEventListener('click', exitFocusMode);
+            if (exitFocusModeBtn) {
+                exitFocusModeBtn.addEventListener('click', exitFocusMode);
+            }
+            
+            if (exitFocusModeX) {
+                exitFocusModeX.addEventListener('click', exitFocusMode);
+            }
             
             function updateFocusTimer() {
                 focusSeconds++;
                 const minutes = Math.floor(focusSeconds / 60);
                 const seconds = focusSeconds % 60;
-                document.getElementById('focus-time').textContent = 
-                    `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+                const focusTimeElement = document.getElementById('focus-time');
+                if (focusTimeElement) {
+                    focusTimeElement.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+                }
             }
         }
-        
+
         function showNotification(message, type) {
             const notification = document.getElementById('notification');
             const icon = document.getElementById('notification-icon');
@@ -2808,40 +3332,435 @@
                 setTimeout(() => notification.classList.add('hidden'), 400);
             }, 3000);
         }
-        
-        function calculateProgress(course) {
-            const totalLessons = course.modules.reduce((acc, module) => acc + module.lessons.length, 0);
-            const completedLessons = course.modules.reduce((acc, module) => 
-                acc + module.lessons.filter(lesson => lesson.completed).length, 0);
-            
-            return totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
-        }
-        
-        function showCommunityModal() {
-            document.getElementById('community-modal').classList.remove('hidden');
-        }
-        
+
         function closeCommunityModal() {
             document.getElementById('community-modal').classList.add('hidden');
         }
-        
-        function showCourseDetails(courseId) {
-            // Implementation for course details page
-            // This would be similar to the original code, just updated for the new design
+
+        function closeFlashcardsModal() {
+            document.getElementById('flashcards-modal').classList.add('hidden');
         }
-        
+
+        function downloadMaterial(type) {
+            showNotification(`Downloading ${type} materials...`, 'success');
+            setTimeout(() => {
+                showNotification(`${type.charAt(0).toUpperCase() + type.slice(1)} materials downloaded successfully!`, 'success');
+            }, 1500);
+        }
+
         function showCertificateModal() {
             document.getElementById('certificate-modal').classList.remove('hidden');
+            
+            // Update the certificate title
+            const courseTitle = document.getElementById('course-title').textContent;
+            document.getElementById('certificate-course-title').textContent = courseTitle;
         }
-        
-        function closeModal() {
-            document.getElementById('certificate-modal').classList.add('hidden');
-        }
-        
+
         function downloadCertificate() {
             showNotification('Certificate downloaded successfully!', 'success');
-            closeModal();
+            closeModal('certificate-modal');
         }
+
+        function startQuiz(moduleIndex) {
+            const course = courses.find(c => c.id === parseInt(document.getElementById('breadcrumb-title').getAttribute('data-course-id')));
+            if (!course || !course.modules[moduleIndex] || !course.modules[moduleIndex].quiz) {
+                showNotification('Quiz not available', 'error');
+                return;
+            }
+            
+            showNotification('Quiz starting...', 'info');
+            // In a real app, this would open the quiz interface
+            // For demo purposes, we'll just show a success message after a delay
+            setTimeout(() => {
+                showNotification('Quiz completed successfully!', 'success');
+            }, 1500);
+        }
+
+        function toggleLearningPath() {
+            const learningPath = document.getElementById('learning-path');
+            const showHideBtn = learningPath.querySelector('button');
+            
+            if (learningPath.classList.contains('hidden')) {
+                learningPath.classList.remove('hidden');
+                showHideBtn.innerHTML = '<i class="fas fa-chevron-up"></i> Hide Learning Path';
+            } else {
+                learningPath.classList.add('hidden');
+                showHideBtn.innerHTML = '<i class="fas fa-chevron-down"></i> Show Learning Path';
+            }
+        }
+
+        function clearAllBookmarks() {
+            document.getElementById('bookmarks-list').innerHTML = '<li class="px-4 py-2 text-sm text-gray-600 dark:text-gray-400">No bookmarks yet</li>';
+            showNotification('All bookmarks cleared', 'success');
+        }
+
+        // Modify showCourseDetails to store course ID for later use
+        function showCourseDetails(courseId) {
+            // Find the course
+            const course = courses.find(c => c.id === courseId);
+            
+            if (!course) {
+                showNotification('Course not found', 'error');
+                return;
+            }
+            
+            // Hide other sections
+            document.getElementById('welcome-banner').classList.add('hidden');
+            document.getElementById('dashboard-summary').classList.add('hidden');
+            document.getElementById('course-list').classList.add('hidden');
+            
+            // Show course details
+            document.getElementById('course-details').classList.remove('hidden');
+            
+            // Update course details
+            const breadcrumbTitle = document.getElementById('breadcrumb-title');
+            breadcrumbTitle.textContent = course.title;
+            breadcrumbTitle.setAttribute('data-course-id', courseId); // Store for reference
+            
+            document.getElementById('course-cover').src = course.cover;
+            document.getElementById('course-category').textContent = course.category;
+            document.getElementById('course-title').textContent = course.title;
+            
+            // Count lessons
+            const lessonCount = course.modules.reduce((acc, module) => acc + module.lessons.length, 0);
+            document.getElementById('lesson-count').textContent = lessonCount;
+            
+            document.getElementById('estimated-time').textContent = course.estimatedTime;
+            document.getElementById('difficulty-level').textContent = course.difficulty;
+            document.getElementById('course-description').textContent = course.description;
+            
+            // Progress bar
+            const progress = calculateProgress(course);
+            const progressBarContainer = document.getElementById('progress-bar');
+            progressBarContainer.innerHTML = `
+                <div class="progress-container">
+                    <div class="progress-bar" style="width: ${progress}%;"></div>
+                </div>
+                <p class="text-sm mt-1 text-right">${progress}% Complete</p>
+            `;
+            
+            // Course stats
+            document.getElementById('course-stats').innerHTML = `
+                <p>Completed Lessons: ${course.modules.reduce((acc, module) => acc + module.lessons.filter(l => l.completed).length, 0)} / ${lessonCount}</p>
+                <p>Time Spent: ${course.timeSpent}</p>
+            `;
+            
+            // Learning streak
+            document.getElementById('streak-count').textContent = '3'; // Demo streak count
+            const streakDays = document.getElementById('streak-days');
+            streakDays.innerHTML = '';
+            
+            // Add demo streak days
+            const today = new Date();
+            for (let i = 6; i >= 0; i--) {
+                const day = new Date(today);
+                day.setDate(today.getDate() - i);
+                
+                const dayEl = document.createElement('div');
+                dayEl.className = 'text-center';
+                dayEl.innerHTML = `
+                    <div class="${i < 3 ? 'w-6 h-6 rounded-full bg-orange-500 mx-auto flex items-center justify-center text-white' : 'w-6 h-6 rounded-full bg-gray-200 mx-auto'}">
+                        ${i < 3 ? '<i class="fas fa-check text-xs"></i>' : ''}
+                    </div>
+                    <span class="text-xs mt-1 block">${day.toString().split(' ')[0]}</span>
+                `;
+                streakDays.appendChild(dayEl);
+            }
+            
+            // Populate modules
+            const modulesContainer = document.getElementById('modules');
+            modulesContainer.innerHTML = '';
+            
+            course.modules.forEach((module, moduleIndex) => {
+                const moduleElement = document.createElement('div');
+                moduleElement.className = 'card';
+                
+                const moduleContent = `
+                    <div class="flex justify-between items-center cursor-pointer" onclick="toggleModule(${moduleIndex})">
+                        <h3 class="text-lg font-bold">${module.name}</h3>
+                        <i class="fas fa-chevron-down module-icon-${moduleIndex}"></i>
+                    </div>
+                    <div class="module-content mt-4 hidden" id="module-content-${moduleIndex}">
+                        <ul class="space-y-2">
+                            ${module.lessons.map((lesson, lessonIndex) => `
+                                <li class="p-3 bg-gray-50 rounded flex justify-between items-center">
+                                    <span class="flex items-center">
+                                        ${lesson.completed ? 
+                                          '<i class="fas fa-check-circle text-green-500 mr-2"></i>' : 
+                                          '<i class="far fa-circle text-gray-300 mr-2"></i>'}
+                                        ${lesson.name}
+                                        ${lesson.hasQuiz ? '<span class="ml-2 text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">Quiz</span>' : ''}
+                                    </span>
+                                    <button class="btn-sm btn-outline" onclick="startLesson(${moduleIndex}, ${lessonIndex})">Start</button>
+                                </li>
+                            `).join('')}
+                        </ul>
+                        ${module.quiz ? `
+                            <div class="mt-4 p-4 bg-blue-50 rounded-lg border border-blue-100">
+                                <div class="flex justify-between items-center">
+                                    <h4 class="font-bold flex items-center">
+                                        <i class="fas fa-question-circle text-blue-500 mr-2"></i> 
+                                        ${module.quiz.title}
+                                    </h4>
+                                    <button class="btn-sm btn-primary" onclick="startQuiz(${moduleIndex})">Start Quiz</button>
+                                </div>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+                
+                moduleElement.innerHTML = moduleContent;
+                modulesContainer.appendChild(moduleElement);
+            });
+            
+            // Populate resource list
+            const resourceList = document.getElementById('resource-list');
+            resourceList.innerHTML = '';
+            
+            if (course.resources && course.resources.length > 0) {
+                course.resources.forEach(resource => {
+                    const li = document.createElement('li');
+                    li.className = 'mb-2';
+                    li.innerHTML = `
+                        <a href="#" onclick="downloadResource('${resource.name}', '${resource.type}'); return false;" class="flex items-center text-blue-600 hover:underline">
+                            <i class="fas fa-${resource.type === 'PDF' ? 'file-pdf' : 'link'} mr-2"></i>
+                            ${resource.name}
+                        </a>
+                    `;
+                    resourceList.appendChild(li);
+                });
+            } else {
+                resourceList.innerHTML = '<li class="text-gray-500">No resources available</li>';
+            }
+            
+            showNotification(`Viewing ${course.title}`, 'info');
+        }
+
+        function startLesson(moduleIndex, lessonIndex) {
+            showNotification('Starting lesson...', 'info');
+            // In a real app, this would navigate to the lesson content
+            // For demo purposes, we mark it as completed after a delay
+            setTimeout(() => {
+                const courseId = parseInt(document.getElementById('breadcrumb-title').getAttribute('data-course-id'));
+                const course = courses.find(c => c.id === courseId);
+                if (course && course.modules[moduleIndex] && course.modules[moduleIndex].lessons[lessonIndex]) {
+                    course.modules[moduleIndex].lessons[lessonIndex].completed = true;
+                    showCourseDetails(courseId); // Refresh the course details
+                    showNotification('Lesson completed!', 'success');
+                }
+            }, 1500);
+        }
+
+        function downloadResource(name, type) {
+            showNotification(`Downloading ${name}...`, 'info');
+            setTimeout(() => {
+                showNotification(`${name} downloaded successfully!`, 'success');
+            }, 1500);
+        }
+
+        // Notes functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add note button
+            const addNoteBtn = document.getElementById('add-note-btn');
+            if (addNoteBtn) {
+                addNoteBtn.addEventListener('click', function() {
+                    document.getElementById('note-editor').classList.remove('hidden');
+                });
+            }
+            
+            // Cancel note button
+            const cancelNoteBtn = document.getElementById('cancel-note-btn');
+            if (cancelNoteBtn) {
+                cancelNoteBtn.addEventListener('click', function() {
+                    document.getElementById('note-editor').classList.add('hidden');
+                });
+            }
+            
+            // Save note button
+            const saveNoteBtn = document.getElementById('save-notes-btn');
+            if (saveNoteBtn) {
+                saveNoteBtn.addEventListener('click', function() {
+                    const title = document.getElementById('note-title').value;
+                    const content = document.getElementById('notes-content').value;
+                    const category = document.getElementById('note-category').value;
+                    
+                    if (!title || !content) {
+                        showNotification('Please fill in all fields', 'error');
+                        return;
+                    }
+                    
+                    saveNote(title, content, category);
+                });
+            }
+            
+            // Set up rating stars
+            const ratingStars = document.querySelectorAll('#rating-stars i');
+            ratingStars.forEach(star => {
+                star.addEventListener('click', function() {
+                    const rating = parseInt(this.getAttribute('data-rating'));
+                    setRating(rating);
+                });
+            });
+        });
+
+        function saveNote(title, content, category) {
+            const savedNotes = document.getElementById('saved-notes');
+            const noteEl = document.createElement('div');
+            noteEl.className = 'p-3 bg-white border rounded-lg hover:shadow-md transition-all';
+            noteEl.setAttribute('data-category', category || 'general');
+            
+            const categoryLabel = category ? 
+                `<span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">${getCategoryLabel(category)}</span>` : '';
+            
+            noteEl.innerHTML = `
+                <div class="flex justify-between items-start mb-2">
+                    <h4 class="font-medium">${title}</h4>
+                    ${categoryLabel}
+                </div>
+                <p class="text-gray-600">${content}</p>
+                <div class="flex justify-end mt-2">
+                    <button class="text-blue-500 hover:text-blue-700 text-xs mr-2" onclick="editNote(this.parentElement.parentElement)">
+                        <i class="fas fa-edit mr-1"></i> Edit
+                    </button>
+                    <button class="text-red-500 hover:text-red-700 text-xs" onclick="deleteNote(this.parentElement.parentElement)">
+                        <i class="fas fa-trash mr-1"></i> Delete
+                    </button>
+                </div>
+            `;
+            
+            savedNotes.prepend(noteEl);
+            
+            // Clear form
+            document.getElementById('note-title').value = '';
+            document.getElementById('notes-content').value = '';
+            document.getElementById('note-category').value = '';
+            document.getElementById('note-editor').classList.add('hidden');
+            
+            showNotification('Note saved successfully', 'success');
+        }
+
+        function getCategoryLabel(category) {
+            switch(category) {
+                case 'important': return 'Important';
+                case 'concept': return 'Concept';
+                case 'question': return 'Question';
+                case 'reference': return 'Reference';
+                default: return 'General';
+            }
+        }
+
+        function editNote(noteEl) {
+            const title = noteEl.querySelector('h4').textContent;
+            const content = noteEl.querySelector('p').textContent;
+            const category = noteEl.getAttribute('data-category');
+            
+            document.getElementById('note-title').value = title;
+            document.getElementById('notes-content').value = content;
+            document.getElementById('note-category').value = category;
+            
+            document.getElementById('note-editor').classList.remove('hidden');
+            
+            // Delete the old note
+            deleteNote(noteEl);
+        }
+
+        function deleteNote(noteEl) {
+            noteEl.remove();
+            showNotification('Note deleted', 'info');
+        }
+
+        function setRating(rating) {
+            const ratingStars = document.querySelectorAll('#rating-stars i');
+            ratingStars.forEach((star, index) => {
+                if (index < rating) {
+                    star.classList.remove('text-gray-300');
+                    star.classList.add('text-yellow-500');
+                } else {
+                    star.classList.add('text-gray-300');
+                    star.classList.remove('text-yellow-500');
+                }
+            });
+            
+            document.getElementById('current-rating').textContent = `${rating}/5`;
+            
+            // Store the rating for the current course
+            const courseId = parseInt(document.getElementById('breadcrumb-title').getAttribute('data-course-id'));
+            const course = courses.find(c => c.id === courseId);
+            if (course) {
+                course.rating = rating;
+                showNotification(`You rated this course ${rating}/5`, 'success');
+            }
+        }
+
+        // Category filter for notes
+        document.addEventListener('DOMContentLoaded', function() {
+            // Note category filters
+            const allNotesBtn = document.getElementById('all-notes-btn');
+            const importantNotesBtn = document.getElementById('important-notes-btn');
+            const conceptNotesBtn = document.getElementById('concept-notes-btn');
+            const questionNotesBtn = document.getElementById('question-notes-btn');
+            const referenceNotesBtn = document.getElementById('reference-notes-btn');
+            
+            if (allNotesBtn) {
+                allNotesBtn.addEventListener('click', () => filterNotes('all'));
+            }
+            if (importantNotesBtn) {
+                importantNotesBtn.addEventListener('click', () => filterNotes('important'));
+            }
+            if (conceptNotesBtn) {
+                conceptNotesBtn.addEventListener('click', () => filterNotes('concept'));
+            }
+            if (questionNotesBtn) {
+                questionNotesBtn.addEventListener('click', () => filterNotes('question'));
+            }
+            if (referenceNotesBtn) {
+                referenceNotesBtn.addEventListener('click', () => filterNotes('reference'));
+            }
+        });
+
+        function filterNotes(category) {
+            // Update active tab
+            const tabs = ['all-notes-btn', 'important-notes-btn', 'concept-notes-btn', 'question-notes-btn', 'reference-notes-btn'];
+            tabs.forEach(tabId => {
+                const tab = document.getElementById(tabId);
+                if (tab) {
+                    if (tabId === `${category}-notes-btn` || (category === 'all' && tabId === 'all-notes-btn')) {
+                        tab.className = 'py-2 px-3 font-medium text-blue-600 border-b-2 border-blue-500';
+                    } else {
+                        tab.className = 'py-2 px-3 text-gray-600 hover:text-gray-800';
+                    }
+                }
+            });
+            
+            // Filter notes
+            const notes = document.querySelectorAll('#saved-notes > div');
+            notes.forEach(note => {
+                if (category === 'all' || note.getAttribute('data-category') === category) {
+                    note.classList.remove('hidden');
+                } else {
+                    note.classList.add('hidden');
+                }
+            });
+        }
+
+        // Ensure all the required functions for interactivity are available
+        window.showCertificateModal = showCertificateModal;
+        window.downloadCertificate = downloadCertificate;
+        window.downloadMaterial = downloadMaterial;
+        window.closeModal = closeModal;
+        window.startQuiz = startQuiz;
+        window.toggleLearningPath = toggleLearningPath;
+        window.showCourseList = showAllCourses;
+        window.closeCommunityModal = closeCommunityModal;
+        window.closeFlashcardsModal = closeFlashcardsModal;
+        window.clearAllBookmarks = clearAllBookmarks;
+        window.showCourseDetails = showCourseDetails;
+        window.startLesson = startLesson;
+        window.downloadResource = downloadResource;
+        window.editNote = editNote;
+        window.deleteNote = deleteNote;
+        window.setRating = setRating;
+        window.filterNotes = filterNotes;
     </script>
 </body>
 

@@ -1,0 +1,1543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MoneyPulse - Personal Finance Tracker</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #6d28d9;
+            --primary-light: #8b5cf6;
+            --primary-dark: #5b21b6;
+            --secondary: #06b6d4;
+            --success: #10b981;
+            --success-dark: #059669;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --danger-dark: #b91c1c;
+            --light: #f3f4f6;
+            --dark: #1f2937;
+            --dark-panel: #111827;
+            --text-light: #9ca3af;
+            --text-light-dark: #e5e7eb;
+            --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --card-shadow-dark: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --nav-text-dark: #f9fafb;
+            --page-title: #f8fafc;
+        }
+
+        .dark {
+            --light: #374151;
+            --dark: #f9fafb;
+            --dark-panel: #0f172a;
+            --dark-card: #1E293B;
+            --text-light: #e2e8f0;
+            --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.4);
+            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.6), 0 10px 10px -5px rgba(0, 0, 0, 0.5);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .dark {
+            background-color: #0F172A;
+        }
+
+        .dark .page h1 {
+            color: var(--page-title) !important;
+        }
+
+        .dark .bg-white {
+            background-color: var(--dark-card) !important;
+        }
+
+        .dark .bg-gray-50, 
+        .dark .bg-gray-100, 
+        .dark .bg-gray-200 {
+            background-color: #1E293B !important;
+        }
+
+        .dark .border,
+        .dark .border-gray-100,
+        .dark .border-gray-200 {
+            border-color: #334155 !important;
+        }
+
+        .dark .shadow-md,
+        .dark .shadow-lg,
+        .dark .shadow {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.4) !important;
+        }
+
+        .dark .text-gray-500 {
+            color: #94A3B8 !important;
+        }
+
+        .dark .text-gray-600,
+        .dark .text-gray-700,
+        .dark .text-gray-800 {
+            color: #CBD5E1 !important;
+        }
+
+        .dark .card {
+            background-color: var(--dark-panel);
+            color: #f3f4f6;
+        }
+
+        .dark .modal-content {
+            background-color: var(--dark-panel) !important; 
+        }
+
+        .dark .form-input {
+            background-color: #1e293b !important;
+            border-color: #475569 !important;
+            color: #f1f5f9 !important;
+        }
+
+        .dark .bottom-0 {
+            background-color: #0f172a !important;
+            border-top: 1px solid #334155 !important;
+        }
+
+        .dark .nav-item {
+            color: var(--nav-text-dark) !important;
+        }
+
+        .dark .nav-item svg {
+            stroke: #e5e7eb !important;
+        }
+
+        .dark .nav-item:not(.active) {
+            background-color: rgba(71, 85, 105, 0.2) !important;
+        }
+
+        .dark .nav-item:not(.active):hover {
+            background-color: rgba(71, 85, 105, 0.4) !important;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .app-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1.5rem;
+        }
+
+        .card {
+            transition: all 0.3s ease;
+            border-radius: 1rem;
+            overflow: hidden;
+            animation: fadeInUp 0.5s ease-out;
+            border: 1px solid rgba(229, 231, 235, 0.3);
+            box-shadow: var(--card-shadow);
+        }
+
+        .dark .card {
+            border-color: rgba(55, 65, 81, 0.5);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .card-header {
+            padding: 1.25rem;
+            border-bottom: 1px solid rgba(229, 231, 235, 0.3);
+            background-color: rgba(249, 250, 251, 0.5);
+        }
+
+        .dark .card-header {
+            border-bottom: 1px solid rgba(75, 85, 99, 0.4);
+            background-color: rgba(30, 41, 59, 0.8);
+        }
+
+        .card-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, padding 0.3s ease;
+            padding: 0 1.25rem;
+        }
+        
+        .card-content.expanded {
+            max-height: 10000px; 
+            padding: 1.25rem;
+        }
+
+        .badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border: 1px solid transparent;
+        }
+
+        .badge-success {
+            background-color: rgba(16, 185, 129, 0.15);
+            color: var(--success-dark);
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+        
+        .dark .badge-success {
+            background-color: rgba(16, 185, 129, 0.2);
+            color: #34d399;
+            border-color: rgba(16, 185, 129, 0.4);
+        }
+
+        .badge-danger {
+            background-color: rgba(239, 68, 68, 0.15);
+            color: var(--danger-dark);
+            border-color: rgba(239, 68, 68, 0.3);
+        }
+        
+        .dark .badge-danger {
+            background-color: rgba(239, 68, 68, 0.2);
+            color: #f87171;
+            border-color: rgba(239, 68, 68, 0.4);
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #e5e7eb;
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--primary);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            transition: all 0.3s;
+            animation: slideInLeft 0.4s ease-out;
+        }
+
+        .nav-item.active {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            transition: all 0.3s;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .btn-secondary {
+            background-color: #e5e7eb;
+            color: #1f2937;
+        }
+
+        .btn-secondary:hover {
+            background-color: #d1d5db;
+        }
+
+        .dark .btn-secondary {
+            background-color: #374151;
+            color: #f3f4f6;
+        }
+
+        .dark .btn-secondary:hover {
+            background-color: #4b5563;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            transition: all 0.3s;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(109, 40, 217, 0.1);
+        }
+
+        .dark .form-input {
+            background-color: #1e293b !important;
+            border-color: #475569 !important;
+            color: #f1f5f9 !important;
+        }
+
+        .modal {
+            transition: opacity 0.3s, transform 0.3s;
+        }
+
+        .modal-content {
+            border-radius: 1rem;
+            transition: transform 0.3s;
+        }
+
+        .toast {
+            border-radius: 0.5rem;
+            box-shadow: var(--shadow-lg);
+            transition: opacity 0.5s, transform 0.5s;
+        }
+
+        .toast.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .dark ::-webkit-scrollbar-track {
+            background: #374151;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+        
+        .modern-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+        
+        .modern-table th {
+            padding: 1rem;
+            font-weight: 600;
+            text-align: left;
+            color: var(--text-light);
+            border-bottom: 1px solid rgba(229, 231, 235, 0.5);
+            font-family: 'Montserrat', sans-serif;
+        }
+        
+        .dark .modern-table th {
+            color: #f1f5f9 !important;
+        }
+        
+        .modern-table td {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(229, 231, 235, 0.2);
+        }
+        
+        .dark .modern-table td {
+            border-bottom: 1px solid rgba(75, 85, 99, 0.4);
+        }
+        
+        .modern-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .modern-table tr:hover td {
+            background-color: rgba(243, 244, 246, 0.05);
+        }
+
+        .dark #add-transaction-modal label {
+            color: #f3f4f6;
+        }
+        
+        .dark #type-income span:last-child,
+        .dark #type-expense span:last-child {
+            color: #f9fafb !important;
+            text-shadow: 0 0 1px rgba(0,0,0,0.3);
+        }
+        
+        .dark #type-income.border-green-500 span:last-child {
+            color: #022d19 !important;
+            font-weight: 600;
+        }
+        
+        .dark #type-expense.border-red-500 span:last-child {
+            color: #ea0e0e !important;
+            font-weight: 600;
+        }
+
+        .app-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            padding: 1.5rem 0;
+            margin-bottom: 2rem;
+            border-radius: 0 0 1rem 1rem;
+            box-shadow: var(--shadow-md);
+            position: relative;
+            overflow: hidden;
+            animation: gradient-shift 15s ease infinite;
+        }
+
+        .app-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                radial-gradient(circle at 25% 25%, rgba(255, 255, 255, 0.15) 0%, transparent 10%),
+                radial-gradient(circle at 75% 75%, rgba(255, 255, 255, 0.15) 0%, transparent 10%),
+                radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.12) 0%, transparent 20%);
+            opacity: 0.6;
+            animation: pulse-bg 5s ease-in-out infinite alternate;
+            z-index: 0;
+        }
+        
+        .app-header::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            right: -50%;
+            bottom: -50%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: rotate-bg 20s linear infinite;
+            z-index: 1;
+            pointer-events: none;
+        }
+        
+        .app-header .app-container {
+            position: relative;
+            z-index: 2;
+        }
+
+        .app-title {
+            font-weight: 700;
+            letter-spacing: -0.025em;
+            position: relative;
+            display: inline-block;
+            background-image: linear-gradient(135deg, #fff 0%, rgba(255, 255, 255, 0.85) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+            animation: shimmer 3s infinite alternate, pulse-text 2s infinite;
+        }
+
+        .app-subtitle {
+            font-weight: 400;
+            opacity: 0.9;
+            animation: fadeInUp 0.8s ease-out 0.3s both;
+        }
+
+        @keyframes gradient-shift {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+        
+        @keyframes pulse-bg {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 0.6;
+            }
+            50% {
+                transform: scale(1.05);
+                opacity: 0.8;
+            }
+        }
+        
+        @keyframes rotate-bg {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        
+        @keyframes shimmer {
+            0% {
+                background-position: -100% 0;
+            }
+            100% {
+                background-position: 200% 0;
+            }
+        }
+        
+        @keyframes pulse-text {
+            0%, 100% {
+                text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+            }
+            50% {
+                text-shadow: 0 0 15px rgba(255, 255, 255, 0.5), 
+                            0 0 20px rgba(255, 255, 255, 0.2);
+            }
+        }
+
+        .money-symbol {
+            position: absolute;
+            color: rgba(255, 255, 255, 0.2);
+            font-size: 1.2rem;
+            font-weight: bold;
+            pointer-events: none;
+            animation: float-symbol 10s ease-in-out infinite alternate;
+            z-index: 1;
+        }
+        
+        @keyframes float-symbol {
+            0% {
+                transform: translate(0, 0) rotate(0deg);
+                opacity: 0;
+            }
+            20% {
+                opacity: 0.4;
+            }
+            50% {
+                opacity: 0.2;
+            }
+            80% {
+                opacity: 0.4;
+            }
+            100% {
+                transform: translate(20px, -30px) rotate(45deg);
+                opacity: 0;
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 min-h-screen pb-16">
+    <div class="app-header">
+        <div class="app-container px-4">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h1 class="app-title text-3xl">MoneyPulse</h1>
+                    <p class="app-subtitle">Track your finances with ease</p>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <select id="period-select" class="form-input py-1 px-2 bg-white bg-opacity-20 border-none text-white">
+                        <option class="text-gray-900">This Month</option>
+                        <option class="text-gray-900">Last Month</option>
+                        <option class="text-gray-900">This Year</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="app-container p-4">
+        <div id="home" class="page">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+                <div class="card bg-white dark:bg-gray-800 shadow-md">
+                    <div class="p-6">
+                        <div class="flex items-center mb-4">
+                            <div class="rounded-full p-3 bg-indigo-100 dark:bg-indigo-900 mr-4">
+                                <svg class="w-6 h-6 text-indigo-500 dark:text-indigo-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h4v11H3zM10 3h4v18h-4zM17 14h4v7h-4z"></path></svg>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Balance</p>
+                                <h2 class="text-3xl font-bold" id="total-balance">$0.00</h2>
+                            </div>
+                        </div>
+                        <div class="h-1 w-full bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                            <div class="h-1 bg-gradient-to-r from-indigo-500 to-purple-500" style="width: 70%"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card bg-white dark:bg-gray-800 shadow-md">
+                    <div class="p-6">
+                        <div class="flex items-center mb-4">
+                            <div class="rounded-full p-3 bg-green-100 dark:bg-green-900 mr-4">
+                                <svg class="w-6 h-6 text-green-500 dark:text-green-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 11l3-3m0 0l3 3m-3-3v8m0-13a9 9 0 110 18 9 9 0 010-18z"></path></svg>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Income</p>
+                                <h2 class="text-3xl font-bold" id="income-amount">$0.00</h2>
+                            </div>
+                        </div>
+                        <div class="h-1 w-full bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                            <div class="h-1 bg-gradient-to-r from-green-400 to-green-500" style="width: 80%"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card bg-white dark:bg-gray-800 shadow-md">
+                    <div class="p-6">
+                        <div class="flex items-center mb-4">
+                            <div class="rounded-full p-3 bg-red-100 dark:bg-red-900 mr-4">
+                                <svg class="w-6 h-6 text-red-500 dark:text-red-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Expenses</p>
+                                <h2 class="text-3xl font-bold" id="expense-amount">$0.00</h2>
+                            </div>
+                        </div>
+                        <div class="h-1 w-full bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                            <div class="h-1 bg-gradient-to-r from-red-400 to-red-500" style="width: 60%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                <div class="card bg-white dark:bg-gray-800 shadow-md">
+                    <div class="card-header flex justify-between items-center">
+                        <h2 class="text-lg font-semibold">Income vs. Expenses</h2>
+                        <button class="toggle-btn focus:outline-none" onclick="toggleCard(this)">
+                            <svg class="w-5 h-5 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </button>
+                    </div>
+                    <div class="card-content expanded p-4">
+                        <canvas id="income-expense-chart" height="300"></canvas>
+                    </div>
+                </div>
+                
+                <div class="card bg-white dark:bg-gray-800 shadow-md">
+                    <div class="card-header flex justify-between items-center">
+                        <h2 class="text-lg font-semibold">Expense Categories</h2>
+                        <button class="toggle-btn focus:outline-none" onclick="toggleCard(this)">
+                            <svg class="w-5 h-5 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </button>
+                    </div>
+                    <div class="card-content expanded p-4">
+                        <canvas id="category-chart" height="300"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 gap-6 mb-6">
+                <div class="card bg-white dark:bg-gray-800 shadow-md">
+                    <div class="card-header flex justify-between items-center">
+                        <h2 class="text-lg font-semibold">Recent Transactions</h2>
+                        <div class="flex items-center">
+                            <button class="px-3 py-1 bg-indigo-100 dark:bg-indigo-800 text-indigo-600 dark:text-indigo-300 rounded-full text-sm font-medium mr-2 hover:bg-indigo-200 dark:hover:bg-indigo-700 transition-colors" onclick="showPage('transactions')">View All</button>
+                            <button class="toggle-btn focus:outline-none" onclick="toggleCard(this)">
+                                <svg class="w-5 h-5 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-content expanded">
+                        <div class="overflow-x-auto">
+                            <table class="modern-table">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Category</th>
+                                        <th>Type</th>
+                                        <th>Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="transaction-list"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="budget-alert" class="hidden mb-6 p-4 rounded-lg border-l-4 border-red-500 bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300">
+                <div class="flex items-center">
+                    <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                    <p>Your expenses have exceeded your budget for this month!</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="transactions" class="page hidden">
+            <div class="flex justify-between items-center mb-6">
+                <h1 class="text-2xl font-bold">Transactions</h1>
+                <button class="btn btn-primary flex items-center pulse-animation" onclick="openAddTransactionModal()">
+                    <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                    Add Transaction
+                </button>
+            </div>
+            
+            <div class="card bg-white dark:bg-gray-800 shadow-md">
+                <div class="p-4">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-lg font-semibold">All Transactions</h2>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="modern-table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Category</th>
+                                    <th>Type</th>
+                                    <th>Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody id="all-transaction-list"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="alerts" class="page hidden">
+            <div class="flex justify-between items-center mb-6">
+                <h1 class="text-2xl font-bold">Alerts</h1>
+            </div>
+            <div class="card bg-white dark:bg-gray-800 shadow-md">
+                <div class="p-6">
+                    <ul id="alert-list" class="space-y-4"></ul>
+                </div>
+            </div>
+        </div>
+
+        <div id="settings" class="page hidden">
+            <div class="flex justify-between items-center mb-6">
+                <h1 class="text-2xl font-bold">Settings</h1>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="card bg-white dark:bg-gray-800 shadow-md">
+                    <div class="p-6">
+                        <h2 class="text-lg font-semibold mb-4">Application Settings</h2>
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-center">
+                                <span class="font-medium">Dark Mode</span>
+                                <label class="switch">
+                                    <input type="checkbox" id="dark-mode-toggle" onchange="toggleDarkMode()">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="font-medium">Notifications</span>
+                                <label class="switch">
+                                    <input type="checkbox" id="notifications-toggle" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card bg-white dark:bg-gray-800 shadow-md">
+                    <div class="p-6">
+                        <h2 class="text-lg font-semibold mb-4">Budget Settings</h2>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium mb-2" for="budget-input">Monthly Budget</label>
+                                <div class="flex">
+                                    <input type="number" id="budget-input" class="form-input" placeholder="Enter amount">
+                                    <button class="btn btn-primary ml-2" onclick="setBudget()">Set</button>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-2">Budget Alerts</label>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <div class="flex items-center">
+                                        <input type="checkbox" class="mr-2" checked>
+                                        <span>75% Warning</span>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <input type="checkbox" class="mr-2" checked>
+                                        <span>90% Warning</span>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <input type="checkbox" class="mr-2" checked>
+                                        <span>100% Alert</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 shadow-lg z-10">
+        <div class="max-w-screen-lg mx-auto flex justify-around p-2">
+          <button id="nav-home" class="nav-item active" onclick="showPage('home')">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h4v11H3zM10 3h4v18h-4zM17 14h4v7h-4z" />
+            </svg>
+            <span class="text-xs mt-1">Dashboard</span>
+          </button>
+          <button id="nav-transactions" class="nav-item" onclick="showPage('transactions')">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2 8.5A2.5 2.5 0 014.5 6H19.5A2.5 2.5 0 0122 8.5v7A2.5 2.5 0 0119.5 18H4.5A2.5 2.5 0 012 15.5v-7z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01" />
+            </svg>
+            <span class="text-xs mt-1">Transactions</span>
+          </button>
+          <button id="nav-alerts" class="nav-item" onclick="showPage('alerts')">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-4.215A2 2 0 0016.5 11H15m-6 6H4l1.405-4.215A2 2 0 007.5 11H9m6 0V7a2 2 0 00-2-2H7a2 2 0 00-2 2v4m4 6v2" />
+            </svg>
+            <span class="text-xs mt-1">Alerts</span>
+          </button>
+          <button id="nav-settings" class="nav-item" onclick="showPage('settings')">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c.921.3.921 1.603 0 1.902a1.724 1.724 0 00-1.066 2.573c-.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573-1.066c-.3.921-1.603.921-1.902 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-.921-.3-.921-1.603 0-1.902a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37a1.724 1.724 0 002.572-1.065z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+            <span class="text-xs mt-1">Settings</span>
+          </button>
+        </div>
+      </div>
+
+    <div id="add-transaction-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 pointer-events-none z-20">
+        <div class="modal-content bg-white dark:bg-gray-800 p-6 rounded-xl shadow-xl w-full max-w-md transform scale-95 mx-4">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xl font-bold">Add New Transaction</h2>
+                <button class="focus:outline-none" onclick="closeAddTransactionModal()">
+                    <svg class="w-6 h-6 text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            <form id="add-transaction-form">
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-2" for="transaction-type">Transaction Type</label>
+                        <div class="grid grid-cols-2 gap-4">
+                            <label class="flex items-center p-3 border rounded-lg cursor-pointer transition-colors" id="type-income">
+                                <input type="radio" name="transaction-type" value="Income" class="hidden" checked>
+                                <span class="w-5 h-5 flex-shrink-0 border border-green-500 rounded-full mr-2"><span id="dot-income" class="block w-3 h-3 mx-auto mt-1 bg-green-500 rounded-full"></span></span>
+                                <span>Income</span>
+                            </label>
+                            <label class="flex items-center p-3 border rounded-lg cursor-pointer transition-colors" id="type-expense">
+                                <input type="radio" name="transaction-type" value="Expense" class="hidden">
+                                <span class="w-5 h-5 flex-shrink-0 border border-gray-300 rounded-full mr-2">
+                                    <span id="dot-expense" class="hidden w-3 h-3 mx-auto mt-1 rounded-full"></span>
+                                </span>
+                                <span>Expense</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2" for="transaction-category">Category</label>
+                        <input type="text" id="transaction-category" class="form-input" placeholder="e.g., Salary, Food, Rent...">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2" for="transaction-amount">Amount</label>
+                        <div class="relative">
+                            <input type="number" id="transaction-amount" class="form-input pl-8" step="0.01" placeholder="0.00">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2" for="transaction-date">Date</label>
+                        <input type="date" id="transaction-date" class="form-input">
+                    </div>
+                </div>
+                <div class="flex justify-end space-x-3 mt-6">
+                    <button type="button" class="btn btn-secondary" onclick="closeAddTransactionModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Transaction</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="toast" class="toast fixed bottom-4 right-4 max-w-xs py-3 px-4 text-white opacity-0 transform translate-y-8 z-50">
+        <p id="toast-message"></p>
+    </div>
+
+    <script>
+        var incomeExpenseChart;
+        var categoryChart;
+        var transactionsChart;
+
+        let transactions = JSON.parse(localStorage.getItem('transactions')) || [];
+        let alerts = JSON.parse(localStorage.getItem('alerts')) || [];
+        let budget = localStorage.getItem('budget');
+        budget = budget && !isNaN(parseFloat(budget)) ? parseFloat(budget) : 1000;
+        document.getElementById('budget-input').value = budget;
+
+        function enhanceBottomNavVisibility() {
+            const isDark = document.documentElement.classList.contains('dark');
+            const navItems = document.querySelectorAll('.nav-item');
+            
+            navItems.forEach(item => {
+                item.classList.remove(
+                    'dark:text-gray-400', 'dark:text-gray-500', 'dark:text-gray-600',
+                    'dark:bg-opacity-5', 'dark:bg-opacity-10', 'dark:bg-gray-800', 'dark:bg-gray-700'
+                );
+                
+                const svg = item.querySelector('svg');
+                if (svg) {
+                    svg.style.stroke = "";
+                }
+                
+                if (isDark && !item.classList.contains('active')) {
+                    item.classList.add('dark:text-gray-300', 'dark:bg-gray-700', 'dark:bg-opacity-30');
+                    if (svg) {
+                        svg.style.stroke = "#D1D5DB";
+                    }
+                }
+            });
+        }
+        
+        function toggleDarkMode() {
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.setItem('darkMode', isDark);
+            updateChartsTheme();
+            enhanceBottomNavVisibility();
+            
+            if (!dotExpense.classList.contains('hidden')) {
+                dotExpense.style.backgroundColor = isDark ? '#ea0e0e' : '#ef4444';
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            initDarkMode();
+            initCharts();
+            updateUI();
+            showPage('home');
+            enhanceBottomNavVisibility();
+        });
+        
+        function showPage(pageId) {
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            document.getElementById(`nav-${pageId}`).classList.add('active');
+            enhanceBottomNavVisibility();
+            
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(page => {
+                if (page.id === pageId) {
+                    page.classList.remove('hidden');
+                    if (pageId === 'alerts') {
+                        updateAlertList();
+                    }
+                } else {
+                    page.classList.add('hidden');
+                }
+            });
+        }
+
+        const lightColors = { income: '#10b981', expense: '#ef4444' };
+        const darkColors = { income: '#34d399', expense: '#f87171' };
+        const lightCategoryColors = ['#10b981', '#ef4444', '#6d28d9', '#f59e0b', '#06b6d4', '#8b5cf6', '#ec4899'];
+        const darkCategoryColors = ['#34d399', '#f87171', '#8b5cf6', '#fbbf24', '#22d3ee', '#a78bfa', '#f472b6'];
+        const lightLineColor = '#6d28d9';
+        const darkLineColor = '#8b5cf6';
+
+        function initDarkMode() {
+            const isDark = localStorage.getItem('darkMode') === 'true';
+            if (isDark) {
+                document.documentElement.classList.add('dark');
+                document.getElementById('dark-mode-toggle').checked = true;
+            }
+        }
+
+        const typeIncome = document.getElementById('type-income');
+        const typeExpense = document.getElementById('type-expense');
+        const dotIncome = document.getElementById('dot-income');
+        const dotExpense = document.getElementById('dot-expense');
+
+        typeIncome.addEventListener('click', () => {
+            typeIncome.classList.add('border-green-500', 'bg-green-50', 'dark:bg-green-900', 'dark:bg-opacity-20');
+            typeExpense.classList.remove('border-red-500', 'bg-red-50', 'dark:bg-red-900', 'dark:bg-opacity-20');
+            dotIncome.classList.remove('hidden');
+            dotExpense.classList.add('hidden');
+            document.querySelector('input[name="transaction-type"][value="Income"]').checked = true;
+            
+            dotIncome.style.backgroundColor = '';
+        });
+
+        typeExpense.addEventListener('click', () => {
+            typeExpense.classList.add('border-red-500', 'bg-red-50', 'dark:bg-red-900', 'dark:bg-opacity-20');
+            typeIncome.classList.remove('border-green-500', 'bg-green-50', 'dark:bg-green-900', 'dark:bg-opacity-20');
+            dotExpense.classList.remove('hidden');
+            dotIncome.classList.add('hidden');
+            document.querySelector('input[name="transaction-type"][value="Expense"]').checked = true;
+            
+            const isDark = document.documentElement.classList.contains('dark');
+            dotExpense.style.backgroundColor = isDark ? '#ea0e0e' : '#ef4444';
+            dotExpense.style.display = 'block';
+        });
+
+        typeIncome.classList.add('border-green-500', 'bg-green-50', 'dark:bg-green-900', 'dark:bg-opacity-20');
+
+        function openAddTransactionModal() {
+            const modal = document.getElementById('add-transaction-modal');
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            modal.querySelector('.modal-content').classList.remove('scale-95');
+            modal.querySelector('.modal-content').classList.add('scale-100');
+            
+            if (document.querySelector('input[name="transaction-type"]:checked').value === 'Expense') {
+                const isDark = document.documentElement.classList.contains('dark');
+                dotExpense.style.backgroundColor = isDark ? '#ea0e0e' : '#ef4444';
+                dotExpense.style.display = 'block';
+            }
+            
+            const today = new Date();
+            const formattedDate = today.toISOString().split('T')[0];
+            document.getElementById('transaction-date').value = formattedDate;
+        }
+
+        function closeAddTransactionModal() {
+            const modal = document.getElementById('add-transaction-modal');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            modal.querySelector('.modal-content').classList.remove('scale-100');
+            modal.querySelector('.modal-content').classList.add('scale-95');
+            
+            document.getElementById('add-transaction-form').reset();
+            typeIncome.click();
+        }
+
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toast-message');
+            toastMessage.textContent = message;
+            
+            if (type === 'success') {
+                toast.classList.remove('bg-red-500');
+                toast.classList.add('bg-green-500');
+            } else if (type === 'error') {
+                toast.classList.remove('bg-green-500');
+                toast.classList.add('bg-red-500');
+            }
+            
+            toast.classList.remove('opacity-0', 'translate-y-8');
+            toast.classList.add('opacity-100', 'translate-y-0');
+            
+            setTimeout(() => {
+                toast.classList.remove('opacity-100', 'translate-y-0');
+                toast.classList.add('opacity-0', 'translate-y-8');
+            }, 3000);
+        }
+
+        function calculateBalance() {
+            return transactions.reduce((acc, tx) => {
+                if (tx.type === 'Income') {
+                    return acc + tx.amount;
+                } else {
+                    return acc - tx.amount;
+                }
+            }, 0);
+        }
+
+        function calculateIncomeExpense() {
+            let income = 0;
+            let expense = 0;
+            transactions.forEach(tx => {
+                if (tx.type === 'Income') {
+                    income += tx.amount;
+                } else {
+                    expense += tx.amount;
+                }
+            });
+            return { income, expense };
+        }
+
+        function checkBudget() {
+            const { expense } = calculateIncomeExpense();
+            if (expense > budget) {
+                document.getElementById('budget-alert').classList.remove('hidden');
+                
+                const alertExists = alerts.some(alert => 
+                    alert.message.includes('Expenses have exceeded the budget')
+                );
+                
+                if (!alertExists) {
+                    const alertMessage = `Expenses have exceeded the budget by $${(expense - budget).toFixed(2)}`;
+                    alerts.unshift({ 
+                        date: new Date().toISOString().split('T')[0], 
+                        message: alertMessage,
+                        type: 'budget'
+                    });
+                    localStorage.setItem('alerts', JSON.stringify(alerts));
+                    showToast(alertMessage, 'error');
+                    updateAlertList();
+                }
+            } else {
+                document.getElementById('budget-alert').classList.add('hidden');
+            }
+        }
+
+        function updateUI() {
+            const balance = calculateBalance();
+            document.getElementById('total-balance').textContent = `$${balance.toFixed(2)}`;
+            const { income, expense } = calculateIncomeExpense();
+            document.getElementById('income-amount').textContent = `$${income.toFixed(2)}`;
+            document.getElementById('expense-amount').textContent = `$${expense.toFixed(2)}`;
+            updateIncomeExpenseChart(income, expense);
+            updateCategoryChart();
+            updateTransactionList();
+            updateAllTransactionList();
+
+            checkBudget();
+        }
+
+        function addTransaction(type, category, amount, date) {
+            const parsedAmount = parseFloat(amount);
+            if (isNaN(parsedAmount)) {
+                showToast('Please enter a valid amount', 'error');
+                return false;
+            }
+            
+            if (!category) {
+                showToast('Please enter a category', 'error');
+                return false;
+            }
+            
+            if (!date) {
+                showToast('Please select a date', 'error');
+                return false;
+            }
+            
+            const { expense: currentExpense } = calculateIncomeExpense();
+            const newTransaction = { type, category, amount: parsedAmount, date };
+            
+            transactions.unshift(newTransaction);
+            localStorage.setItem('transactions', JSON.stringify(transactions));
+            
+            const { expense: newExpense } = calculateIncomeExpense();
+            if (newExpense > budget && currentExpense <= budget) {
+                const alertMessage = `Expenses have exceeded the budget by $${(newExpense - budget).toFixed(2)}`;
+                alerts.unshift({ 
+                    date: new Date().toISOString().split('T')[0], 
+                    message: alertMessage,
+                    type: 'budget'
+                });
+                localStorage.setItem('alerts', JSON.stringify(alerts));
+                showToast(alertMessage, 'error');
+                updateAlertList();
+            }
+            
+            updateUI();
+            showToast('Transaction added successfully!', 'success');
+            return true;
+        }
+
+        document.getElementById('add-transaction-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const type = document.querySelector('input[name="transaction-type"]:checked').value;
+            const category = document.getElementById('transaction-category').value;
+            const amount = document.getElementById('transaction-amount').value;
+            const date = document.getElementById('transaction-date').value;
+            
+            if (addTransaction(type, category, amount, date)) {
+                closeAddTransactionModal();
+            }
+        });
+
+        function updateTransactionList() {
+            const tbody = document.getElementById('transaction-list');
+            tbody.innerHTML = '';
+            
+            const recentTransactions = transactions.slice(0, 5);
+            
+            if (recentTransactions.length === 0) {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td colspan="4" class="text-center py-4 text-gray-500">No transactions yet. Add one to get started!</td>`;
+                tbody.appendChild(tr);
+                return;
+            }
+            
+            recentTransactions.forEach(tx => {
+                const tr = document.createElement('tr');
+                const dateObj = new Date(tx.date);
+                const formattedDate = dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                
+                tr.innerHTML = `
+                    <td class="whitespace-nowrap">${formattedDate}</td>
+                    <td>${tx.category}</td>
+                    <td>
+                        <span class="badge ${tx.type === 'Income' ? 'badge-success' : 'badge-danger'}">
+                            ${tx.type}
+                        </span>
+                    </td>
+                    <td class="${tx.type === 'Income' ? 'text-green-500 dark:text-green-400' : 'text-red-500 dark:text-red-400'} font-medium">
+                        ${tx.type === 'Income' ? '+' : '-'}$${tx.amount.toFixed(2)}
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function updateAllTransactionList() {
+            const tbody = document.getElementById('all-transaction-list');
+            tbody.innerHTML = '';
+            
+            if (transactions.length === 0) {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td colspan="5" class="text-center py-4 text-gray-500">No transactions yet. Add one to get started!</td>`;
+                tbody.appendChild(tr);
+                return;
+            }
+            
+            transactions.forEach(tx => {
+                const tr = document.createElement('tr');
+                const dateObj = new Date(tx.date);
+                const formattedDate = dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                tr.innerHTML = `
+                    <td class="whitespace-nowrap">${formattedDate}</td>
+                    <td>${tx.category}</td>
+                    <td>
+                        <span class="badge ${tx.type === 'Income' ? 'badge-success' : 'badge-danger'}">
+                            ${tx.type}
+                        </span>
+                    </td>
+                    <td class="${tx.type === 'Income' ? 'text-green-500 dark:text-green-400' : 'text-red-500 dark:text-red-400'} font-medium">
+                        ${tx.type === 'Income' ? '+' : '-'}$${tx.amount.toFixed(2)}
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function updateAlertList() {
+            const alertList = document.getElementById('alert-list');
+            alertList.innerHTML = '';
+            
+            if (alerts.length === 0) {
+                alertList.innerHTML = '<p class="text-center text-gray-500 dark:text-gray-400 py-4">No alerts at the moment.</p>';
+                return;
+            }
+            
+            alerts.forEach((alert, index) => {
+                const li = document.createElement('li');
+                li.classList.add('p-4', 'rounded-lg', 'border-l-4', 
+                    alert.type === 'budget' ? 'border-red-500 bg-red-100 dark:bg-red-900 dark:bg-opacity-20' : 'border-yellow-500 bg-yellow-100 dark:bg-yellow-900 dark:bg-opacity-20');
+                
+                const dateObj = new Date(alert.date);
+                const formattedDate = dateObj.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+                
+                li.innerHTML = `
+                    <div class="flex justify-between items-center">
+                        <div class="flex items-start">
+                            <svg class="w-5 h-5 mr-3 ${alert.type === 'budget' ? 'text-red-500' : 'text-yellow-500'} mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                            <div>
+                                <p class="font-medium ${alert.type === 'budget' ? 'text-red-800 dark:text-red-300' : 'text-yellow-800 dark:text-yellow-300'}">${alert.message}</p>
+                                <p class="text-sm ${alert.type === 'budget' ? 'text-red-600 dark:text-red-400' : 'text-yellow-600 dark:text-yellow-400'} mt-1">${formattedDate}</p>
+                            </div>
+                        </div>
+                        <button class="${alert.type === 'budget' ? 'text-red-500 hover:text-red-700 dark:hover:text-red-300' : 'text-yellow-500 hover:text-yellow-700 dark:hover:text-yellow-300'}" onclick="removeAlert(${index})">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                        </button>
+                    </div>
+                `;
+                alertList.appendChild(li);
+            });
+        }
+
+        function removeAlert(index) {
+            alerts.splice(index, 1);
+            localStorage.setItem('alerts', JSON.stringify(alerts));
+            updateAlertList();
+        }
+
+        function initCharts() {
+            const ctx1 = document.getElementById('income-expense-chart').getContext('2d');
+            incomeExpenseChart = new Chart(ctx1, {
+                type: 'bar',
+                data: {
+                    labels: ['Income', 'Expense'],
+                    datasets: [{
+                        label: 'Amount',
+                        data: [0, 0],
+                        backgroundColor: [lightColors.income, lightColors.expense],
+                        borderRadius: 8,
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: { 
+                            enabled: true,
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            padding: 12,
+                            titleFont: { size: 14, weight: 'bold' },
+                            bodyFont: { size: 13 },
+                            displayColors: false,
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                display: true,
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return '$' + value;
+                                }
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
+
+            const ctx2 = document.getElementById('category-chart').getContext('2d');
+            categoryChart = new Chart(ctx2, {
+                type: 'doughnut',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        data: [],
+                        backgroundColor: [],
+                        borderWidth: 0,
+                        borderRadius: 4,
+                        hoverOffset: 10
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    cutout: '70%',
+                    plugins: {
+                        legend: { 
+                            position: 'right',
+                            labels: {
+                                padding: 20,
+                                usePointStyle: true,
+                                pointStyle: 'circle'
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            padding: 12,
+                            titleFont: { size: 14, weight: 'bold' },
+                            bodyFont: { size: 13 },
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.label}: $${context.raw.toFixed(2)}`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateChartsTheme() {
+            const isDark = document.documentElement.classList.contains('dark');
+            
+            if (incomeExpenseChart) {
+                const colors = isDark ? darkColors : lightColors;
+                incomeExpenseChart.data.datasets[0].backgroundColor = [colors.income, colors.expense];
+                incomeExpenseChart.options.scales.y.grid.color = isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)';
+                incomeExpenseChart.update();
+            }
+            
+            if (categoryChart) {
+                const colors = isDark ? darkCategoryColors : lightCategoryColors;
+                const labels = categoryChart.data.labels;
+                categoryChart.data.datasets[0].backgroundColor = colors.slice(0, labels.length);
+                categoryChart.update();
+            }
+        }
+
+        function updateIncomeExpenseChart(income, expense) {
+            const isDark = document.documentElement.classList.contains('dark');
+            const colors = isDark ? darkColors : lightColors;
+            incomeExpenseChart.data.datasets[0].backgroundColor = [colors.income, colors.expense];
+            incomeExpenseChart.data.datasets[0].data = [income, expense];
+            incomeExpenseChart.update();
+        }
+
+        function updateCategoryChart() {
+            const isDark = document.documentElement.classList.contains('dark');
+            const colors = isDark ? darkCategoryColors : lightCategoryColors;
+            const categories = {};
+            
+            transactions.forEach(tx => {
+                if (tx.type === 'Expense') {
+                    if (categories[tx.category]) {
+                        categories[tx.category] += tx.amount;
+                    } else {
+                        categories[tx.category] = tx.amount;
+                    }
+                }
+            });
+            
+            const sortedCategories = Object.entries(categories)
+                .sort((a, b) => b[1] - a[1])
+                .reduce((obj, [key, value]) => {
+                    obj[key] = value;
+                    return obj;
+                }, {});
+            
+            const labels = Object.keys(sortedCategories);
+            const data = Object.values(sortedCategories);
+            
+            if (labels.length === 0) {
+                categoryChart.data.labels = ['No Expense Data'];
+                categoryChart.data.datasets[0].data = [1];
+                categoryChart.data.datasets[0].backgroundColor = ['#e5e7eb'];
+            } else {
+                categoryChart.data.labels = labels;
+                categoryChart.data.datasets[0].data = data;
+                categoryChart.data.datasets[0].backgroundColor = colors.slice(0, labels.length);
+            }
+            
+            categoryChart.update();
+        }
+
+        function setBudget() {
+            const budgetInput = document.getElementById('budget-input').value;
+            const parsedBudget = parseFloat(budgetInput);
+            if (isNaN(parsedBudget) || parsedBudget <= 0) {
+                showToast('Please enter a valid budget amount', 'error');
+                return;
+            }
+            
+            const { expense } = calculateIncomeExpense();
+            if (expense > parsedBudget && expense <= budget) {
+                const alertMessage = `Expenses have exceeded the new budget by $${(expense - parsedBudget).toFixed(2)}`;
+                alerts.unshift({ 
+                    date: new Date().toISOString().split('T')[0], 
+                    message: alertMessage,
+                    type: 'budget'
+                });
+                localStorage.setItem('alerts', JSON.stringify(alerts));
+                showToast(alertMessage, 'error');
+                updateAlertList();
+            }
+            
+            budget = parsedBudget;
+            localStorage.setItem('budget', budget);
+            updateUI();
+            showToast('Budget updated successfully!', 'success');
+        }
+
+        function toggleCard(button) {
+            const card = button.closest('.card');
+            const content = card.querySelector('.card-content');
+            content.classList.toggle('expanded');
+            button.classList.toggle('rotated');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initDarkMode();
+            initCharts();
+            updateUI();
+            showPage('home');
+            
+            const header = document.querySelector('.app-header');
+            for (let i = 0; i < 12; i++) {
+                const symbol = document.createElement('span');
+                symbol.className = 'money-symbol';
+                symbol.textContent = ['$', '€', '£', '¥'][Math.floor(Math.random() * 4)];
+                symbol.style.left = `${Math.random() * 100}%`;
+                symbol.style.top = `${Math.random() * 100}%`;
+                symbol.style.animationDelay = `${Math.random() * 5}s`;
+                symbol.style.animationDuration = `${5 + Math.random() * 10}s`;
+                header.appendChild(symbol);
+            }
+        });
+
+        document.querySelectorAll("details").forEach(detail => {
+            detail.addEventListener("toggle", function () {
+                if (this.open) {
+                    requestAnimationFrame(() => {
+                        setTimeout(() => {
+                            if (typeof incomeVsExpenseChart !== 'undefined') incomeVsExpenseChart.resize();
+                            if (typeof expenseCategoryChart !== 'undefined') expenseCategoryChart.resize();
+                        }, 100);
+                    });
+                }
+            });
+        });
+
+    </script>
+</body>
+</html>

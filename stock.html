@@ -1,0 +1,2806 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+   <head>
+      <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+      <meta name="description" content="Track stock prices in real-time with interactive charts, live updates, and market news. A responsive dashboard for monitoring your investments across all devices.">
+      <meta name="theme-color" content="#ffffff">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="robots" content="">
+
+      
+      <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+
+      <title>StockTracker - Real-Time Stock Market Dashboard</title>
+      <!-- SEO Description -->
+      <meta name="description" content="Track stock prices in real-time with interactive charts, live updates, and market news. A responsive dashboard for monitoring your investments across all devices.">
+
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <!-- Performance optimization: Preload critical resources -->
+      <link rel="preload" href="https://cdn.tailwindcss.com" as="script">
+      
+      <!-- Header Scripts -->
+      <script id="header-scripts">
+        // This script tag will be replaced with actual scripts.head content
+        if (window.scripts && window.scripts.head) {
+          document.getElementById('header-scripts').outerHTML = window.scripts.head;
+        }
+      </script>
+
+      <!-- Preconnect -->
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+      <!-- Font stylesheet -->
+
+      <style>
+        :root {
+          color-scheme: light;
+        }
+
+      </style>
+
+      <script type="application/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.8/handlebars.min.js"></script>
+
+      <!-- Core CSS -->
+      <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+      <!-- <script src="https://cdn.tailwindcss.com"></script> -->
+      
+      <script>
+      // render the settings object
+      //console.log('settings', [object Object]);
+      document.addEventListener('DOMContentLoaded', function() {
+        try {
+          // Define Tailwind config
+          const tailwindConfig = {
+            theme: {
+              extend: {
+                colors: {
+                  primary: {
+                    DEFAULT: '#1E1E2E',
+                    50: '#f8f8f8',
+                    100: '#e8e8e8', 
+                    200: '#d3d3d3',
+                    300: '#a3a3a3',
+                    400: '#737373',
+                    500: '#525252',
+                    600: '#404040',
+                    700: '#262626',
+                    800: '#171717',
+                    900: '#0a0a0a',
+                    950: '#030303',
+                  },
+                  secondary: {
+                    DEFAULT: '#2A2A3C',
+                    50: '#f8f8f8',
+                    100: '#e8e8e8',
+                    200: '#d3d3d3', 
+                    300: '#a3a3a3',
+                    400: '#737373',
+                    500: '#525252',
+                    600: '#404040',
+                    700: '#262626',
+                    800: '#171717',
+                    900: '#0a0a0a',
+                    950: '#030303',
+                  },
+                  accent: {
+                    DEFAULT: '',
+                    50: '#f8f8f8',
+                    100: '#e8e8e8',
+                    200: '#d3d3d3',
+                    300: '#a3a3a3', 
+                    400: '#737373',
+                    500: '#525252',
+                    600: '#404040',
+                    700: '#262626',
+                    800: '#171717',
+                    900: '#0a0a0a',
+                    950: '#030303',
+                  },
+                },
+                fontFamily: {
+                  sans: ['Rubik', 'Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Helvetica Neue', 'Arial', 'sans-serif'],
+                  heading: ['Inter', 'Inter', 'system-ui', 'sans-serif'],
+                  body: ['Inter', 'Inter', 'system-ui', 'sans-serif'],
+                },
+                spacing: {
+                  '18': '4.5rem',
+                  '22': '5.5rem',
+                  '30': '7.5rem',
+                },
+                maxWidth: {
+                  '8xl': '88rem',
+                  '9xl': '96rem',
+                },
+                aspectRatio: {
+                  'portrait': '3/4',
+                  'landscape': '4/3',
+                  'ultrawide': '21/9',
+                },
+              },
+            },
+            variants: {
+              extend: {
+                opacity: ['disabled'],
+                cursor: ['disabled'],
+                backgroundColor: ['active', 'disabled'],
+                textColor: ['active', 'disabled'],
+              },
+            },
+          }
+          // Apply Tailwind config
+          tailwind.config = tailwindConfig;
+        } catch (e) {
+          console.error('Error setting Tailwind config:', e);
+        }
+      });
+      </script>
+
+      <!-- Utilities and Components -->
+      <script defer src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.13.3/cdn.min.js"></script>
+      <script defer src="https://cdnjs.cloudflare.com/ajax/libs/apexcharts/3.45.1/apexcharts.min.js"></script>
+      
+      <!-- Add Recharts Dependencies -->
+      <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+      <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+      <script src="https://unpkg.com/prop-types/prop-types.min.js"></script>
+      <script src="https://unpkg.com/recharts/umd/Recharts.js"></script>
+
+      <!-- Icons -->
+      <!-- Optimized Font Loading -->
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      
+      <!-- Icons -->
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" 
+            integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+            crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+      <!-- Dynamic Meta Tags -->
+      <meta name="description" content="">
+      <meta name="keywords" content="">
+      <meta name="robots" content="">
+      <meta name="google-site-verification" content="">
+      <meta name="baidu-verification" content="">
+      <meta name="yandex-verification" content="">
+      <meta name="bing-verification" content="">
+      <meta property="og:title" content="">
+      <meta property="og:description" content="">
+      <meta property="og:image" content="">
+      <meta property="og:type" content="website">
+      <meta property="og:locale" content="en_US">
+      <meta property="og:site_name" content="StockTracker Dashboard">
+      <meta name="twitter:card" content="summary_large_image">
+      <meta name="twitter:title" content="">
+      <meta name="twitter:description" content="">
+      <meta name="twitter:image" content="">
+    
+      
+      <!-- Font Links -->
+     
+      <link rel="icon" type="image/x-icon" href="">
+
+      <style>
+        h1, h2, h3, h4, h5, h6 {
+          font-family: Rubik, Inter, system-ui, sans-serif;
+        }
+        body {
+          font-family: Inter, Inter, system-ui, sans-serif;
+        }
+      </style>
+   </head>
+   <body class="antialiased text-gray-800 min-h-screen flex flex-col">
+      <!-- Skip to main content link for accessibility -->
+      <a href="#main-content" 
+         class="sr-only focus:not-sr-only focus:absolute focus:top-0 focus:left-0 focus:z-50 focus:p-4 focus:bg-white focus:text-black">
+         Skip to main content
+      </a>
+
+      <!-- Main content area -->
+      <main id="main-content" class="flex-1 relative h-full">
+        <div id="RolloutPageContent"><element id="9f0b03b1-56fa-4be2-82bb-038f564ace9e" data-section-id="9f0b03b1-56fa-4be2-82bb-038f564ace9e">
+
+
+<div id="root" class="bg-neutral-900 text-white min-h-screen font-sans" x-data="{ isOpen: false }">
+  <div class="flex h-screen overflow-hidden">
+    <!-- Sidebar Navigation -->
+    <nav id="layout" class="w-64 bg-neutral-800 border-r border-neutral-700/30 hidden lg:block h-screen">
+      <div class="px-6 py-4 border-b border-neutral-700/30">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-2">
+            <div class="bg-emerald-500 h-8 w-8 rounded-md flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" viewBox="0 0 20 20" fill="currentColor">
+                <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zm6-4a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zm6-3a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z" />
+              </svg>
+            </div>
+            <h1 class="text-xl font-semibold text-white">StockVue</h1>
+          </div>
+        </div>
+      </div>
+      
+      <div class="px-4 py-6">
+        <ul class="space-y-2">
+          <li>
+            <a href="#dashboard" class="flex items-center px-4 py-3 text-white bg-neutral-700/40 rounded-lg group transition-colors duration-200">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 text-emerald-400" viewBox="0 0 20 20" fill="currentColor">
+                <path d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z" />
+                <path d="M12 2.252A8.014 8.014 0 0117.748 8H12V2.252z" />
+              </svg>
+              Dashboard
+            </a>
+          </li>
+          <li>
+            <a href="#stocks" class="flex items-center px-4 py-3 text-neutral-400 hover:text-white hover:bg-neutral-700/30 rounded-lg group transition-colors duration-200">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 text-neutral-400 group-hover:text-emerald-400" viewBox="0 0 20 20" fill="currentColor">
+                <path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+              </svg>
+              Stocks
+            </a>
+          </li>
+          <li>
+            <a href="#alerts" class="flex items-center px-4 py-3 text-neutral-400 hover:text-white hover:bg-neutral-700/30 rounded-lg group transition-colors duration-200">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 text-neutral-400 group-hover:text-emerald-400" viewBox="0 0 20 20" fill="currentColor">
+                <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z" />
+              </svg>
+              Alerts
+            </a>
+          </li>
+          <li>
+            <a href="#market-news" class="flex items-center px-4 py-3 text-neutral-400 hover:text-white hover:bg-neutral-700/30 rounded-lg group transition-colors duration-200">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 text-neutral-400 group-hover:text-emerald-400" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M2 5a2 2 0 012-2h8a2 2 0 012 2v10a2 2 0 002 2H4a2 2 0 01-2-2V5zm3 1h6v4H5V6zm6 6H5v2h6v-2z" clip-rule="evenodd" />
+                <path d="M15 7h1a2 2 0 012 2v5.5a1.5 1.5 0 01-3 0V7z" />
+              </svg>
+              Market News
+            </a>
+          </li>
+        </ul>
+      </div>
+      
+      <div class="absolute bottom-0 w-64 bg-neutral-800 border-t border-neutral-700/30 p-4">
+        <div class="flex items-center">
+          <img 
+            src="https://images.unsplash.com/photo-1507679799987-c73779587ccf?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w2MzQ2fDB8MXxzZWFyY2h8MXx8bGF5b3V0JTIwcHJvZmVzc2lvbmFsfGVufDB8MHx8fDE3NDMxNjA0MTR8MA&ixlib=rb-4.0.3&q=80&w=60"
+            alt="User profile"
+            onerror="this.onerror=null; this.src='https://placehold.co/40x40'"
+            width="40"
+            height="40"
+            class="rounded-full h-10 w-10 object-cover border border-neutral-700/50"
+          >
+          <div class="ml-3">
+            <p class="text-sm font-medium text-white">Alex Morgan</p>
+            <p class="text-xs text-neutral-400">alex@stockvue.com</p>
+          </div>
+          <button class="ml-auto text-neutral-400 hover:text-white">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Mobile menu toggle -->
+    <button
+      type="button"
+      class="lg:hidden fixed top-0 left-0 z-50 p-2 mt-4 ml-4 rounded-md bg-neutral-800 text-neutral-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
+      @click="isOpen = !isOpen"
+      aria-controls="mobile-menu"
+      :aria-expanded="isOpen"
+    >
+      <svg x-show="!isOpen" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" x-cloak>
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+      </svg>
+      <svg x-show="isOpen" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" x-cloak>
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+    
+    <!-- Mobile navbar -->
+    <div class="lg:hidden fixed top-0 left-0 right-0 h-16 bg-neutral-800 border-b border-neutral-700/30 z-40 flex items-center px-16">
+      <div class="flex items-center justify-center w-full">
+        <div class="flex items-center space-x-2">
+          <div class="bg-emerald-500 h-8 w-8 rounded-md flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" viewBox="0 0 20 20" fill="currentColor">
+              <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zm6-4a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zm6-3a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z" />
+            </svg>
+          </div>
+          <h1 class="text-xl font-semibold text-white">StockVue</h1>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Mobile menu -->
+    <div id="mobile-menu" class="lg:hidden fixed inset-0 z-50 bg-neutral-800/80 backdrop-blur-lg" x-show="isOpen" x-cloak
+      x-transition:enter="transition ease-out duration-100 transform"
+      x-transition:enter-start="opacity-0 scale-95"
+      x-transition:enter-end="opacity-100 scale-100"
+      x-transition:leave="transition ease-in duration-75 transform"
+      x-transition:leave-start="opacity-100 scale-100"
+      x-transition:leave-end="opacity-0 scale-95"
+      @click.away="isOpen = false"
+      @resize.window="if (window.innerWidth > 1024) isOpen = false">
+      
+      <div class="pt-16 pb-6 px-4">
+        <div class="flex flex-col">
+          <div class="px-4 py-3 border-b border-neutral-700/30 mb-4">
+            <div class="flex items-center">
+              <div class="bg-emerald-500 h-8 w-8 rounded-md flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" viewBox="0 0 20 20" fill="currentColor">
+                  <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zm6-4a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zm6-3a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z" />
+                </svg>
+              </div>
+              <h1 class="ml-3 text-xl font-semibold text-white">StockVue</h1>
+            </div>
+          </div>
+          
+          <ul class="space-y-1">
+            <li>
+              <a href="#dashboard" class="flex items-center px-4 py-3 text-white bg-neutral-700/40 rounded-lg" @click="isOpen = false">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 text-emerald-400" viewBox="0 0 20 20" fill="currentColor">
+                  <path d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z" />
+                  <path d="M12 2.252A8.014 8.014 0 0117.748 8H12V2.252z" />
+                </svg>
+                Dashboard
+              </a>
+            </li>
+            <li>
+              <a href="#stocks" class="flex items-center px-4 py-3 text-neutral-300 hover:bg-neutral-700/30 rounded-lg" @click="isOpen = false">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 text-neutral-400 hover:text-emerald-400" viewBox="0 0 20 20" fill="currentColor">
+                  <path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                </svg>
+                Stocks
+              </a>
+            </li>
+            <li>
+              <a href="#alerts" class="flex items-center px-4 py-3 text-neutral-300 hover:bg-neutral-700/30 rounded-lg" @click="isOpen = false">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 text-neutral-400 hover:text-emerald-400" viewBox="0 0 20 20" fill="currentColor">
+                  <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z" />
+                </svg>
+                Alerts
+              </a>
+            </li>
+            <li>
+              <a href="#market-news" class="flex items-center px-4 py-3 text-neutral-300 hover:bg-neutral-700/30 rounded-lg" @click="isOpen = false">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 text-neutral-400 hover:text-emerald-400" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M2 5a2 2 0 012-2h8a2 2 0 012 2v10a2 2 0 002 2H4a2 2 0 01-2-2V5zm3 1h6v4H5V6zm6 6H5v2h6v-2z" clip-rule="evenodd" />
+                  <path d="M15 7h1a2 2 0 012 2v5.5a1.5 1.5 0 01-3 0V7z" />
+                </svg>
+                Market News
+              </a>
+            </li>
+          </ul>
+          
+          <div class="mt-auto pt-6 border-t border-neutral-700/30 mt-6">
+            <div class="flex items-center px-4">
+              <img 
+                src="https://images.unsplash.com/photo-1507679799987-c73779587ccf?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w2MzQ2fDB8MXxzZWFyY2h8MXx8bGF5b3V0JTIwcHJvZmVzc2lvbmFsfGVufDB8MHx8fDE3NDMxNjA0MTR8MA&ixlib=rb-4.0.3&q=80&w=60"
+                alt="User profile"
+                onerror="this.onerror=null; this.src='https://placehold.co/40x40'"
+                width="40"
+                height="40"
+                class="rounded-full h-10 w-10 object-cover border border-neutral-700/50"
+              >
+              <div class="ml-3">
+                <p class="text-sm font-medium text-white">Alex Morgan</p>
+                <p class="text-xs text-neutral-400">alex@stockvue.com</p>
+              </div>
+              <button class="ml-auto text-neutral-400 hover:text-white">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="flex-1 overflow-y-auto bg-neutral-900 lg:pt-0 pt-16">
+      <mountpoint><element id="de290062-224e-4418-80eb-609b32974e0e" data-section-id="de290062-224e-4418-80eb-609b32974e0e">
+
+
+<div id="stocksOverview" class="px-6 py-8 h-screen overflow-y-auto">
+          <div class="flex flex-col space-y-6">
+            <!-- Section Header -->
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div>
+                <h2 class="text-2xl font-bold text-white">Stock Market Overview</h2>
+                <p class="text-neutral-400 text-sm">Live updates from global markets</p>
+              </div>
+              <div class="flex items-center space-x-3">
+                <button class="flex items-center justify-center bg-neutral-800 hover:bg-neutral-700 rounded-lg px-4 py-2 text-white text-sm border border-neutral-700/30 transition-colors duration-200">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z" clip-rule="evenodd" />
+                  </svg>
+                  Filter
+                </button>
+              </div>
+            </div>
+
+            <!-- Market Highlights -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div class="bg-neutral-800/70 rounded-xl p-4 border border-neutral-700/30">
+                <h3 class="text-neutral-400 text-sm mb-2">S&P 500</h3>
+                <div class="flex items-baseline">
+                  <span class="text-xl font-bold text-white">4,587.64</span>
+                  <span class="ml-2 text-sm font-medium text-green-500">+1.23%</span>
+                </div>
+                <div class="h-10 mt-3" id="sp500Chart">
+                  <!-- Recharts will render here -->
+                </div>
+              </div>
+              <div class="bg-neutral-800/70 rounded-xl p-4 border border-neutral-700/30">
+                <h3 class="text-neutral-400 text-sm mb-2">NASDAQ</h3>
+                <div class="flex items-baseline">
+                  <span class="text-xl font-bold text-white">14,346.02</span>
+                  <span class="ml-2 text-sm font-medium text-green-500">+0.89%</span>
+                </div>
+                <div class="h-10 mt-3" id="nasdaqChart">
+                  <!-- Recharts will render here -->
+                </div>
+              </div>
+              <div class="bg-neutral-800/70 rounded-xl p-4 border border-neutral-700/30">
+                <h3 class="text-neutral-400 text-sm mb-2">DOW JONES</h3>
+                <div class="flex items-baseline">
+                  <span class="text-xl font-bold text-white">34,945.47</span>
+                  <span class="ml-2 text-sm font-medium text-red-500">-0.37%</span>
+                </div>
+                <div class="h-10 mt-3" id="dowjonesChart">
+                  <!-- Recharts will render here -->
+                </div>
+              </div>
+              <div class="bg-neutral-800/70 rounded-xl p-4 border border-neutral-700/30">
+                <h3 class="text-neutral-400 text-sm mb-2">RUSSELL 2000</h3>
+                <div class="flex items-baseline">
+                  <span class="text-xl font-bold text-white">2,192.65</span>
+                  <span class="ml-2 text-sm font-medium text-green-500">+0.62%</span>
+                </div>
+                <div class="h-10 mt-3" id="russell2000Chart">
+                  <!-- Recharts will render here -->
+                </div>
+              </div>
+            </div>
+
+            
+
+            <!-- Watchlist Section -->
+            <div>
+              <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-semibold text-white">Your Watchlist</h3>
+                <button class="text-emerald-500 hover:text-emerald-400 text-sm flex items-center transition-colors duration-200">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+                  </svg>
+                  Add Stock to watchlist
+                </button>
+              </div>
+              <div class="overflow-x-auto">
+                <table class="min-w-full">
+                  <thead>
+                    <tr class="border-b border-neutral-700/30">
+                      <th class="px-4 py-3 text-left text-xs font-medium text-neutral-400 uppercase tracking-wider">Symbol</th>
+                      <th class="px-4 py-3 text-left text-xs font-medium text-neutral-400 uppercase tracking-wider">Company</th>
+                      <th class="px-4 py-3 text-right text-xs font-medium text-neutral-400 uppercase tracking-wider">Price</th>
+                      <th class="px-4 py-3 text-right text-xs font-medium text-neutral-400 uppercase tracking-wider">Change</th>
+                      <th class="px-4 py-3 text-right text-xs font-medium text-neutral-400 uppercase tracking-wider">Market Cap</th>
+                      <th class="px-4 py-3 text-right text-xs font-medium text-neutral-400 uppercase tracking-wider">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-neutral-700/30">
+                    <tr class="hover:bg-neutral-800/50 transition-colors duration-150">
+                      <td class="px-4 py-4 whitespace-nowrap text-sm font-medium text-white">AAPL</td>
+                      <td class="px-4 py-4 whitespace-nowrap text-sm text-neutral-300">Apple Inc.</td>
+                      <td class="px-4 py-4 whitespace-nowrap text-sm text-right text-white">$171.98</td>
+                      <td class="px-4 py-4 whitespace-nowrap text-right">
+                        <span class="px-2 py-1 text-xs font-medium rounded-md bg-green-500/20 text-green-500">+2.45%</span>
+                      </td>
+                      <td class="px-4 py-4 whitespace-nowrap text-sm text-right text-neutral-300">$2.78T</td>
+                      <td class="px-4 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <button class="text-neutral-400 hover:text-white mr-3 transition-colors duration-200">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                            <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" />
+                          </svg>
+                        </button>
+                        <button class="text-neutral-400 hover:text-white transition-colors duration-200">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                          </svg>
+                        </button>
+                      </td>
+                    </tr>
+                    <tr class="hover:bg-neutral-800/50 transition-colors duration-150">
+                      <td class="px-4 py-4 whitespace-nowrap text-sm font-medium text-white">MSFT</td>
+                      <td class="px-4 py-4 whitespace-nowrap text-sm text-neutral-300">Microsoft Corporation</td>
+                      <td class="px-4 py-4 whitespace-nowrap text-sm text-right text-white">$410.34</td>
+                      <td class="px-4 py-4 whitespace-nowrap text-right">
+                        <span class="px-2 py-1 text-xs font-medium rounded-md bg-green-500/20 text-green-500">+1.87%</span>
+                      </td>
+                      <td class="px-4 py-4 whitespace-nowrap text-sm text-right text-neutral-300">$3.05T</td>
+                      <td class="px-4 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <button class="text-neutral-400 hover:text-white mr-3 transition-colors duration-200">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                            <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" />
+                          </svg>
+                        </button>
+                        <button class="text-neutral-400 hover:text-white transition-colors duration-200">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                          </svg>
+                        </button>
+                      </td>
+                    </tr>
+                    <tr class="hover:bg-neutral-800/50 transition-colors duration-150">
+                      <td class="px-4 py-4 whitespace-nowrap text-sm font-medium text-white">GOOGL</td>
+                      <td class="px-4 py-4 whitespace-nowrap text-sm text-neutral-300">Alphabet Inc.</td>
+                      <td class="px-4 py-4 whitespace-nowrap text-sm text-right text-white">$152.55</td>
+                      <td class="px-4 py-4 whitespace-nowrap text-right">
+                        <span class="px-2 py-1 text-xs font-medium rounded-md bg-green-500/20 text-green-500">+1.22%</span>
+                      </td>
+                      <td class="px-4 py-4 whitespace-nowrap text-sm text-right text-neutral-300">$1.91T</td>
+                      <td class="px-4 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <button class="text-neutral-400 hover:text-white mr-3 transition-colors duration-200">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                            <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" />
+                          </svg>
+                        </button>
+                        <button class="text-neutral-400 hover:text-white transition-colors duration-200">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                          </svg>
+                        </button>
+                      </td>
+                    </tr>
+                    <tr class="hover:bg-neutral-800/50 transition-colors duration-150">
+                      <td class="px-4 py-4 whitespace-nowrap text-sm font-medium text-white">AMZN</td>
+                      <td class="px-4 py-4 whitespace-nowrap text-sm text-neutral-300">Amazon.com Inc.</td>
+                      <td class="px-4 py-4 whitespace-nowrap text-sm text-right text-white">$178.75</td>
+                      <td class="px-4 py-4 whitespace-nowrap text-right">
+                        <span class="px-2 py-1 text-xs font-medium rounded-md bg-red-500/20 text-red-500">-0.84%</span>
+                      </td>
+                      <td class="px-4 py-4 whitespace-nowrap text-sm text-right text-neutral-300">$1.85T</td>
+                      <td class="px-4 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <button class="text-neutral-400 hover:text-white mr-3 transition-colors duration-200">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                            <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" />
+                          </svg>
+                        </button>
+                        <button class="text-neutral-400 hover:text-white transition-colors duration-200">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                          </svg>
+                        </button>
+                      </td>
+                    </tr>
+                    <tr class="hover:bg-neutral-800/50 transition-colors duration-150">
+                      <td class="px-4 py-4 whitespace-nowrap text-sm font-medium text-white">TSLA</td>
+                      <td class="px-4 py-4 whitespace-nowrap text-sm text-neutral-300">Tesla Inc.</td>
+                      <td class="px-4 py-4 whitespace-nowrap text-sm text-right text-white">$199.36</td>
+                      <td class="px-4 py-4 whitespace-nowrap text-right">
+                        <span class="px-2 py-1 text-xs font-medium rounded-md bg-red-500/20 text-red-500">-1.48%</span>
+                      </td>
+                      <td class="px-4 py-4 whitespace-nowrap text-sm text-right text-neutral-300">$634.42B</td>
+                      <td class="px-4 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <button class="text-neutral-400 hover:text-white mr-3 transition-colors duration-200">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                            <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" />
+                          </svg>
+                        </button>
+                        <button class="text-neutral-400 hover:text-white transition-colors duration-200">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                          </svg>
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Main Chart Section -->
+            <div class="bg-neutral-800/70 rounded-xl p-4 sm:p-6 border border-neutral-700/30">
+              <div class="flex flex-col md:flex-row md:items-center justify-between mb-4 md:mb-6">
+                <div class="mb-3 md:mb-0">
+                  <h3 class="text-lg font-semibold text-white">Global Market Performance</h3>
+                  <div class="flex items-center mt-1">
+                    <span class="text-sm text-neutral-400">Comparative performance of major indices (normalized)</span>
+                  </div>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                  <button data-global-timeframe="1M" class="px-3 py-1 rounded-md bg-emerald-600 text-white text-sm hover:bg-emerald-700 transition-colors duration-200">1M</button>
+                  <button data-global-timeframe="3M" class="px-3 py-1 rounded-md bg-neutral-700/50 text-white text-sm hover:bg-neutral-600/50 transition-colors duration-200">3M</button>
+                  <button data-global-timeframe="6M" class="px-3 py-1 rounded-md bg-neutral-700/50 text-white text-sm hover:bg-neutral-600/50 transition-colors duration-200">6M</button>
+                  <button data-global-timeframe="1Y" class="px-3 py-1 rounded-md bg-neutral-700/50 text-white text-sm hover:bg-neutral-600/50 transition-colors duration-200">1Y</button>
+                  <button data-global-timeframe="ALL" class="px-3 py-1 rounded-md bg-neutral-700/50 text-white text-sm hover:bg-neutral-600/50 transition-colors duration-200">ALL</button>
+                </div>
+              </div>
+              <div class="h-72 sm:h-80 w-full mt-2 md:mt-0" id="globalChart">
+                <!-- Recharts will render here -->
+              </div>
+              <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mt-4 md:mt-6">
+                <div class="bg-neutral-900/50 p-2 sm:p-3 rounded-lg">
+                  <p class="text-neutral-400 text-xs mb-1">S&P 500</p>
+                  <div class="flex items-baseline justify-between">
+                    <p class="text-white text-sm sm:text-base font-medium">$4,587.64</p>
+                    <p class="text-xs sm:text-sm text-green-500">+1.23%</p>
+                  </div>
+                </div>
+                <div class="bg-neutral-900/50 p-2 sm:p-3 rounded-lg">
+                  <p class="text-neutral-400 text-xs mb-1">NASDAQ</p>
+                  <div class="flex items-baseline justify-between">
+                    <p class="text-white text-sm sm:text-base font-medium">$14,346.02</p>
+                    <p class="text-xs sm:text-sm text-green-500">+0.89%</p>
+                  </div>
+                </div>
+                <div class="bg-neutral-900/50 p-2 sm:p-3 rounded-lg">
+                  <p class="text-neutral-400 text-xs mb-1">DOW JONES</p>
+                  <div class="flex items-baseline justify-between">
+                    <p class="text-white text-sm sm:text-base font-medium">$34,945.47</p>
+                    <p class="text-xs sm:text-sm text-red-500">-0.37%</p>
+                  </div>
+                </div>
+                <div class="bg-neutral-900/50 p-2 sm:p-3 rounded-lg">
+                  <p class="text-neutral-400 text-xs mb-1">RUSSELL 2000</p>
+                  <div class="flex items-baseline justify-between">
+                    <p class="text-white text-sm sm:text-base font-medium">$2,192.65</p>
+                    <p class="text-xs sm:text-sm text-green-500">+0.62%</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+</div>
+
+</element><element id="c582504e-f98e-47e2-a66c-7af87fdd1c13" data-section-id="c582504e-f98e-47e2-a66c-7af87fdd1c13">
+
+
+<div id="stockDetail" class="px-6 py-8 h-screen overflow-y-auto">
+  <div class="flex flex-col space-y-6">
+    <!-- Back Button and Stock Title -->
+    <div class="flex items-center">
+      <button class="p-2 rounded-lg bg-neutral-800 hover:bg-neutral-700 mr-4 transition-colors duration-200">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-neutral-400" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+        </svg>
+      </button>
+      <div>
+        <div class="flex items-center">
+          <h2 class="text-2xl font-bold text-white">Apple Inc. (AAPL)</h2>
+          <span class="ml-3 bg-neutral-800 text-neutral-300 text-xs px-3 py-1 rounded-full">NASDAQ</span>
+        </div>
+        <p class="text-neutral-400 text-sm mt-1">Technology • Consumer Electronics</p>
+        </div>
+      </div>
+
+    <!-- Current Price & Stats -->
+    <div class="bg-neutral-800/70 rounded-xl p-6 border border-neutral-700/30">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="lg:col-span-1">
+          <div class="mb-4">
+            <div class="flex items-center">
+              <h3 class="text-3xl font-bold text-white">$171.98</h3>
+              <div class="flex items-center ml-3">
+                <span class="bg-green-500/20 text-green-500 text-sm px-2 py-0.5 rounded-md flex items-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z" clip-rule="evenodd" />
+                  </svg>
+                  4.15 (2.45%)
+                </span>
+              </div>
+            </div>
+            <p class="text-neutral-400 text-sm mt-1">Last updated: Today 3:59 PM EST</p>
+          </div>
+
+          <div class="grid grid-cols-2 gap-4 mb-6">
+            <div>
+              <p class="text-neutral-400 text-xs mb-1">Open</p>
+              <p class="text-white font-medium">$168.92</p>
+            </div>
+            <div>
+              <p class="text-neutral-400 text-xs mb-1">Previous Close</p>
+              <p class="text-white font-medium">$167.83</p>
+            </div>
+            <div>
+              <p class="text-neutral-400 text-xs mb-1">Day High</p>
+              <p class="text-white font-medium">$172.54</p>
+            </div>
+            <div>
+              <p class="text-neutral-400 text-xs mb-1">Day Low</p>
+              <p class="text-white font-medium">$168.54</p>
+            </div>
+            <div>
+              <p class="text-neutral-400 text-xs mb-1">52 Week High</p>
+              <p class="text-white font-medium">$181.46</p>
+            </div>
+            <div>
+              <p class="text-neutral-400 text-xs mb-1">52 Week Low</p>
+              <p class="text-white font-medium">$121.73</p>
+            </div>
+          </div>
+
+          <div class="flex space-x-3">
+            <button class="flex items-center justify-center px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition-colors duration-200 flex-1">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+              </svg>
+              Buy
+            </button>
+            <button class="flex items-center justify-center px-4 py-2 bg-neutral-700 hover:bg-neutral-600 text-white rounded-lg transition-colors duration-200 flex-1">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M5 10a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1z" clip-rule="evenodd" />
+              </svg>
+              Sell
+            </button>
+          </div>
+        </div>
+
+        <div class="lg:col-span-2">
+          <div class="flex flex-col md:flex-row md:items-center justify-between mb-4">
+            <h3 class="text-lg font-semibold text-white mb-3 md:mb-0">Price History</h3>
+            <div class="flex flex-wrap gap-2">
+              <button class="px-3 py-1 rounded-md bg-neutral-700/50 text-white text-sm hover:bg-neutral-600/50 transition-colors duration-200">1D</button>
+              <button class="px-3 py-1 rounded-md bg-emerald-600 text-white text-sm hover:bg-emerald-700 transition-colors duration-200">1W</button>
+              <button class="px-3 py-1 rounded-md bg-neutral-700/50 text-white text-sm hover:bg-neutral-600/50 transition-colors duration-200">1M</button>
+              <button class="px-3 py-1 rounded-md bg-neutral-700/50 text-white text-sm hover:bg-neutral-600/50 transition-colors duration-200">3M</button>
+              <button class="px-3 py-1 rounded-md bg-neutral-700/50 text-white text-sm hover:bg-neutral-600/50 transition-colors duration-200">1Y</button>
+              <button class="px-3 py-1 rounded-md bg-neutral-700/50 text-white text-sm hover:bg-neutral-600/50 transition-colors duration-200">ALL</button>
+            </div>
+          </div>
+          <div class="bg-neutral-800/50 rounded-lg h-48 sm:h-64 border border-neutral-700/20 flex items-center justify-center">
+            <div class="text-center">
+              <div class="text-neutral-400 mb-2">Interactive Chart</div>
+              <div class="text-sm text-neutral-500">Chart.js would render here in the actual implementation</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Company Overview and Key Metrics -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div class="lg:col-span-1">
+        <div class="bg-neutral-800/70 rounded-xl p-6 border border-neutral-700/30 h-full">
+          <h3 class="text-lg font-semibold text-white mb-4">Company Overview</h3>
+          <div class="mb-4">
+            <img 
+              src="https://images.unsplash.com/photo-1507679799987-c73779587ccf?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w2MzQ2fDB8MXxzZWFyY2h8MXx8c3RvY2tkZXRhaWwlMjBwcm9mZXNzaW9uYWx8ZW58MHwwfHx8MTc0MzI5NzYyOXww&ixlib=rb-4.0.3&q=80&w=1080?q=80"
+              alt="Professional in business setting"
+              onerror="this.onerror=null; this.src='https://placehold.co/400x200'"
+              width="400"
+              height="200"
+              class="w-full h-40 object-cover rounded-lg"
+            >
+          </div>
+          <p class="text-neutral-300 text-sm mb-4">
+            Apple Inc. designs, manufactures, and markets smartphones, personal computers, tablets, wearables, and accessories worldwide. The company offers iPhone, Mac, iPad, and wearables, home, and accessories.
+          </p>
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <p class="text-neutral-400 text-xs mb-1">Founded</p>
+              <p class="text-white">1976</p>
+            </div>
+            <div>
+              <p class="text-neutral-400 text-xs mb-1">Headquarters</p>
+              <p class="text-white">Cupertino, CA</p>
+            </div>
+            <div>
+              <p class="text-neutral-400 text-xs mb-1">CEO</p>
+              <p class="text-white">Tim Cook</p>
+            </div>
+            <div>
+              <p class="text-neutral-400 text-xs mb-1">Employees</p>
+              <p class="text-white">164,000</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="lg:col-span-2">
+        <div class="bg-neutral-800/70 rounded-xl p-6 border border-neutral-700/30 h-full">
+          <h3 class="text-lg font-semibold text-white mb-4">Key Financial Metrics</h3>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-6">
+            <div>
+              <p class="text-neutral-400 text-xs mb-1">Market Cap</p>
+              <p class="text-white font-medium">$2.78T</p>
+            </div>
+            <div>
+              <p class="text-neutral-400 text-xs mb-1">P/E Ratio</p>
+              <p class="text-white font-medium">28.74</p>
+            </div>
+            <div>
+              <p class="text-neutral-400 text-xs mb-1">EPS (TTM)</p>
+              <p class="text-white font-medium">$5.98</p>
+            </div>
+            <div>
+              <p class="text-neutral-400 text-xs mb-1">Dividend Yield</p>
+              <p class="text-white font-medium">0.53%</p>
+            </div>
+            <div>
+              <p class="text-neutral-400 text-xs mb-1">Revenue (TTM)</p>
+              <p class="text-white font-medium">$394.32B</p>
+            </div>
+            <div>
+              <p class="text-neutral-400 text-xs mb-1">Profit Margin</p>
+              <p class="text-white font-medium">25.31%</p>
+            </div>
+            <div>
+              <p class="text-neutral-400 text-xs mb-1">Volume (Avg.)</p>
+              <p class="text-white font-medium">58.74M</p>
+            </div>
+            <div>
+              <p class="text-neutral-400 text-xs mb-1">Beta</p>
+              <p class="text-white font-medium">1.28</p>
+            </div>
+          </div>
+
+          <h4 class="text-md font-medium text-white mb-3">Performance</h4>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div>
+              <p class="text-neutral-400 text-xs mb-1">1 Month</p>
+              <p class="text-green-500 font-medium">+3.42%</p>
+            </div>
+            <div>
+              <p class="text-neutral-400 text-xs mb-1">3 Months</p>
+              <p class="text-green-500 font-medium">+7.15%</p>
+            </div>
+            <div>
+              <p class="text-neutral-400 text-xs mb-1">YTD</p>
+              <p class="text-red-500 font-medium">-1.25%</p>
+            </div>
+            <div>
+              <p class="text-neutral-400 text-xs mb-1">1 Year</p>
+              <p class="text-green-500 font-medium">+15.72%</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Latest News & Analyst Ratings -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div class="lg:col-span-2">
+        <div class="bg-neutral-800/70 rounded-xl p-6 border border-neutral-700/30">
+          <div class="flex justify-between items-center mb-4">
+            <h3 class="text-lg font-semibold text-white">Latest News</h3>
+            <a href="#" class="text-emerald-500 hover:text-emerald-400 text-sm transition-colors duration-200">View All</a>
+          </div>
+          <div class="space-y-4">
+            <div class="border-b border-neutral-700/30 pb-4">
+              <div class="flex justify-between items-start mb-2">
+                <h4 class="text-white font-medium">Apple Announces New MacBook Pro Models with M3 Chips</h4>
+                <span class="text-neutral-400 text-xs">2h ago</span>
+              </div>
+              <p class="text-neutral-300 text-sm mb-2">Apple unveiled its latest MacBook Pro lineup featuring new M3 chips, promising significant performance improvements over previous models.</p>
+              <div class="flex items-center text-xs text-neutral-400">
+                <span>Source: Bloomberg</span>
+                <span class="mx-2">•</span>
+                <span>5 min read</span>
+              </div>
+            </div>
+            
+            <div class="border-b border-neutral-700/30 pb-4">
+              <div class="flex justify-between items-start mb-2">
+                <h4 class="text-white font-medium">Apple Services Revenue Hits All-Time High in Q1 Earnings</h4>
+                <span class="text-neutral-400 text-xs">6h ago</span>
+              </div>
+              <p class="text-neutral-300 text-sm mb-2">Apple's services segment, including App Store and Apple TV+, posted record revenue in the first quarter, offsetting slowing iPhone sales growth.</p>
+              <div class="flex items-center text-xs text-neutral-400">
+                <span>Source: CNBC</span>
+                <span class="mx-2">•</span>
+                <span>4 min read</span>
+              </div>
+            </div>
+            
+            <div class="border-b border-neutral-700/30 pb-4">
+              <div class="flex justify-between items-start mb-2">
+                <h4 class="text-white font-medium">Apple Expands AI Research Team Amid Industry Race</h4>
+                <span class="text-neutral-400 text-xs">10h ago</span>
+              </div>
+              <p class="text-neutral-300 text-sm mb-2">Apple is reportedly expanding its artificial intelligence research division as competition in the AI space heats up among tech giants.</p>
+              <div class="flex items-center text-xs text-neutral-400">
+                <span>Source: The Wall Street Journal</span>
+                <span class="mx-2">•</span>
+                <span>7 min read</span>
+              </div>
+            </div>
+            
+            <div>
+              <div class="flex justify-between items-start mb-2">
+                <h4 class="text-white font-medium">Apple's India Manufacturing Push Gains Momentum</h4>
+                <span class="text-neutral-400 text-xs">1d ago</span>
+              </div>
+              <p class="text-neutral-300 text-sm mb-2">Apple's efforts to diversify its manufacturing beyond China continue as production in India reaches new milestones, according to supply chain reports.</p>
+              <div class="flex items-center text-xs text-neutral-400">
+                <span>Source: Reuters</span>
+                <span class="mx-2">•</span>
+                <span>3 min read</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="lg:col-span-1">
+        <div class="bg-neutral-800/70 rounded-xl p-6 border border-neutral-700/30">
+          <h3 class="text-lg font-semibold text-white mb-4">Analyst Ratings</h3>
+          <div class="flex items-center mb-6">
+            <div class="w-16 h-16 rounded-full bg-neutral-700 flex items-center justify-center mr-4">
+              <span class="text-white text-xl font-bold">4.2</span>
+            </div>
+            <div>
+              <p class="text-white font-medium">Buy</p>
+              <p class="text-neutral-400 text-sm">Based on 32 analysts</p>
+            </div>
+          </div>
+          
+          <div class="space-y-3 mb-6">
+            <div>
+              <div class="flex justify-between mb-1">
+                <span class="text-sm text-neutral-300">Strong Buy</span>
+                <span class="text-sm text-neutral-300">18</span>
+              </div>
+              <div class="w-full bg-neutral-700 rounded-full h-2">
+                <div class="bg-green-500 h-2 rounded-full" style="width: 56%"></div>
+              </div>
+            </div>
+            <div>
+              <div class="flex justify-between mb-1">
+                <span class="text-sm text-neutral-300">Buy</span>
+                <span class="text-sm text-neutral-300">9</span>
+              </div>
+              <div class="w-full bg-neutral-700 rounded-full h-2">
+                <div class="bg-emerald-500 h-2 rounded-full" style="width: 28%"></div>
+              </div>
+            </div>
+            <div>
+              <div class="flex justify-between mb-1">
+                <span class="text-sm text-neutral-300">Hold</span>
+                <span class="text-sm text-neutral-300">4</span>
+              </div>
+              <div class="w-full bg-neutral-700 rounded-full h-2">
+                <div class="bg-yellow-500 h-2 rounded-full" style="width: 13%"></div>
+              </div>
+            </div>
+            <div>
+              <div class="flex justify-between mb-1">
+                <span class="text-sm text-neutral-300">Sell</span>
+                <span class="text-sm text-neutral-300">1</span>
+              </div>
+              <div class="w-full bg-neutral-700 rounded-full h-2">
+                <div class="bg-orange-500 h-2 rounded-full" style="width: 3%"></div>
+              </div>
+            </div>
+            <div>
+              <div class="flex justify-between mb-1">
+                <span class="text-sm text-neutral-300">Strong Sell</span>
+                <span class="text-sm text-neutral-300">0</span>
+              </div>
+              <div class="w-full bg-neutral-700 rounded-full h-2">
+                <div class="bg-red-500 h-2 rounded-full" style="width: 0%"></div>
+              </div>
+            </div>
+          </div>
+          
+          <div>
+            <h4 class="text-md font-medium text-white mb-3">Price Targets</h4>
+            <div class="flex justify-between items-center">
+              <div>
+                <p class="text-neutral-400 text-xs mb-1">Low</p>
+                <p class="text-white font-medium">$140</p>
+              </div>
+              <div class="h-1 flex-1 bg-neutral-700 mx-4 relative">
+                <div class="absolute -top-2 left-1/2 transform -translate-x-1/2 w-2 h-4 bg-emerald-500 rounded"></div>
+              </div>
+              <div>
+                <p class="text-neutral-400 text-xs mb-1">High</p>
+                <p class="text-white font-medium">$210</p>
+              </div>
+            </div>
+            <div class="text-center mt-4">
+              <p class="text-neutral-400 text-xs mb-1">Average Target</p>
+              <p class="text-white font-medium">$189.45</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</element><element id="7c91cbfc-f331-4eb4-b2a2-012c4633cb12" data-section-id="7c91cbfc-f331-4eb4-b2a2-012c4633cb12">
+
+
+<div id="marketNews" class="px-6 py-8 h-screen overflow-y-auto">
+  <div class="flex flex-col space-y-6">
+    <!-- Section Header -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div>
+        <h2 class="text-2xl font-bold text-white">Market News</h2>
+        <p class="text-neutral-400 text-sm">Latest financial insights and market updates</p>
+      </div>
+      <div class="flex items-center space-x-3">
+        <div class="flex items-center bg-neutral-800 rounded-lg px-4 py-2 border border-neutral-700/30">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-neutral-500" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
+          </svg>
+          <input type="text" placeholder="Search news..." class="bg-transparent border-none text-sm text-white focus:outline-none px-2 py-1 w-full" />
+        </div>
+        <button class="flex items-center justify-center bg-neutral-800 hover:bg-neutral-700 rounded-lg px-4 py-2 text-white text-sm border border-neutral-700/30 transition-colors duration-200">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z" clip-rule="evenodd" />
+          </svg>
+          Filter
+        </button>
+      </div>
+    </div>
+
+    <!-- Featured News -->
+    <div class="bg-neutral-800/70 rounded-xl overflow-hidden border border-neutral-700/30">
+      <div class="relative">
+        <img 
+          src="https://images.unsplash.com/photo-1425421669292-0c3da3b8f529?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w2MzQ2fDB8MXxzZWFyY2h8M3x8bWFya2V0bmV3cyUyMHByb2Zlc3Npb25hbHxlbnwwfDB8fHwxNzQzNzI3NDM4fDA&ixlib=rb-4.0.3&q=80&w=1080?q=80"
+          alt="Business professional in formal attire"
+          onerror="this.onerror=null; this.src='https://placehold.co/1200x400'"
+          width="1080"
+          height="400"
+          class="w-full h-64 md:h-80 object-cover"
+        >
+        <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+        <div class="absolute bottom-0 left-0 p-6">
+          <span class="bg-emerald-500 text-white text-xs px-2 py-1 rounded-md mb-3 inline-block">Breaking News</span>
+          <h3 class="text-xl md:text-2xl font-bold text-white mb-2">Fed Signals Potential Rate Cuts As Inflation Eases</h3>
+          <p class="text-neutral-200 text-sm md:text-base mb-2 max-w-3xl">Federal Reserve Chair indicates the central bank may consider interest rate reductions in the coming months as inflation shows signs of cooling.</p>
+          <div class="flex items-center text-neutral-400 text-sm">
+            <span>The Wall Street Journal</span>
+            <span class="mx-2">•</span>
+            <span>35 minutes ago</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- News Categories -->
+    <div class="flex overflow-x-auto py-2 scrollbar-hide space-x-2">
+      <button class="whitespace-nowrap px-4 py-2 rounded-full bg-emerald-600 text-white text-sm">All News</button>
+      <button class="whitespace-nowrap px-4 py-2 rounded-full bg-neutral-800 hover:bg-neutral-700 text-white text-sm transition-colors duration-200">Market Updates</button>
+      <button class="whitespace-nowrap px-4 py-2 rounded-full bg-neutral-800 hover:bg-neutral-700 text-white text-sm transition-colors duration-200">Technology</button>
+      <button class="whitespace-nowrap px-4 py-2 rounded-full bg-neutral-800 hover:bg-neutral-700 text-white text-sm transition-colors duration-200">Economy</button>
+      <button class="whitespace-nowrap px-4 py-2 rounded-full bg-neutral-800 hover:bg-neutral-700 text-white text-sm transition-colors duration-200">Earnings</button>
+      <button class="whitespace-nowrap px-4 py-2 rounded-full bg-neutral-800 hover:bg-neutral-700 text-white text-sm transition-colors duration-200">Cryptocurrency</button>
+      <button class="whitespace-nowrap px-4 py-2 rounded-full bg-neutral-800 hover:bg-neutral-700 text-white text-sm transition-colors duration-200">Commodities</button>
+    </div>
+
+    <!-- News Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- News Card 1 -->
+      <div class="bg-neutral-800/70 rounded-xl overflow-hidden border border-neutral-700/30 transition-transform duration-300 hover:transform hover:scale-[1.02]">
+        <img 
+          src="https://images.unsplash.com/photo-1507679799987-c73779587ccf?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w2MzQ2fDB8MXxzZWFyY2h8MXx8bWFya2V0bmV3cyUyMHByb2Zlc3Npb25hbHxlbnwwfDB8fHwxNzQzNzI3NDM4fDA&ixlib=rb-4.0.3&q=80&w=1080?q=80"
+          alt="Professional in business setting"
+          onerror="this.onerror=null; this.src='https://placehold.co/600x300'"
+          width="600"
+          height="300"
+          class="w-full h-48 object-cover"
+        >
+        <div class="p-4">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs text-neutral-400">Technology</span>
+            <span class="text-xs text-neutral-400">2 hours ago</span>
+          </div>
+          <h3 class="text-white font-medium mb-2">Tech Stocks Rally as AI Investment Surges</h3>
+          <p class="text-neutral-300 text-sm mb-3">Major tech companies see stock prices climb as institutional investors increase allocation to artificial intelligence ventures.</p>
+          <div class="flex items-center justify-between">
+            <span class="text-xs text-neutral-400">CNBC</span>
+            <button class="text-emerald-500 hover:text-emerald-400 text-sm transition-colors duration-200">
+              Read More
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline ml-1" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- News Card 2 -->
+      <div class="bg-neutral-800/70 rounded-xl overflow-hidden border border-neutral-700/30 transition-transform duration-300 hover:transform hover:scale-[1.02]">
+        <img 
+          src="https://images.unsplash.com/photo-1484981138541-3d074aa97716?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w2MzQ2fDB8MXxzZWFyY2h8Mnx8bWFya2V0bmV3cyUyMHByb2Zlc3Npb25hbHxlbnwwfDB8fHwxNzQzNzI3NDM4fDA&ixlib=rb-4.0.3&q=80&w=1080?q=80"
+          alt="Professional workspace with coffee"
+          onerror="this.onerror=null; this.src='https://placehold.co/600x300'"
+          width="600"
+          height="300"
+          class="w-full h-48 object-cover"
+        >
+        <div class="p-4">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs text-neutral-400">Economy</span>
+            <span class="text-xs text-neutral-400">4 hours ago</span>
+          </div>
+          <h3 class="text-white font-medium mb-2">Unemployment Rate Falls to 3.8% in Latest Report</h3>
+          <p class="text-neutral-300 text-sm mb-3">Job market shows resilience as unemployment numbers decline, beating analyst expectations and signaling economic strength.</p>
+          <div class="flex items-center justify-between">
+            <span class="text-xs text-neutral-400">Bloomberg</span>
+            <button class="text-emerald-500 hover:text-emerald-400 text-sm transition-colors duration-200">
+              Read More
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline ml-1" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- News Card 3 -->
+      <div class="bg-neutral-800/70 rounded-xl overflow-hidden border border-neutral-700/30 transition-transform duration-300 hover:transform hover:scale-[1.02]">
+        <img 
+          src="https://images.unsplash.com/photo-1425421669292-0c3da3b8f529?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w2MzQ2fDB8MXxzZWFyY2h8M3x8bWFya2V0bmV3cyUyMHByb2Zlc3Npb25hbHxlbnwwfDB8fHwxNzQzNzI3NDM4fDA&ixlib=rb-4.0.3&q=80&w=1080?q=80"
+          alt="Professional in formal attire"
+          onerror="this.onerror=null; this.src='https://placehold.co/600x300'"
+          width="600"
+          height="300"
+          class="w-full h-48 object-cover"
+        >
+        <div class="p-4">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs text-neutral-400">Earnings</span>
+            <span class="text-xs text-neutral-400">8 hours ago</span>
+          </div>
+          <h3 class="text-white font-medium mb-2">Amazon Beats Q2 Estimates on Cloud Growth</h3>
+          <p class="text-neutral-300 text-sm mb-3">E-commerce giant reports stronger than expected quarterly results, with AWS cloud division driving significant revenue growth.</p>
+          <div class="flex items-center justify-between">
+            <span class="text-xs text-neutral-400">Reuters</span>
+            <button class="text-emerald-500 hover:text-emerald-400 text-sm transition-colors duration-200">
+              Read More
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline ml-1" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- News Card 4 -->
+      <div class="bg-neutral-800/70 rounded-xl overflow-hidden border border-neutral-700/30 transition-transform duration-300 hover:transform hover:scale-[1.02]">
+        <div class="p-4">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs text-neutral-400">Cryptocurrency</span>
+            <span class="text-xs text-neutral-400">10 hours ago</span>
+          </div>
+          <h3 class="text-white font-medium mb-2">Bitcoin Surpasses $60,000 Mark After ETF Approval</h3>
+          <p class="text-neutral-300 text-sm mb-3">Largest cryptocurrency by market cap reaches new heights following regulatory approval of spot Bitcoin exchange-traded funds.</p>
+          <div class="flex items-center justify-between">
+            <span class="text-xs text-neutral-400">CoinDesk</span>
+            <button class="text-emerald-500 hover:text-emerald-400 text-sm transition-colors duration-200">
+              Read More
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline ml-1" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- News Card 5 -->
+      <div class="bg-neutral-800/70 rounded-xl overflow-hidden border border-neutral-700/30 transition-transform duration-300 hover:transform hover:scale-[1.02]">
+        <div class="p-4">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs text-neutral-400">Market Updates</span>
+            <span class="text-xs text-neutral-400">12 hours ago</span>
+          </div>
+          <h3 class="text-white font-medium mb-2">S&P 500 Reaches New All-Time High as Rally Continues</h3>
+          <p class="text-neutral-300 text-sm mb-3">Benchmark index sets record as investor optimism grows amid positive economic indicators and strong corporate earnings reports.</p>
+          <div class="flex items-center justify-between">
+            <span class="text-xs text-neutral-400">Financial Times</span>
+            <button class="text-emerald-500 hover:text-emerald-400 text-sm transition-colors duration-200">
+              Read More
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline ml-1" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- News Card 6 -->
+      <div class="bg-neutral-800/70 rounded-xl overflow-hidden border border-neutral-700/30 transition-transform duration-300 hover:transform hover:scale-[1.02]">
+        <div class="p-4">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs text-neutral-400">Commodities</span>
+            <span class="text-xs text-neutral-400">1 day ago</span>
+          </div>
+          <h3 class="text-white font-medium mb-2">Oil Prices Stabilize Despite Supply Chain Concerns</h3>
+          <p class="text-neutral-300 text-sm mb-3">Crude oil holds steady at $85 per barrel as market absorbs news of production challenges in key oil-producing regions.</p>
+          <div class="flex items-center justify-between">
+            <span class="text-xs text-neutral-400">The Wall Street Journal</span>
+            <button class="text-emerald-500 hover:text-emerald-400 text-sm transition-colors duration-200">
+              Read More
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline ml-1" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Load More Button -->
+    <div class="text-center mt-4">
+      <button class="px-6 py-3 bg-neutral-800 hover:bg-neutral-700 text-white rounded-lg border border-neutral-700/30 transition-colors duration-200">
+        Load More News
+      </button>
+    </div>
+
+    <!-- Market Insights -->
+    <div class="bg-neutral-800/70 rounded-xl p-6 border border-neutral-700/30 mt-4">
+      <h3 class="text-lg font-semibold text-white mb-4">Today's Market Insights</h3>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-neutral-900/50 rounded-lg p-4 border border-neutral-700/20">
+          <h4 class="text-white font-medium mb-2">Market Sentiment</h4>
+          <div class="flex items-center">
+            <div class="w-12 h-12 rounded-full bg-green-500 flex items-center justify-center text-white font-bold">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414z" clip-rule="evenodd" />
+              </svg>
+            </div>
+            <div class="ml-4">
+              <p class="text-sm text-neutral-300">Currently</p>
+              <p class="text-white font-medium">Bullish</p>
+            </div>
+          </div>
+        </div>
+        <div class="bg-neutral-900/50 rounded-lg p-4 border border-neutral-700/20">
+          <h4 class="text-white font-medium mb-2">Fear & Greed Index</h4>
+          <div class="flex items-center">
+            <div class="w-12 h-12 rounded-full bg-yellow-500 flex items-center justify-center text-white font-bold">
+              65
+            </div>
+            <div class="ml-4">
+              <p class="text-sm text-neutral-300">Current Level</p>
+              <p class="text-white font-medium">Greed</p>
+            </div>
+          </div>
+        </div>
+        <div class="bg-neutral-900/50 rounded-lg p-4 border border-neutral-700/20">
+          <h4 class="text-white font-medium mb-2">Market Volatility (VIX)</h4>
+          <div class="flex items-center">
+            <div class="w-12 h-12 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold">
+              17.2
+            </div>
+            <div class="ml-4">
+              <p class="text-sm text-neutral-300">Risk Level</p>
+              <p class="text-white font-medium">Moderate</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</element><element id="212cae3e-e6a7-477c-af57-d0b56e89df71" data-section-id="212cae3e-e6a7-477c-af57-d0b56e89df71">
+
+
+<div id="stocks" class="px-6 py-8 h-screen overflow-y-auto">
+          <div class="flex flex-col space-y-6">
+            <!-- Section Header -->
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div>
+                <h2 class="text-2xl font-bold text-white">Your Stocks</h2>
+                <p class="text-neutral-400 text-sm">Track and monitor your favorite stocks</p>
+              </div>
+              <div class="flex items-center space-x-3">
+                <div class="flex items-center bg-neutral-800 rounded-lg px-4 py-2 border border-neutral-700/30">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-neutral-500" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
+                  </svg>
+                  <input id="stockSearch" type="text" placeholder="Search stocks..." class="bg-transparent border-none text-sm text-white focus:outline-none px-2 py-1 w-full" />
+                </div>
+              </div>
+            </div>
+
+            <!-- Stocks Categories -->
+            <div class="flex overflow-x-auto py-2 space-x-2">
+              <button class="whitespace-nowrap px-4 py-2 rounded-lg bg-emerald-600 text-white text-sm">All Stocks</button>
+              <button class="whitespace-nowrap px-4 py-2 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-white text-sm transition-colors duration-200">Technology</button>
+              <button class="whitespace-nowrap px-4 py-2 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-white text-sm transition-colors duration-200">Financial</button>
+              <button class="whitespace-nowrap px-4 py-2 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-white text-sm transition-colors duration-200">Healthcare</button>
+              <button class="whitespace-nowrap px-4 py-2 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-white text-sm transition-colors duration-200">Energy</button>
+              <button class="whitespace-nowrap px-4 py-2 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-white text-sm transition-colors duration-200">+ Create Category</button>
+            </div>
+
+            <!-- Stocks Table -->
+            <div class="bg-neutral-800/70 rounded-xl border border-neutral-700/30 overflow-hidden">
+              <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-neutral-700/30">
+                  <thead>
+                    <tr>
+                      <th scope="col" class="px-6 py-4 text-left text-xs font-medium text-neutral-400 uppercase tracking-wider">Symbol</th>
+                      <th scope="col" class="px-6 py-4 text-left text-xs font-medium text-neutral-400 uppercase tracking-wider">Company</th>
+                      <th scope="col" class="px-6 py-4 text-right text-xs font-medium text-neutral-400 uppercase tracking-wider">Last Price</th>
+                      <th scope="col" class="px-6 py-4 text-right text-xs font-medium text-neutral-400 uppercase tracking-wider">Change</th>
+                      <th scope="col" class="px-6 py-4 text-right text-xs font-medium text-neutral-400 uppercase tracking-wider">Change %</th>
+                      <th scope="col" class="px-6 py-4 text-right text-xs font-medium text-neutral-400 uppercase tracking-wider">Volume</th>
+                      <th scope="col" class="px-6 py-4 text-right text-xs font-medium text-neutral-400 uppercase tracking-wider">Market Cap</th>
+                      <th scope="col" class="px-6 py-4 text-right text-xs font-medium text-neutral-400 uppercase tracking-wider">P/E Ratio</th>
+                    </tr>
+                  </thead>
+                  <tbody id="stockTableBody" class="divide-y divide-neutral-700/30">
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Stock Details Section -->
+            <div class="bg-neutral-800/70 rounded-xl p-6 border border-neutral-700/30">
+              <div class="flex flex-col md:flex-row md:items-center justify-between mb-6">
+                <div class="mb-4 md:mb-0">
+                  <h3 id="stockTitle" class="text-lg font-semibold text-white">Loading...</h3>
+                  <div class="flex items-center mt-1">
+                    <span id="stockPrice" class="text-2xl font-bold text-white">$0.00</span>
+                    <span id="stockChange" class="ml-2 text-sm font-medium px-2 py-0.5 rounded-md bg-neutral-500/20 text-neutral-500">0.00 (0.00%)</span>
+                  </div>
+                </div>
+                    <div class="flex flex-wrap gap-2">
+                  <button data-timeframe="1M" class="px-3 py-1 rounded-md bg-emerald-600 text-white text-sm hover:bg-emerald-700 transition-colors duration-200">1M</button>
+                  <button data-timeframe="3M" class="px-3 py-1 rounded-md bg-neutral-700/50 text-white text-sm hover:bg-neutral-600/50 transition-colors duration-200">3M</button>
+                  <button data-timeframe="6M" class="px-3 py-1 rounded-md bg-neutral-700/50 text-white text-sm hover:bg-neutral-600/50 transition-colors duration-200">6M</button>
+                  <button data-timeframe="1Y" class="px-3 py-1 rounded-md bg-neutral-700/50 text-white text-sm hover:bg-neutral-600/50 transition-colors duration-200">1Y</button>
+                  <button data-timeframe="ALL" class="px-3 py-1 rounded-md bg-neutral-700/50 text-white text-sm hover:bg-neutral-600/50 transition-colors duration-200">ALL</button>
+                    </div>
+                  </div>
+
+              <div class="h-64 sm:h-80 w-full" id="mainStockChart">
+                <!-- Chart will be rendered here -->
+                  </div>
+                  
+              <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+                    <div>
+                  <p class="text-neutral-400 text-xs">Open</p>
+                  <p id="stockOpen" class="text-white font-medium">-</p>
+                      </div>
+                <div>
+                  <p class="text-neutral-400 text-xs">Previous Close</p>
+                  <p id="stockPrevClose" class="text-white font-medium">-</p>
+                    </div>
+                    <div>
+                  <p class="text-neutral-400 text-xs">Volume</p>
+                  <p id="stockVolume" class="text-white font-medium">-</p>
+                      </div>
+                <div>
+                  <p class="text-neutral-400 text-xs">Avg. Volume</p>
+                  <p id="stockAvgVolume" class="text-white font-medium">-</p>
+                    </div>
+                    <div>
+                  <p class="text-neutral-400 text-xs">52 Week High</p>
+                  <p id="stockHigh52w" class="text-white font-medium">-</p>
+                      </div>
+                <div>
+                  <p class="text-neutral-400 text-xs">52 Week Low</p>
+                  <p id="stockLow52w" class="text-white font-medium">-</p>
+                    </div>
+                <div>
+                  <p class="text-neutral-400 text-xs">P/E Ratio</p>
+                  <p id="stockPeRatio" class="text-white font-medium">-</p>
+                  </div>
+                <div>
+                  <p class="text-neutral-400 text-xs">EPS</p>
+                  <p id="stockEps" class="text-white font-medium">-</p>
+                </div>
+                <div>
+                  <p class="text-neutral-400 text-xs">Market Cap</p>
+                  <p id="stockMarketCap" class="text-white font-medium">-</p>
+              </div>
+                <div>
+                  <p class="text-neutral-400 text-xs">Dividend Yield</p>
+                  <p id="stockDividend" class="text-white font-medium">-</p>
+                      </div>
+                <div>
+                  <p class="text-neutral-400 text-xs">Beta</p>
+                  <p id="stockBeta" class="text-white font-medium">-</p>
+                    </div>
+                    </div>
+                  </div>
+                  
+          </div>
+        </div>
+
+</element>
+
+<element id="alerts-section" data-section-id="alerts-section">
+  <div id="alerts" class="px-6 py-8 h-screen overflow-y-auto">
+    <div class="flex flex-col space-y-6">
+      <!-- Section Header -->
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <h2 class="text-2xl font-bold text-white">Alerts & Notifications</h2>
+          <p class="text-neutral-400 text-sm">Manage your alerts and view notifications</p>
+        </div>
+        <div class="flex items-center space-x-3">
+          <button class="flex items-center justify-center bg-emerald-600 hover:bg-emerald-700 rounded-lg px-4 py-2 text-white text-sm transition-colors duration-200">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+            </svg>
+            Create New Alert
+          </button>
+        </div>
+      </div>
+  
+      <!-- Unread Notifications -->
+      <div class="bg-neutral-800/70 rounded-xl border border-neutral-700/30 overflow-hidden">
+        <div class="px-6 py-4 border-b border-neutral-700/30">
+          <h3 class="text-lg font-semibold text-white">Recent Notifications</h3>
+        </div>
+        <div class="divide-y divide-neutral-700/30">
+          <!-- Notification 1 - Price Alert -->
+          <div class="p-4 bg-emerald-500/5">
+            <div class="flex items-start">
+              <div class="bg-emerald-500/20 rounded-full p-2 mr-4">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-emerald-500" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M3.293 9.707a1 1 0 010-1.414l6-6a1 1 0 011.414 0l6 6a1 1 0 01-1.414 1.414L11 5.414V17a1 1 0 11-2 0V5.414L4.707 9.707a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                </svg>
+              </div>
+              <div class="flex-1">
+                <div class="flex justify-between items-start">
+                  <div>
+                    <h4 class="text-white font-medium">Price Alert: AAPL Reached $172.00</h4>
+                    <p class="text-neutral-400 text-sm mt-1">Apple Inc. has reached your target price of $172.00 (Condition: Greater than $170.00)</p>
+                  </div>
+                  <span class="text-xs text-neutral-500">5 min ago</span>
+                </div>
+                <div class="flex justify-between items-center mt-3">
+                  <div class="flex space-x-2">
+                    <button class="text-xs text-emerald-500 hover:text-emerald-400 transition-colors duration-200">View Stock</button>
+                    <button class="text-xs text-neutral-400 hover:text-neutral-300 transition-colors duration-200">Edit Alert</button>
+                  </div>
+                  <button class="text-xs text-neutral-400 hover:text-neutral-300 transition-colors duration-200">Mark as Read</button>
+                </div>
+              </div>
+            </div>
+          </div>
+  
+          <!-- Notification 2 - Earnings Report -->
+          <div class="p-4 bg-blue-500/5">
+            <div class="flex items-start">
+              <div class="bg-blue-500/20 rounded-full p-2 mr-4">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-500" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd" />
+                </svg>
+              </div>
+              <div class="flex-1">
+                <div class="flex justify-between items-start">
+                  <div>
+                    <h4 class="text-white font-medium">Upcoming Earnings: MSFT</h4>
+                    <p class="text-neutral-400 text-sm mt-1">Microsoft Corporation (MSFT) will report Q2 earnings tomorrow after market close</p>
+                  </div>
+                  <span class="text-xs text-neutral-500">2 hours ago</span>
+                </div>
+                <div class="flex justify-between items-center mt-3">
+                  <div class="flex space-x-2">
+                    <button class="text-xs text-blue-500 hover:text-blue-400 transition-colors duration-200">View Stock</button>
+                    <button class="text-xs text-neutral-400 hover:text-neutral-300 transition-colors duration-200">Set Reminder</button>
+                  </div>
+                  <button class="text-xs text-neutral-400 hover:text-neutral-300 transition-colors duration-200">Mark as Read</button>
+                </div>
+              </div>
+            </div>
+          </div>
+  
+          <!-- Notification 3 - News Alert -->
+          <div class="p-4 bg-yellow-500/5">
+            <div class="flex items-start">
+              <div class="bg-yellow-500/20 rounded-full p-2 mr-4">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-500" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M18 3a1 1 0 00-1.447-.894L8.763 6H5a3 3 0 000 6h.28l1.771 5.316A1 1 0 008 18h1a1 1 0 001-1v-4.382l6.553 3.276A1 1 0 0018 15V3z" clip-rule="evenodd" />
+                </svg>
+              </div>
+              <div class="flex-1">
+                <div class="flex justify-between items-start">
+                  <div>
+                    <h4 class="text-white font-medium">Breaking News: TSLA</h4>
+                    <p class="text-neutral-400 text-sm mt-1">Tesla announces new factory location in Asia to expand production capacity</p>
+                  </div>
+                  <span class="text-xs text-neutral-500">5 hours ago</span>
+                </div>
+                <div class="flex justify-between items-center mt-3">
+                  <div class="flex space-x-2">
+                    <button class="text-xs text-yellow-500 hover:text-yellow-400 transition-colors duration-200">Read Article</button>
+                    <button class="text-xs text-neutral-400 hover:text-neutral-300 transition-colors duration-200">View Stock</button>
+                  </div>
+                  <button class="text-xs text-neutral-400 hover:text-neutral-300 transition-colors duration-200">Mark as Read</button>
+                </div>
+              </div>
+            </div>
+          </div>
+  
+          <!-- Notification 4 - Price Drop -->
+          <div class="p-4 bg-red-500/5">
+            <div class="flex items-start">
+              <div class="bg-red-500/20 rounded-full p-2 mr-4">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-red-500" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M16.707 10.293a1 1 0 010 1.414l-6 6a1 1 0 01-1.414 0l-6-6a1 1 0 111.414-1.414L9 14.586V3a1 1 0 012 0v11.586l4.293-4.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                </svg>
+              </div>
+              <div class="flex-1">
+                <div class="flex justify-between items-start">
+                  <div>
+                    <h4 class="text-white font-medium">Price Drop Alert: AMZN</h4>
+                    <p class="text-neutral-400 text-sm mt-1">Amazon.com Inc. dropped below your threshold of $180.00 (Current: $178.75)</p>
+                  </div>
+                  <span class="text-xs text-neutral-500">Yesterday</span>
+                </div>
+                <div class="flex justify-between items-center mt-3">
+                  <div class="flex space-x-2">
+                    <button class="text-xs text-red-500 hover:text-red-400 transition-colors duration-200">View Stock</button>
+                    <button class="text-xs text-neutral-400 hover:text-neutral-300 transition-colors duration-200">Edit Alert</button>
+                  </div>
+                  <button class="text-xs text-neutral-400 hover:text-neutral-300 transition-colors duration-200">Mark as Read</button>
+                </div>
+              </div>
+            </div>
+          </div>
+  
+          <!-- Notification 5 - Market Open -->
+          <div class="p-4">
+            <div class="flex items-start">
+              <div class="bg-neutral-500/20 rounded-full p-2 mr-4">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-neutral-400" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd" />
+                </svg>
+              </div>
+              <div class="flex-1">
+                <div class="flex justify-between items-start">
+                  <div>
+                    <h4 class="text-white font-medium">Market Open</h4>
+                    <p class="text-neutral-400 text-sm mt-1">U.S. Stock Market is now open for regular trading hours (9:30 AM ET)</p>
+                  </div>
+                  <span class="text-xs text-neutral-500">Yesterday</span>
+                </div>
+                <div class="flex justify-between items-center mt-3">
+                  <div class="flex space-x-2">
+                    <button class="text-xs text-neutral-400 hover:text-neutral-300 transition-colors duration-200">View Market Overview</button>
+                  </div>
+                  <button class="text-xs text-neutral-400 hover:text-neutral-300 transition-colors duration-200">Mark as Read</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Alert Settings -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Active Alerts -->
+        <div class="bg-neutral-800/70 rounded-xl border border-neutral-700/30 overflow-hidden">
+          <div class="px-6 py-4 border-b border-neutral-700/30 flex justify-between items-center">
+            <h3 class="text-lg font-semibold text-white">Your Active Alerts</h3>
+            <button class="text-emerald-500 hover:text-emerald-400 text-sm transition-colors duration-200">View All</button>
+          </div>
+          <div class="p-6 space-y-4">
+            <!-- Price Alert 1 -->
+            <div class="border border-neutral-700/30 rounded-lg p-4">
+              <div class="flex justify-between">
+                <div>
+                  <div class="flex items-center">
+                    <div class="text-white font-medium">AAPL</div>
+                    <span class="ml-2 text-xs bg-emerald-500/20 text-emerald-500 px-2 py-0.5 rounded-full">Price Alert</span>
+                  </div>
+                  <p class="text-neutral-400 text-sm mt-1">Alert when price goes above $175.00</p>
+                </div>
+                <div class="flex items-center space-x-2">
+                  <button class="text-neutral-400 hover:text-white transition-colors duration-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                      <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                    </svg>
+                  </button>
+                  <button class="text-neutral-400 hover:text-white transition-colors duration-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                      <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+  
+            <!-- Volume Alert -->
+            <div class="border border-neutral-700/30 rounded-lg p-4">
+              <div class="flex justify-between">
+                <div>
+                  <div class="flex items-center">
+                    <div class="text-white font-medium">TSLA</div>
+                    <span class="ml-2 text-xs bg-blue-500/20 text-blue-500 px-2 py-0.5 rounded-full">Volume Alert</span>
+                  </div>
+                  <p class="text-neutral-400 text-sm mt-1">Alert when volume exceeds 100M shares</p>
+                </div>
+                <div class="flex items-center space-x-2">
+                  <button class="text-neutral-400 hover:text-white transition-colors duration-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                      <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                    </svg>
+                  </button>
+                  <button class="text-neutral-400 hover:text-white transition-colors duration-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                      <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+  
+            <!-- Price Drop Alert -->
+            <div class="border border-neutral-700/30 rounded-lg p-4">
+              <div class="flex justify-between">
+                <div>
+                  <div class="flex items-center">
+                    <div class="text-white font-medium">MSFT</div>
+                    <span class="ml-2 text-xs bg-red-500/20 text-red-500 px-2 py-0.5 rounded-full">Price Drop</span>
+                  </div>
+                  <p class="text-neutral-400 text-sm mt-1">Alert when price falls below $400.00</p>
+                </div>
+                <div class="flex items-center space-x-2">
+                  <button class="text-neutral-400 hover:text-white transition-colors duration-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                      <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                    </svg>
+                  </button>
+                  <button class="text-neutral-400 hover:text-white transition-colors duration-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                      <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Notification Settings -->
+        <div class="bg-neutral-800/70 rounded-xl border border-neutral-700/30 overflow-hidden">
+          <div class="px-6 py-4 border-b border-neutral-700/30">
+            <h3 class="text-lg font-semibold text-white">Notification Settings</h3>
+          </div>
+          <div class="p-6 space-y-6">
+            <div class="flex items-center justify-between">
+              <div>
+                <h4 class="text-white font-medium">Price Alerts</h4>
+                <p class="text-neutral-400 text-sm">Get notified when stocks hit your target prices</p>
+              </div>
+              <div class="relative inline-block w-12 h-6 transition duration-200 ease-in-out">
+                <input type="checkbox" id="toggle-price-alerts" class="absolute w-6 h-6 opacity-0 z-10 cursor-pointer peer" checked>
+                <label for="toggle-price-alerts" class="block w-12 h-6 overflow-hidden rounded-full bg-neutral-700 cursor-pointer peer-checked:bg-emerald-600"></label>
+                <span class="absolute left-1 top-1 w-4 h-4 rounded-full bg-white transition-transform duration-200 ease-in-out peer-checked:translate-x-6"></span>
+              </div>
+            </div>
+            
+            <div class="flex items-center justify-between">
+              <div>
+                <h4 class="text-white font-medium">News Alerts</h4>
+                <p class="text-neutral-400 text-sm">Get notified about important news for your stocks</p>
+              </div>
+              <div class="relative inline-block w-12 h-6 transition duration-200 ease-in-out">
+                <input type="checkbox" id="toggle-news-alerts" class="absolute w-6 h-6 opacity-0 z-10 cursor-pointer peer" checked>
+                <label for="toggle-news-alerts" class="block w-12 h-6 overflow-hidden rounded-full bg-neutral-700 cursor-pointer peer-checked:bg-emerald-600"></label>
+                <span class="absolute left-1 top-1 w-4 h-4 rounded-full bg-white transition-transform duration-200 ease-in-out peer-checked:translate-x-6"></span>
+              </div>
+            </div>
+            
+            <div class="flex items-center justify-between">
+              <div>
+                <h4 class="text-white font-medium">Earnings Reports</h4>
+                <p class="text-neutral-400 text-sm">Get notified before and after earnings reports</p>
+              </div>
+              <div class="relative inline-block w-12 h-6 transition duration-200 ease-in-out">
+                <input type="checkbox" id="toggle-earnings" class="absolute w-6 h-6 opacity-0 z-10 cursor-pointer peer" checked>
+                <label for="toggle-earnings" class="block w-12 h-6 overflow-hidden rounded-full bg-neutral-700 cursor-pointer peer-checked:bg-emerald-600"></label>
+                <span class="absolute left-1 top-1 w-4 h-4 rounded-full bg-white transition-transform duration-200 ease-in-out peer-checked:translate-x-6"></span>
+              </div>
+            </div>
+            
+            <div class="flex items-center justify-between">
+              <div>
+                <h4 class="text-white font-medium">Market Open/Close</h4>
+                <p class="text-neutral-400 text-sm">Get notified at market open and close times</p>
+              </div>
+              <div class="relative inline-block w-12 h-6 transition duration-200 ease-in-out">
+                <input type="checkbox" id="toggle-market" class="absolute w-6 h-6 opacity-0 z-10 cursor-pointer peer">
+                <label for="toggle-market" class="block w-12 h-6 overflow-hidden rounded-full bg-neutral-700 cursor-pointer peer-checked:bg-emerald-600"></label>
+                <span class="absolute left-1 top-1 w-4 h-4 rounded-full bg-white transition-transform duration-200 ease-in-out peer-checked:translate-x-6"></span>
+              </div>
+            </div>
+  
+            <div class="flex items-center justify-between">
+              <div>
+                <h4 class="text-white font-medium">Mobile Push Notifications</h4>
+                <p class="text-neutral-400 text-sm">Receive alerts on your mobile device</p>
+              </div>
+              <div class="relative inline-block w-12 h-6 transition duration-200 ease-in-out">
+                <input type="checkbox" id="toggle-mobile" class="absolute w-6 h-6 opacity-0 z-10 cursor-pointer peer" checked>
+                <label for="toggle-mobile" class="block w-12 h-6 overflow-hidden rounded-full bg-neutral-700 cursor-pointer peer-checked:bg-emerald-600"></label>
+                <span class="absolute left-1 top-1 w-4 h-4 rounded-full bg-white transition-transform duration-200 ease-in-out peer-checked:translate-x-6"></span>
+              </div>
+            </div>
+  
+            <div class="flex items-center justify-between">
+              <div>
+                <h4 class="text-white font-medium">Email Notifications</h4>
+                <p class="text-neutral-400 text-sm">Receive alerts via email</p>
+              </div>
+              <div class="relative inline-block w-12 h-6 transition duration-200 ease-in-out">
+                <input type="checkbox" id="toggle-email" class="absolute w-6 h-6 opacity-0 z-10 cursor-pointer peer" checked>
+                <label for="toggle-email" class="block w-12 h-6 overflow-hidden rounded-full bg-neutral-700 cursor-pointer peer-checked:bg-emerald-600"></label>
+                <span class="absolute left-1 top-1 w-4 h-4 rounded-full bg-white transition-transform duration-200 ease-in-out peer-checked:translate-x-6"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </element>
+</mountpoint>
+
+
+
+      </main>
+
+      <!-- {bodyScripts} -->
+      <script>
+        document.addEventListener('DOMContentLoaded', function() {
+          // Get all sections
+          const sections = {
+            dashboard: document.getElementById('stocksOverview'),
+            stocks: document.getElementById('stocks'),
+            'market-news': document.getElementById('marketNews'),
+            alerts: document.getElementById('alerts'),
+            stockDetail: document.getElementById('stockDetail'),
+          };
+
+          // Get all navigation links
+          const navLinks = document.querySelectorAll('a[href^="#"]');
+
+          // Function to show active section and hide others
+          function showSection(sectionId) {
+            // Remove the '#' from the hash
+            const targetSection = sectionId.replace('#', '');
+            
+            // Hide all sections first
+            Object.values(sections).forEach(section => {
+              if (section) {
+                section.style.display = 'none';
+              }
+            });
+
+            // Show the target section
+            if (sections[targetSection]) {
+              sections[targetSection].style.display = 'block';
+            } else {
+              // Default to dashboard if section not found
+              sections.dashboard.style.display = 'block';
+            }
+
+            // Update active state in navigation
+            navLinks.forEach(link => {
+              const isActive = link.getAttribute('href') === sectionId;
+              const svgIcon = link.querySelector('svg');
+              
+              // Update link styling
+              link.classList.toggle('bg-neutral-700/40', isActive);
+              link.classList.toggle('text-white', isActive);
+              link.classList.toggle('text-neutral-400', !isActive);
+              link.classList.toggle('hover:text-white', !isActive);
+              link.classList.toggle('hover:bg-neutral-700/30', !isActive);
+              
+              // Update SVG styling
+              if (svgIcon) {
+                if (isActive) {
+                  svgIcon.classList.add('text-emerald-400');
+                  svgIcon.classList.remove('text-neutral-400');
+                  svgIcon.classList.remove('group-hover:text-emerald-400');
+                  svgIcon.classList.remove('hover:text-emerald-400');
+                } else {
+                  svgIcon.classList.remove('text-emerald-400');
+                  svgIcon.classList.add('text-neutral-400');
+                  // Add hover classes back
+                  if (link.classList.contains('group')) {
+                    svgIcon.classList.add('group-hover:text-emerald-400');
+                  } else {
+                    svgIcon.classList.add('hover:text-emerald-400');
+                  }
+                }
+              }
+            });
+          }
+
+          // Add click event listeners to all navigation links
+          navLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+              e.preventDefault();
+              const hash = this.getAttribute('href');
+              window.location.hash = hash;
+              showSection(hash);
+            });
+          });
+
+          // Handle initial load and browser back/forward
+          window.addEventListener('hashchange', () => {
+            showSection(window.location.hash || '#dashboard');
+          });
+
+          // Show initial section based on URL hash or default to dashboard
+          showSection(window.location.hash || '#dashboard');
+        });
+      </script>
+
+      <!-- Stock Charts Script -->
+      <script>
+        // Utility functions - defined in global scope
+        const formatNumber = (number) => {
+          return new Intl.NumberFormat('en-US', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+          }).format(number);
+        };
+
+        // Stock data generator utilities
+        const generateStockData = (basePrice, days, volatility = 0.02) => {
+          const data = [];
+          let currentPrice = basePrice;
+          
+          // Add some initial randomness to the starting price (±2%)
+          currentPrice += basePrice * (Math.random() * 0.04 - 0.02);
+          
+          // Create some market trends - occasional bull/bear runs
+          const trendDurations = [];
+          let remainingDays = days;
+          
+          // Generate random trend periods
+          while (remainingDays > 0) {
+            // Trends last between 5-20 days
+            const trendLength = Math.floor(Math.random() * 15) + 5;
+            const actualLength = Math.min(trendLength, remainingDays);
+            // Bias: -1 (bearish), 0 (neutral), 1 (bullish)
+            const trendBias = Math.floor(Math.random() * 3) - 1; 
+            
+            trendDurations.push({
+              length: actualLength,
+              bias: trendBias
+            });
+            
+            remainingDays -= actualLength;
+          }
+          
+          let dayCounter = 0;
+          let currentTrendIndex = 0;
+          
+          for (let i = days; i >= 0; i--) {
+            const date = new Date();
+            date.setDate(date.getDate() - i);
+            
+            // Check if we need to switch trends
+            if (dayCounter >= trendDurations[currentTrendIndex].length) {
+              dayCounter = 0;
+              currentTrendIndex = Math.min(currentTrendIndex + 1, trendDurations.length - 1);
+            }
+            
+            // Get current trend bias
+            const { bias } = trendDurations[currentTrendIndex];
+            
+            // Generate random movement with bias
+            // Higher volatility on certain days (like news events)
+            const dayVolatility = Math.random() < 0.1 ? volatility * 3 : volatility;
+            
+            // Base change plus trend bias
+            const biasAdjustment = bias * (dayVolatility * 0.5);
+            const randomFactor = (Math.random() * 2 - 1); // -1 to 1
+            const change = currentPrice * (dayVolatility * randomFactor + biasAdjustment);
+            
+            currentPrice += change;
+            
+            // Add some occasional price gaps (news events)
+            if (Math.random() < 0.03) {
+              const gapSize = currentPrice * (Math.random() * 0.06 - 0.03); // -3% to +3%
+              currentPrice += gapSize;
+            }
+            
+            // Ensure price doesn't go negative
+            currentPrice = Math.max(currentPrice, basePrice * 0.1);
+            
+            // Randomize volume - higher on big move days
+            const volumeBase = Math.floor(Math.random() * 10000000 + 1000000);
+            const volumeMultiplier = 1 + Math.abs(change / currentPrice) * 10; // Volume spikes on big moves
+            const volume = Math.floor(volumeBase * volumeMultiplier);
+            
+            data.push({
+              date: date.toISOString().split('T')[0],
+              price: parseFloat(currentPrice.toFixed(2)),
+              volume: volume
+            });
+            
+            dayCounter++;
+          }
+          
+          return data;
+        };
+
+        // Generate combined market index data with more realistic correlations
+        function generateMarketIndexData(days = 730) {
+          const result = [];
+          const indices = {
+            sp500: { base: 4587.64, vol: 0.01, influence: 1.0 },   // S&P has baseline influence
+            nasdaq: { base: 14346.02, vol: 0.015, influence: 0.8 }, // Tech stocks more volatile, 80% correlated to S&P
+            dowjones: { base: 34945.47, vol: 0.008, influence: 0.9 }, // Dow less volatile, 90% correlated to S&P
+            russell2000: { base: 2192.65, vol: 0.02, influence: 0.7 }  // Small caps more volatile, 70% correlated to S&P
+          };
+          
+          // Generate market-wide factors (like overall economic trends)
+          const marketFactors = [];
+          const trendChanges = Math.floor(days / 30) + 1; // Trend changes every ~30 days
+          
+          // Generate random market sentiment periods
+          let marketSentiment = Math.random() * 2 - 1; // Initial sentiment (-1 to 1)
+          
+          for (let i = 0; i < days; i++) {
+            // Occasionally shift market sentiment
+            if (i % 30 === 0 || Math.random() < 0.02) { // Shift every ~30 days or 2% chance any day
+              // Don't completely reverse sentiment usually - drift it
+              marketSentiment = Math.max(-1, Math.min(1, marketSentiment + (Math.random() * 1.0 - 0.5)));
+            }
+            
+            // Daily market factor with some randomness
+            marketFactors.push(marketSentiment * 0.005 + (Math.random() * 0.02 - 0.01));
+          }
+          
+          // Generate specific sector factors (tech, industrial, etc.)
+          const sectorFactors = {
+            tech: Array(days).fill(0).map(() => Math.random() * 0.04 - 0.02),     // Tech sector factors
+            industrial: Array(days).fill(0).map(() => Math.random() * 0.03 - 0.015), // Industrial sector
+            financial: Array(days).fill(0).map(() => Math.random() * 0.025 - 0.0125), // Financial sector
+            smallCap: Array(days).fill(0).map(() => Math.random() * 0.05 - 0.025)    // Small cap sector - most volatile
+          };
+          
+          // Influence map of sector factors on each index
+          const sectorInfluence = {
+            sp500: { tech: 0.3, industrial: 0.3, financial: 0.3, smallCap: 0.1 },
+            nasdaq: { tech: 0.6, industrial: 0.2, financial: 0.15, smallCap: 0.05 },
+            dowjones: { tech: 0.2, industrial: 0.4, financial: 0.3, smallCap: 0.1 },
+            russell2000: { tech: 0.3, industrial: 0.2, financial: 0.1, smallCap: 0.4 }
+          };
+          
+          // Generate multiple significant market events
+          const bigEvents = [];
+          // Add 2-4 major events spread across the time period
+          const numEvents = 2 + Math.floor(Math.random() * 3);
+          
+          for (let e = 0; e < numEvents; e++) {
+            // Events more likely in the first 80% of the data
+            const eventDay = Math.floor(Math.random() * (days * 0.8)) + Math.floor(days * 0.2);
+            const isPositive = Math.random() > 0.5;
+            const magnitude = (Math.random() * 0.03) + 0.02; // 2-5% move
+            
+            bigEvents.push({
+              day: eventDay,
+              isPositive: isPositive,
+              magnitude: magnitude
+            });
+          }
+          
+          // Add market cycles - bull and bear markets
+          const cycles = [];
+          let daysCovered = 0;
+          while (daysCovered < days) {
+            // Bull markets typically last longer than bear markets
+            const isBullish = Math.random() > 0.3;
+            const cycleDuration = isBullish ? 
+              Math.floor(Math.random() * 120) + 90 : // 3-7 months for bull markets
+              Math.floor(Math.random() * 60) + 30;  // 1-3 months for bear markets
+            
+            cycles.push({
+              start: daysCovered,
+              duration: Math.min(cycleDuration, days - daysCovered),
+              isBullish: isBullish,
+              intensity: Math.random() * 0.5 + 0.5 // 0.5-1.0 intensity factor
+            });
+            
+            daysCovered += cycleDuration;
+          }
+          
+          // Initialize prices
+          const prices = {};
+          Object.entries(indices).forEach(([index, { base }]) => {
+            prices[index] = base;
+          });
+          
+          // Generate price movements
+          for (let i = days; i >= 0; i--) {
+            const date = new Date();
+            date.setDate(date.getDate() - i);
+            const dateStr = date.toISOString().split('T')[0];
+            
+            const dataPoint = { date: dateStr };
+            const dayIndex = days - i;
+            
+            // Find applicable market cycle
+            const currentCycle = cycles.find(cycle => 
+              dayIndex >= cycle.start && dayIndex < (cycle.start + cycle.duration)
+            ) || { isBullish: true, intensity: 0.5 };
+            
+            // Apply cycle bias
+            const cycleBias = currentCycle.isBullish ? 0.001 : -0.001;
+            const cycleIntensity = currentCycle.intensity;
+            
+            // Check if today is a big event day
+            const todayEvent = bigEvents.find(event => event.day === dayIndex);
+            
+            // Generate each index's price for this day
+            Object.entries(indices).forEach(([index, { vol, influence }]) => {
+              // Base market movement (correlated across all indices)
+              let movement = marketFactors[dayIndex % marketFactors.length] * influence;
+              
+              // Add sector-specific movement
+              Object.entries(sectorInfluence[index]).forEach(([sector, weight]) => {
+                movement += sectorFactors[sector][dayIndex % sectorFactors[sector].length] * weight;
+              });
+              
+              // Add cycle bias (bull/bear market effect)
+              movement += cycleBias * cycleIntensity;
+              
+              // Add index-specific random noise
+              movement += (Math.random() * vol * 2 - vol);
+              
+              // Apply big event if it's happening today
+              if (todayEvent) {
+                // Different indices react differently to the event
+                let indexSpecificImpact = todayEvent.isPositive ? todayEvent.magnitude : -todayEvent.magnitude;
+                
+                // Tech stocks (NASDAQ) may react more extremely
+                if (index === 'nasdaq') indexSpecificImpact *= 1.2;
+                
+                // Small caps (Russell 2000) may be more volatile during events
+                if (index === 'russell2000') indexSpecificImpact *= 1.3;
+                
+                // Blue chips (Dow) may be more stable
+                if (index === 'dowjones') indexSpecificImpact *= 0.8;
+                
+                movement += indexSpecificImpact;
+              }
+              
+              // Apply movement to price
+              prices[index] *= (1 + movement);
+              
+              // Add some mean reversion for stability (prices tend to return to the mean)
+              const meanReversionFactor = 0.0005; // Very small daily effect
+              prices[index] += (indices[index].base - prices[index]) * meanReversionFactor;
+              
+              // Ensure price doesn't go too low
+              prices[index] = Math.max(prices[index], indices[index].base * 0.5);
+              
+              dataPoint[index] = parseFloat(prices[index].toFixed(2));
+            });
+            
+            result.push(dataPoint);
+          }
+          
+          return result;
+        }
+
+        // Market data for different indices
+        const marketData = {
+          sp500: generateStockData(4587.64, 365, 0.01),
+          nasdaq: generateStockData(14346.02, 365, 0.015),
+          dowjones: generateStockData(34945.47, 365, 0.008),
+          russell2000: generateStockData(2192.65, 365, 0.02)
+        };
+
+        // Combined market data for global chart (2 years of data)
+        const globalMarketData = generateMarketIndexData(730);
+
+        // Stock data for different companies (update to 2 years of data)
+        const stocksData = {
+          AAPL: {
+            name: 'Apple Inc.',
+            sector: 'Technology',
+            data: generateStockData(171.98, 730, 0.02),
+            color: '#22C55E',
+            stats: {
+              marketCap: '2.78T',
+              peRatio: '28.74',
+              eps: '5.98',
+              dividend: '0.53%',
+              volume: '58.7M',
+              avgVolume: '62.3M',
+              high52w: '181.46',
+              low52w: '121.73',
+              open: '168.92',
+              prevClose: '167.83',
+              beta: '1.28'
+            }
+          },
+          MSFT: {
+            name: 'Microsoft Corporation',
+            sector: 'Technology',
+            data: generateStockData(410.34, 730, 0.018),
+            color: '#3B82F6',
+            stats: {
+              marketCap: '3.05T',
+              peRatio: '35.12',
+              eps: '11.78',
+              dividend: '0.72%',
+              volume: '42.1M',
+              avgVolume: '45.8M',
+              high52w: '420.15',
+              low52w: '310.28',
+              open: '408.12',
+              prevClose: '406.98',
+              beta: '1.12'
+            }
+          },
+          GOOGL: {
+            name: 'Alphabet Inc.',
+            sector: 'Technology',
+            data: generateStockData(152.55, 730, 0.022),
+            color: '#EF4444',
+            stats: {
+              marketCap: '1.91T',
+              peRatio: '26.45',
+              eps: '5.89',
+              dividend: '0%',
+              volume: '35.2M',
+              avgVolume: '38.9M',
+              high52w: '153.92',
+              low52w: '104.46',
+              open: '151.23',
+              prevClose: '150.87',
+              beta: '1.35'
+            }
+          },
+          AMZN: {
+            name: 'Amazon.com Inc.',
+            sector: 'Consumer Cyclical',
+            data: generateStockData(178.75, 730, 0.025),
+            color: '#F59E0B',
+            stats: {
+              marketCap: '1.85T',
+              peRatio: '61.23',
+              eps: '2.92',
+              dividend: '0%',
+              volume: '48.6M',
+              avgVolume: '52.1M',
+              high52w: '185.80',
+              low52w: '116.35',
+              open: '177.92',
+              prevClose: '176.85',
+              beta: '1.42'
+            }
+          },
+          TSLA: {
+            name: 'Tesla Inc.',
+            sector: 'Automotive',
+            data: generateStockData(199.36, 730, 0.035),
+            color: '#8B5CF6',
+            stats: {
+              marketCap: '634.42B',
+              peRatio: '48.95',
+              eps: '4.07',
+              dividend: '0%',
+              volume: '125.8M',
+              avgVolume: '132.4M',
+              high52w: '278.98',
+              low52w: '152.37',
+              open: '201.45',
+              prevClose: '202.64',
+              beta: '2.31'
+            }
+          }
+        };
+
+        // Initialize everything when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+          const { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Area, AreaChart, Legend } = Recharts;
+          let currentStock = 'AAPL'; // Track currently selected stock
+
+          // Custom tooltip component
+          const CustomTooltip = ({ active, payload, label }) => {
+            if (active && payload && payload.length) {
+              // Check if we're on mobile
+              const isMobile = window.innerWidth < 768;
+              
+              return (
+                React.createElement('div', {
+                  className: 'bg-neutral-800 border border-neutral-700 rounded-lg p-3 shadow-lg',
+                  style: isMobile ? { fontSize: '0.75rem', maxWidth: '150px' } : {}
+                },
+                  React.createElement('p', { className: 'text-neutral-400 text-xs' }, label),
+                  React.createElement('div', { className: 'space-y-1 mt-1' },
+                    payload.map((entry, index) => (
+                      React.createElement('p', { 
+                        key: `item-${index}`,
+                        className: isMobile ? 'text-xs' : 'text-sm'
+                      },
+                        React.createElement('span', { 
+                          className: 'inline-block w-2 h-2 rounded-full mr-1',
+                          style: { backgroundColor: entry.color }
+                        }),
+                        React.createElement('span', { className: 'font-medium', style: { color: entry.color } },
+                          `${entry.name || ''}: $${formatNumber(entry.value)}`
+                        )
+                      )
+                    ))
+                  )
+                )
+              );
+            }
+            return null;
+          };
+
+          // Render mini charts for market indices
+          function renderMiniChart(containerId, data, color) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+
+            // Slice to recent data for mobile-friendly display
+            const displayData = data.slice(-30);
+
+            const chart = React.createElement(ResponsiveContainer, { width: '100%', height: '100%' },
+              React.createElement(AreaChart, { 
+                data: displayData,
+                margin: { top: 0, right: 0, left: 0, bottom: 0 }
+              },
+                React.createElement(Area, {
+                  type: 'monotone',
+                  dataKey: 'price',
+                  stroke: color,
+                  fill: color,
+                  fillOpacity: 0.1,
+                  strokeWidth: 1.5,
+                  dot: false,
+                  isAnimationActive: false
+                })
+              )
+            );
+
+            ReactDOM.render(chart, container);
+          }
+
+          // Render global market chart
+          function renderGlobalMarketChart(containerId, timeframe = '1M') {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+
+            let data = globalMarketData;
+            
+            // Filter data based on timeframe
+            switch(timeframe) {
+              case '1M':
+                data = data.slice(-30);
+                break;
+              case '3M':
+                data = data.slice(-90);
+                break;
+              case '6M':
+                data = data.slice(-180);
+                break;
+              case '1Y':
+                data = data.slice(-365);
+                break;
+              case 'ALL':
+                // Use all available data
+                break;
+            }
+
+            // Normalize data for better visualization
+            const normalizedData = data.map(point => {
+              const firstPoint = data[0];
+              return {
+                date: point.date,
+                'S&P 500': (point.sp500 / firstPoint.sp500) * 100,
+                'NASDAQ': (point.nasdaq / firstPoint.nasdaq) * 100,
+                'DOW JONES': (point.dowjones / firstPoint.dowjones) * 100,
+                'RUSSELL 2000': (point.russell2000 / firstPoint.russell2000) * 100
+              };
+            });
+
+            // Check if we're on mobile
+            const isMobile = window.innerWidth < 768;
+            
+            // Format date for better mobile display
+            const formatXAxis = (tickItem) => {
+              const date = new Date(tickItem);
+              return isMobile ? 
+                `${date.getMonth()+1}/${date.getDate()}` : 
+                tickItem;
+            };
+
+            // Determine how many ticks to show based on device width
+            const getTickCount = () => {
+              if (window.innerWidth < 400) return 3;
+              if (window.innerWidth < 768) return 5;
+              return 10;
+            };
+            
+            // Custom Legend component for mobile optimization
+            const CustomLegend = (props) => {
+              const { payload } = props;
+              
+              if (!payload || payload.length === 0) {
+                return null;
+              }
+              
+              return React.createElement(
+                'div', 
+                { 
+                  className: 'flex flex-wrap justify-center items-center gap-x-4 gap-y-2 py-1 px-1',
+                  style: { 
+                    fontSize: isMobile ? '0.7rem' : '0.8rem',
+                    marginTop: isMobile ? '-5px' : '0px'
+                  }
+                },
+                payload.map((entry, index) => {
+                  return React.createElement(
+                    'div',
+                    { 
+                      key: `legend-item-${index}`,
+                      className: 'flex items-center'
+                    },
+                    React.createElement(
+                      'span',
+                      {
+                        className: 'inline-block w-3 h-3 rounded-full mr-1.5',
+                        style: { backgroundColor: entry.color }
+                      }
+                    ),
+                    React.createElement(
+                      'span',
+                      { 
+                        style: { color: entry.color, fontWeight: 600 },
+                        className: 'whitespace-nowrap'
+                      },
+                      entry.value
+                    )
+                  );
+                })
+              );
+            };
+
+            const chart = React.createElement(ResponsiveContainer, { width: '100%', height: '100%' },
+              React.createElement(LineChart, { 
+                data: normalizedData,
+                margin: isMobile ? 
+                  { top: 20, right: 10, left: 0, bottom: 5 } : 
+                  { top: 30, right: 30, left: 10, bottom: 10 }
+              },
+                React.createElement(CartesianGrid, { 
+                  strokeDasharray: '3 3',
+                  stroke: '#374151',
+                  vertical: !isMobile
+                }),
+                React.createElement(XAxis, {
+                  dataKey: 'date',
+                  stroke: '#9CA3AF',
+                  fontSize: isMobile ? 10 : 12,
+                  tickMargin: 10,
+                  tickFormatter: formatXAxis,
+                  interval: 'preserveStartEnd',
+                  minTickGap: 10,
+                  tick: { fontSize: isMobile ? 10 : 12 },
+                  allowDecimals: false,
+                  tickCount: getTickCount()
+                }),
+                React.createElement(YAxis, {
+                  stroke: '#9CA3AF',
+                  fontSize: isMobile ? 10 : 12,
+                  tickMargin: isMobile ? 5 : 10,
+                  tickFormatter: (value) => `${Math.round(value)}%`,
+                  width: isMobile ? 50 : 60,
+                  allowDecimals: false,
+                  domain: ['dataMin - 1', 'dataMax + 1']
+                }),
+                React.createElement(Tooltip, {
+                  content: CustomTooltip,
+                  wrapperStyle: isMobile ? { zIndex: 1000, width: '150px' } : {}
+                }),
+                React.createElement(Legend, {
+                  content: CustomLegend,
+                  verticalAlign: 'top',
+                  height: isMobile ? 28 : 36,
+                  wrapperStyle: { paddingTop: isMobile ? '0px' : '10px' }
+                }),
+                React.createElement(Line, {
+                  type: 'monotone',
+                  dataKey: 'S&P 500',
+                  stroke: '#22C55E',
+                  strokeWidth: isMobile ? 1.5 : 2,
+                  dot: false,
+                  activeDot: { r: isMobile ? 3 : 4, fill: '#22C55E' },
+                  name: 'S&P 500'
+                }),
+                React.createElement(Line, {
+                  type: 'monotone',
+                  dataKey: 'NASDAQ',
+                  stroke: '#3B82F6',
+                  strokeWidth: isMobile ? 1.5 : 2,
+                  dot: false,
+                  activeDot: { r: isMobile ? 3 : 4, fill: '#3B82F6' },
+                  name: 'NASDAQ'
+                }),
+                React.createElement(Line, {
+                  type: 'monotone',
+                  dataKey: 'DOW JONES',
+                  stroke: '#EF4444',
+                  strokeWidth: isMobile ? 1.5 : 2,
+                  dot: false,
+                  activeDot: { r: isMobile ? 3 : 4, fill: '#EF4444' },
+                  name: 'DOW JONES'
+                }),
+                React.createElement(Line, {
+                  type: 'monotone',
+                  dataKey: 'RUSSELL 2000',
+                  stroke: '#F59E0B',
+                  strokeWidth: isMobile ? 1.5 : 2,
+                  dot: false,
+                  activeDot: { r: isMobile ? 3 : 4, fill: '#F59E0B' },
+                  name: 'RUSSELL 2000'
+                })
+              )
+            );
+
+            ReactDOM.render(chart, container);
+          }
+
+          // Update stock details in the UI
+          function updateStockDetails(symbol) {
+            const stock = stocksData[symbol];
+            const latestPrice = stock.data[stock.data.length - 1].price;
+            const previousPrice = stock.data[stock.data.length - 2].price;
+            const priceChange = latestPrice - previousPrice;
+            const priceChangePercent = (priceChange / previousPrice) * 100;
+
+            // Update stock title and price
+            document.querySelector('#stockTitle').textContent = `${stock.name} (${symbol})`;
+            document.querySelector('#stockPrice').textContent = `$${formatNumber(latestPrice)}`;
+            document.querySelector('#stockChange').textContent = 
+              `${priceChange >= 0 ? '+' : ''}${formatNumber(priceChange)} (${formatNumber(priceChangePercent)}%)`;
+            document.querySelector('#stockChange').className = 
+              `ml-2 text-sm font-medium px-2 py-0.5 rounded-md ${priceChange >= 0 ? 'bg-green-500/20 text-green-500' : 'bg-red-500/20 text-red-500'}`;
+
+            // Update stats
+            Object.entries(stock.stats).forEach(([key, value]) => {
+              const element = document.querySelector(`#stock${key.charAt(0).toUpperCase() + key.slice(1)}`);
+              if (element) {
+                element.textContent = value;
+              }
+            });
+
+            // Update current stock reference
+            currentStock = symbol;
+          }
+
+          // Render main stock chart
+          function renderMainChart(symbol = currentStock, timeframe = '1M') {
+            const container = document.getElementById('mainStockChart');
+            if (!container) return;
+
+            const stockInfo = stocksData[symbol];
+            let data = stockInfo.data;
+
+            // Filter data based on timeframe
+            switch(timeframe) {
+              case '1M':
+                data = data.slice(-30);
+                break;
+              case '3M':
+                data = data.slice(-90);
+                break;
+              case '6M':
+                data = data.slice(-180);
+                break;
+              case '1Y':
+                data = data.slice(-365);
+                break;
+              case 'ALL':
+                // Use all available data
+                break;
+            }
+
+            // Check if we're on mobile
+            const isMobile = window.innerWidth < 768;
+            
+            // Format date for better mobile display
+            const formatXAxis = (tickItem) => {
+              const date = new Date(tickItem);
+              return isMobile ? 
+                `${date.getMonth()+1}/${date.getDate()}` : 
+                tickItem;
+            };
+            
+            // Determine how many ticks to show based on device width
+            const getTickCount = () => {
+              if (window.innerWidth < 400) return 3;
+              if (window.innerWidth < 768) return 5;
+              return 10;
+            };
+
+            const chart = React.createElement(ResponsiveContainer, { width: '100%', height: '100%' },
+              React.createElement(LineChart, { 
+                data: data,
+                margin: isMobile ? 
+                  { top: 5, right: 10, left: 0, bottom: 5 } : 
+                  { top: 10, right: 30, left: 10, bottom: 10 }
+              },
+                React.createElement(CartesianGrid, { 
+                  strokeDasharray: '3 3',
+                  stroke: '#374151',
+                  vertical: !isMobile
+                }),
+                React.createElement(XAxis, {
+                  dataKey: 'date',
+                  stroke: '#9CA3AF',
+                  fontSize: isMobile ? 10 : 12,
+                  tickMargin: 10,
+                  tickFormatter: formatXAxis,
+                  interval: 'preserveStartEnd',
+                  minTickGap: 10,
+                  tick: { fontSize: isMobile ? 10 : 12 },
+                  allowDecimals: false,
+                  tickCount: getTickCount()
+                }),
+                React.createElement(YAxis, {
+                  stroke: '#9CA3AF',
+                  fontSize: isMobile ? 10 : 12,
+                  tickMargin: isMobile ? 5 : 10,
+                  tickFormatter: (value) => `$${formatNumber(value)}`,
+                  width: isMobile ? 50 : 60,
+                  allowDecimals: false,
+                  domain: ['dataMin - 1', 'dataMax + 1']
+                }),
+                React.createElement(Tooltip, {
+                  content: CustomTooltip,
+                  wrapperStyle: isMobile ? { zIndex: 1000, width: '150px' } : {}
+                }),
+                React.createElement(Line, {
+                  type: 'monotone',
+                  dataKey: 'price',
+                  stroke: stockInfo.color,
+                  strokeWidth: isMobile ? 1.5 : 2,
+                  dot: false,
+                  activeDot: { r: isMobile ? 3 : 4, fill: stockInfo.color }
+                })
+              )
+            );
+
+            ReactDOM.render(chart, container);
+          }
+
+          // Handle stock row clicks
+          function handleStockClick(symbol) {
+            // Update active state in the table
+            document.querySelectorAll('.stock-row').forEach(row => {
+              row.classList.toggle('bg-neutral-700/20', row.dataset.symbol === symbol);
+            });
+
+            // Update stock details and chart
+            updateStockDetails(symbol);
+            renderMainChart(symbol, document.querySelector('[data-timeframe].bg-emerald-600').dataset.timeframe);
+          }
+
+          // Initialize all charts
+          function initializeCharts() {
+            // Render market index charts
+            renderMiniChart('sp500Chart', marketData.sp500, '#22C55E');
+            renderMiniChart('nasdaqChart', marketData.nasdaq, '#3B82F6');
+            renderMiniChart('dowjonesChart', marketData.dowjones, '#EF4444');
+            renderMiniChart('russell2000Chart', marketData.russell2000, '#F59E0B');
+            
+            // Render global market chart with 1M timeframe as default
+            renderGlobalMarketChart('globalChart', '1M');
+
+            // Initialize with first stock in stocks section with 1M timeframe
+            if (document.querySelector('#stockTitle')) {
+              handleStockClick('AAPL', '1M');
+            }
+          }
+
+          // Add event listeners for global chart timeframe buttons
+          const globalTimeframeButtons = document.querySelectorAll('[data-global-timeframe]');
+          globalTimeframeButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+              const timeframe = e.target.dataset.globalTimeframe;
+              renderGlobalMarketChart('globalChart', timeframe);
+              
+              // Update active state
+              globalTimeframeButtons.forEach(btn => {
+                btn.classList.remove('bg-emerald-600');
+                btn.classList.add('bg-neutral-700/50');
+              });
+              e.target.classList.remove('bg-neutral-700/50');
+              e.target.classList.add('bg-emerald-600');
+            });
+          });
+
+          // Add event listeners for stock chart timeframe buttons
+          const stockTimeframeButtons = document.querySelectorAll('[data-timeframe]');
+          stockTimeframeButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+              const timeframe = e.target.dataset.timeframe;
+              renderMainChart(currentStock, timeframe);
+              
+              // Update active state
+              stockTimeframeButtons.forEach(btn => {
+                btn.classList.remove('bg-emerald-600');
+                btn.classList.add('bg-neutral-700/50');
+              });
+              e.target.classList.remove('bg-neutral-700/50');
+              e.target.classList.add('bg-emerald-600');
+            });
+          });
+
+          // Populate stock table
+          function populateStockTable() {
+            const tbody = document.querySelector('#stockTableBody');
+            Object.entries(stocksData).forEach(([symbol, stock]) => {
+              const latestPrice = stock.data[stock.data.length - 1].price;
+              const previousPrice = stock.data[stock.data.length - 2].price;
+              const priceChange = latestPrice - previousPrice;
+              const priceChangePercent = (priceChange / previousPrice) * 100;
+
+              const row = document.createElement('tr');
+              row.className = 'stock-row hover:bg-neutral-700/20 transition-colors duration-150 cursor-pointer';
+              row.dataset.symbol = symbol;
+              // Add data attributes for searching
+              row.dataset.name = stock.name.toLowerCase();
+              row.dataset.sector = stock.sector.toLowerCase();
+              
+              row.innerHTML = `
+                <td class="px-4 py-4 whitespace-nowrap">
+                  <div class="flex items-center">
+                    <div class="text-sm font-medium text-white">${symbol}</div>
+                  </div>
+                </td>
+                <td class="px-4 py-4 whitespace-nowrap">
+                  <div class="text-sm text-neutral-300">${stock.name}</div>
+                  <div class="text-xs text-neutral-400">${stock.sector}</div>
+                </td>
+                <td class="px-4 py-4 whitespace-nowrap text-sm text-right text-white font-medium">$${formatNumber(latestPrice)}</td>
+                <td class="px-4 py-4 whitespace-nowrap text-right">
+                  <div class="text-sm ${priceChange >= 0 ? 'text-green-500' : 'text-red-500'}">${priceChange >= 0 ? '+' : ''}${formatNumber(priceChange)}</div>
+                </td>
+                <td class="px-4 py-4 whitespace-nowrap text-right">
+                  <span class="px-2 py-1 text-xs font-medium rounded-md ${priceChange >= 0 ? 'bg-green-500/20 text-green-500' : 'bg-red-500/20 text-red-500'}">${priceChange >= 0 ? '+' : ''}${formatNumber(priceChangePercent)}%</span>
+                </td>
+                <td class="px-4 py-4 whitespace-nowrap text-sm text-right text-neutral-300">${stock.stats.volume}</td>
+                <td class="px-4 py-4 whitespace-nowrap text-sm text-right text-neutral-300">${stock.stats.marketCap}</td>
+                <td class="px-4 py-4 whitespace-nowrap text-sm text-right text-neutral-300">${stock.stats.peRatio}</td>
+              `;
+              
+              tbody.appendChild(row);
+            });
+
+            // Add click handlers to stock rows
+            document.querySelectorAll('.stock-row').forEach(row => {
+              row.addEventListener('click', () => handleStockClick(row.dataset.symbol));
+            });
+            
+            // Add search functionality
+            setupStockSearch();
+          }
+          
+          // Setup stock search functionality
+          function setupStockSearch() {
+            const searchInput = document.getElementById('stockSearch');
+            if (!searchInput) return;
+            
+            searchInput.addEventListener('input', function() {
+              const searchTerm = this.value.toLowerCase().trim();
+              filterStocks(searchTerm);
+            });
+            
+            // Clear search when switching to stocks view
+            document.querySelectorAll('a[href="#stocks"]').forEach(link => {
+              link.addEventListener('click', function() {
+                if (searchInput.value) {
+                  searchInput.value = '';
+                  filterStocks('');
+                }
+              });
+            });
+          }
+          
+          // Filter stocks based on search term
+          function filterStocks(searchTerm) {
+            const stockRows = document.querySelectorAll('.stock-row');
+            
+            if (!searchTerm) {
+              // If search is empty, show all stocks
+              stockRows.forEach(row => {
+                row.style.display = '';
+              });
+              return;
+            }
+            
+            stockRows.forEach(row => {
+              const symbol = row.dataset.symbol.toLowerCase();
+              const name = row.dataset.name;
+              const sector = row.dataset.sector;
+              
+              // Check if the search term matches symbol, name, or sector
+              if (symbol.includes(searchTerm) || 
+                  name.includes(searchTerm) || 
+                  sector.includes(searchTerm)) {
+                row.style.display = '';
+              } else {
+                row.style.display = 'none';
+              }
+            });
+            
+            // If no results, show a message or handle empty state
+            const visibleRows = document.querySelectorAll('.stock-row[style="display: none;"]');
+            const noResults = visibleRows.length === stockRows.length;
+            
+            // Handle no results state - show a message or reset display
+            handleNoSearchResults(noResults);
+          }
+          
+          // Handle when no search results are found
+          function handleNoSearchResults(noResults) {
+            const tbody = document.querySelector('#stockTableBody');
+            let noResultsRow = document.getElementById('noResultsRow');
+            
+            if (noResults) {
+              if (!noResultsRow) {
+                noResultsRow = document.createElement('tr');
+                noResultsRow.id = 'noResultsRow';
+                noResultsRow.innerHTML = `
+                  <td colspan="8" class="px-4 py-8 text-center">
+                    <div class="text-neutral-400">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 mx-auto mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                      </svg>
+                      <p class="text-sm">No stocks found matching your search.</p>
+                    </div>
+                  </td>
+                `;
+                tbody.appendChild(noResultsRow);
+              }
+              noResultsRow.style.display = '';
+            } else if (noResultsRow) {
+              noResultsRow.style.display = 'none';
+            }
+          }
+
+          // Handle window resize
+          let resizeTimeout;
+          window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+              // Re-render all charts with current settings
+              initializeCharts();
+              
+              // Re-render main stock chart with current timeframe
+              if (document.querySelector('#stockTitle')) {
+                const currentTimeframe = document.querySelector('[data-timeframe].bg-emerald-600')?.dataset?.timeframe || '1M';
+                renderMainChart(currentStock, currentTimeframe);
+              }
+              
+              // Re-render global market chart with current timeframe
+              if (document.getElementById('globalChart')) {
+                const currentGlobalTimeframe = document.querySelector('[data-global-timeframe].bg-emerald-600')?.dataset?.globalTimeframe || '1M';
+                renderGlobalMarketChart('globalChart', currentGlobalTimeframe);
+              }
+            }, 250);
+          });
+
+          populateStockTable();
+          initializeCharts();
+        });
+      </script>
+   </body>
+</html>

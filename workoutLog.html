@@ -126,7 +126,7 @@
     }
     
     nav a:visited {
-      color: var(--gray-800); /* Ensure visited links don't change color */
+      color: var(--gray-800); 
     }
     
     nav a::after {
@@ -166,7 +166,7 @@
       transition: all 0.3s ease;
     }
     
-    /* Hero Section */
+
     .hero {
       position: relative;
       height: 600px;
@@ -174,7 +174,7 @@
       align-items: center;
       background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(16, 185, 129, 0.05) 100%);
       overflow: hidden;
-      margin-top: 80px; /* To compensate for fixed header */
+      margin-top: 80px; 
     }
     
     .hero::before {
@@ -293,7 +293,7 @@
       width: 120px;
     }
     
-    /* About Section */
+    
     #about {
       background-color: white;
       position: relative;
@@ -424,7 +424,7 @@
       margin-bottom: 0;
     }
     
-    /* Stats Section */
+  
     #stats {
       background-color: var(--gray-50);
       position: relative;
@@ -650,7 +650,7 @@
       transform: rotate(90deg);
     }
     
-    /* History Container */
+ 
     .history-container {
       background-color: white;
       border-radius: 15px;
@@ -769,7 +769,7 @@
       box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
     }
     
-    /* Card header with accent colors */
+  
     .card-header {
       padding: 16px;
       background: linear-gradient(to right, rgba(59, 130, 246, 0.1), rgba(16, 185, 129, 0.05));
@@ -778,7 +778,7 @@
       align-items: center;
     }
     
-    /* Workout type pill */
+
     .workout-type {
       background: white;
       border-radius: 20px;
@@ -789,31 +789,31 @@
       box-shadow: 0 4px 10px rgba(59, 130, 246, 0.1);
     }
     
-    /* Running type */
+    
     .workout-card[data-type="Running"] .workout-type {
       color: #3b82f6;
       box-shadow: 0 4px 10px rgba(59, 130, 246, 0.1);
     }
     
-    /* Cycling type */
+    
     .workout-card[data-type="Cycling"] .workout-type {
       color: #10b981;
       box-shadow: 0 4px 10px rgba(16, 185, 129, 0.1);
     }
     
-    /* Swimming type */
+
     .workout-card[data-type="Swimming"] .workout-type {
       color: #06b6d4;
       box-shadow: 0 4px 10px rgba(6, 182, 212, 0.1);
     }
     
-    /* Strength type */
+ 
     .workout-card[data-type="Strength"] .workout-type {
       color: #ef4444;
       box-shadow: 0 4px 10px rgba(239, 68, 68, 0.1);
     }
     
-    /* Other types similarly styled */
+
     .workout-card[data-type="CrossFit"] .workout-type {
       color: #8b5cf6;
       box-shadow: 0 4px 10px rgba(139, 92, 246, 0.1);
@@ -829,18 +829,17 @@
       box-shadow: 0 4px 10px rgba(245, 158, 11, 0.1);
     }
     
-    /* Card date */
+
     .card-date {
       font-size: 0.85rem;
       color: #64748b;
     }
     
-    /* Card body with main info */
+    
     .card-body {
       padding: 16px;
     }
-    
-    /* Info grid with three columns */
+
     .workout-info-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -871,8 +870,7 @@
       letter-spacing: 0.5px;
       margin-top: 5px;
     }
-    
-    /* Notes section */
+
     .workout-notes {
       background: #f8fafc;
       border-radius: 10px;
@@ -894,8 +892,7 @@
       color: #64748b;
       line-height: 1.5;
     }
-    
-    /* Card footer with buttons */
+
     .card-footer {
       display: flex;
       justify-content: space-between;
@@ -904,8 +901,7 @@
       border-top: 1px solid #f1f5f9;
       background: #f8fafc;
     }
-    
-    /* Feeling tag */
+
     .feeling-tag {
       display: inline-flex;
       align-items: center;
@@ -918,7 +914,6 @@
       gap: 5px;
     }
     
-    /* Feeling colors */
     .feeling-tag[data-feeling="Great"] {
       color: #10b981;
       background: rgba(16, 185, 129, 0.1);
@@ -943,14 +938,12 @@
       color: #ef4444;
       background: rgba(239, 68, 68, 0.1);
     }
-    
-    /* Card actions */
+
     .card-actions {
       display: flex;
       gap: 10px;
     }
-    
-    /* Edit button */
+
     .edit-button {
       width: 36px;
       height: 36px;
@@ -971,8 +964,7 @@
       transform: translateY(-3px);
       box-shadow: 0 8px 15px rgba(2, 132, 199, 0.2);
     }
-    
-    /* Delete button - completely redesigned */
+
     .delete-button {
       width: 36px;
       height: 36px;
@@ -993,8 +985,7 @@
       transform: translateY(-3px);
       box-shadow: 0 8px 15px rgba(239, 68, 68, 0.2);
     }
-    
-    /* Empty state styling */
+
     .empty-state {
       grid-column: 1 / -1;
       padding: 60px 20px;
@@ -1014,8 +1005,7 @@
       color: #64748b;
       font-size: 1.1rem;
     }
-    
-    /* Footer */
+
     footer {
       background-color: var(--dark);
       color: white;
@@ -1162,7 +1152,7 @@
       color: white;
     }
     
-    /* Media Queries */
+
     @media (max-width: 1200px) {
       .container {
         max-width: 960px;
@@ -1244,8 +1234,7 @@
         color: var(--primary);
       }
     }
-    
-    /* About Section */
+
     .about-section {
       background-color: white;
       position: relative;
@@ -1376,8 +1365,7 @@
       color: var(--gray-600);
       margin-bottom: 0;
     }
-    
-    /* Confirmation modal styling */
+
     .confirmation-modal {
       position: fixed;
       top: 0;
@@ -1482,8 +1470,7 @@
       transform: translateY(-3px);
       box-shadow: 0 10px 20px rgba(239, 68, 68, 0.2);
     }
-    
-    /* Alert styling */
+
     .alert {
       position: fixed;
       top: 20px;
@@ -1559,8 +1546,7 @@
     .alert button:hover {
       opacity: 1;
     }
-    
-    /* Edit mode indicator styling */
+
     .edit-mode-indicator {
       margin-bottom: 15px;
       padding: 12px 15px;
@@ -1592,26 +1578,23 @@
       background-color: #dbeafe;
       transform: scale(1.1);
     }
-    
-    /* Target the specific unwanted navigation list */
+
     header + div > a,
     #content > a[href="#stats"],
     #content > a[href="#about"] {
       display: none !important;
     }
-    
-    /* Ensure only the main navigation is visible */
+
     header {
       position: relative;
       z-index: 10;
     }
     
-    /* Make sure we keep proper spacing after removing elements */
+  
     #content {
       padding-top: 20px;
     }
-    
-    /* Hide any legacy navigation elements that might be outside the header */
+ 
     body > nav:not(header nav),
     #content > nav,
     body > a[href="#stats"],
@@ -1620,9 +1603,7 @@
     body > a[href="#history"] {
       display: none !important;
     }
-    
-    /* More aggressive targeting to remove left sidebar navigation */
-    /* Target all links outside the main navigation */
+
     body > a,
     #app > a,
     #content > a,
@@ -1634,8 +1615,7 @@
     a[href="#history"]:not(header a) {
       display: none !important;
     }
-    
-    /* Target vertical lists outside the header */
+
     body > ul,
     #app > ul,
     #content > ul,
@@ -1644,21 +1624,18 @@
     nav:not(header nav) {
       display: none !important;
     }
-    
-    /* Using a more specific rule to target Statistics and About links */
+
     #content a[href="#statistics"],
     #content a[href="#about"] {
       display: none !important;
     }
-    
-    /* Hide any list elements directly in the body or main content */
+
     #main-content > a,
     body > div > a:not(header a),
     body > div > a:not(nav a) {
       display: none !important;
     }
-    
-    /* Additional broader catch-all for sidebar-like navigation */
+
     .left-sidebar,
     .sidebar,
     aside,
@@ -1668,14 +1645,12 @@
     [id*="side-nav"] {
       display: none !important;
     }
-    
-    /* Specifically target the vertical list on the top left */
+
     body > div:first-of-type > a,
     main > div:first-of-type > a {
       display: none !important;
     }
     
-    /* Hide ALL navigation links that are not in the header */
     body > a,
     #content > a,
     main > a,
@@ -1688,16 +1663,14 @@
     a[href="#about"]:not(header a):not(nav a) {
       display: none !important;
     }
-    
-    /* Force hidden state on any vertical link list */
+
     body > div > a:not(header *),
     #content > div > a:not(header *),
     main > div > a:not(header *),
     div:not(header):not(.workout-card):not(.card-actions) > a {
       display: none !important;
     }
-    
-    /* Super aggressive removal of the last Log Workout link */
+ 
     a[href="#log-workout"]:not(header a):not(nav a),
     a:contains("Log Workout"):not(header a):not(nav a) {
       display: none !important;
@@ -1710,24 +1683,180 @@
       height: 0 !important;
       overflow: hidden !important;
     }
-    
-    /* Catch all links in the top portion of the page */
+
     body > a, 
     body > div > a:not(header a),
     div:not(header) > a:not(.card-actions a):not(.workout-card a):not(form a) {
       display: none !important;
     }
-    
-    /* Target the specific structure where the link appears */
+
     body > div:first-child > a,
     body > div:nth-child(2) > a,
     body > div:nth-child(3) > a {
       display: none !important;
     }
-    
-    /* Hide FitTrackPro links outside the header */
+
     a:contains("FitTrackPro"):not(header a) {
       display: none !important;
+    }
+
+    .particle-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      z-index: -1;
+      opacity: 0.3;
+    }
+    
+    .particle {
+      position: absolute;
+      border-radius: 50%;
+      background: linear-gradient(to right, var(--primary), var(--primary-light));
+      animation: float 15s infinite ease-in-out;
+      opacity: 0.2;
+    }
+    
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0) translateX(0);
+      }
+      25% {
+        transform: translateY(-30px) translateX(20px);
+      }
+      50% {
+        transform: translateY(-15px) translateX(-25px);
+      }
+      75% {
+        transform: translateY(30px) translateX(15px);
+      }
+    }
+
+    .wave-container {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 100px;
+      overflow: hidden;
+      z-index: -1;
+    }
+    
+    .wave {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 200%;
+      height: 100%;
+      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z' opacity='.25' fill='%233b82f6'/%3E%3Cpath d='M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z' opacity='.5' fill='%233b82f6'/%3E%3Cpath d='M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z' fill='%233b82f6' opacity='.2'/%3E%3C/svg%3E");
+      background-repeat: repeat-x;
+      animation: wave 25s linear infinite;
+    }
+    
+    @keyframes wave {
+      0% {
+        transform: translateX(0);
+      }
+      100% {
+        transform: translateX(-50%);
+      }
+    }
+
+    .fitness-icon {
+      position: fixed;
+      opacity: 0.1;
+      color: var(--primary);
+      filter: drop-shadow(0 0 15px rgba(59, 130, 246, 0.3));
+      animation: pulse 4s infinite ease-in-out;
+      z-index: -1;
+    }
+    
+    @keyframes pulse {
+      0%, 100% {
+        transform: scale(1);
+        opacity: 0.1;
+      }
+      50% {
+        transform: scale(1.1);
+        opacity: 0.15;
+      }
+    }
+
+    .scroll-indicator {
+      position: fixed;
+      right: 30px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+      z-index: 10;
+    }
+    
+    .scroll-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background-color: rgba(100, 116, 139, 0.2);
+      transition: all 0.3s ease;
+    }
+    
+    .scroll-dot.active {
+      background-color: var(--primary);
+      transform: scale(1.5);
+      box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+    }
+
+    .workout-card {
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    
+    .workout-card:hover {
+      transform: translateY(-8px) rotate(1deg);
+      box-shadow: 0 20px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .stats-container:hover .stat-item {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(59, 130, 246, 0.1);
+    }
+    
+    .stat-item {
+      transition: all 0.3s ease;
+    }
+    
+    .stat-item:hover {
+      transform: translateY(-10px) !important;
+      box-shadow: 0 15px 30px rgba(59, 130, 246, 0.2) !important;
+    }
+ 
+    .form-group label {
+      transition: all 0.3s ease;
+    }
+    
+    .form-group:focus-within label {
+      color: var(--primary);
+      transform: translateY(-3px);
+    }
+    
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--primary) !important;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2) !important;
+      transform: translateY(-2px);
+    }
+
+    section {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.8s ease;
+    }
+    
+    section.visible {
+      opacity: 1;
+      transform: translateY(0);
     }
   </style>
 </head>
@@ -1885,8 +2014,7 @@
         </div>
       </div>
     </section>
-    
-    <!-- About Section -->
+
     <section id="about" class="about-section">
       <div class="container">
         <h2>About FitTrackPro</h2>
@@ -1948,8 +2076,7 @@
       </div>
     </section>
   </main>
-  
-  <!-- Footer -->
+
   <footer>
     <div class="container">
       <div class="footer-content">
@@ -2028,11 +2155,6 @@
       console.log('App initialized with', workouts.length, 'workouts');
     });
 
-    // ============================================
-    // DATA MANAGEMENT
-    // ============================================
-
-    // Load workouts from localStorage
     function loadWorkouts() {
       try {
         const saved = localStorage.getItem('workouts');
@@ -2044,7 +2166,6 @@
       }
     }
 
-    // Save workouts to localStorage
     function saveWorkouts() {
       try {
         localStorage.setItem('workouts', JSON.stringify(workouts));
@@ -2055,16 +2176,12 @@
       }
     }
 
-    // Generate unique ID
+
     function generateId() {
       return Date.now().toString(36) + Math.random().toString(36).substr(2);
     }
 
-    // ============================================
-    // FORM HANDLERS
-    // ============================================
-
-    // Initialize form event handlers
+  
     function initFormHandlers() {
       const workoutForm = document.getElementById('workout-form');
       
@@ -2079,7 +2196,7 @@
         e.preventDefault();
         console.log('Form submitted');
         
-        // Get form values
+       
         const type = document.getElementById('workout-type').value;
         const date = document.getElementById('workout-date').value;
         const duration = document.getElementById('workout-duration').value;
@@ -2087,17 +2204,17 @@
         const feeling = document.getElementById('workout-feeling').value;
         const description = document.getElementById('workout-description').value || '';
         
-        // Validate input
+       
         if (!type || !date || !duration || !intensity || !feeling) {
           showAlert('Please fill in all required fields', 'error');
           return;
         }
         
-        // Check if we're editing an existing workout
+        t
         const editId = workoutForm.dataset.editId;
         
         if (editId) {
-          // Update existing workout
+         
           updateWorkout(editId, {
             type,
             date,
@@ -2107,14 +2224,14 @@
             description
           });
           
-          // Clear edit mode
+         
           delete workoutForm.dataset.editId;
           const editIndicator = document.getElementById('edit-indicator');
           if (editIndicator) editIndicator.remove();
           
           showAlert('Workout updated successfully!', 'success');
         } else {
-          // Add new workout
+         
           addWorkout({
             id: generateId(),
             type,
@@ -2128,10 +2245,10 @@
           showAlert('Workout logged successfully!', 'success');
         }
         
-        // Reset form
+       
         workoutForm.reset();
         
-        // Set default date to today if empty
+        
         const dateInput = document.getElementById('workout-date');
         if (!dateInput.value) {
           const today = new Date().toISOString().split('T')[0];
@@ -2139,7 +2256,7 @@
         }
       });
       
-      // Set default date to today
+      
       const dateInput = document.getElementById('workout-date');
       if (dateInput) {
         const today = new Date().toISOString().split('T')[0];
@@ -2147,7 +2264,7 @@
       }
     }
 
-    // Initialize filter buttons
+    
     function initFilterButtons() {
       const filterBtns = document.querySelectorAll('#filter-controls button');
       
@@ -2158,7 +2275,7 @@
       
       console.log('Setting up filter buttons');
       
-      // Set 'All' as active by default
+      
       filterBtns.forEach(btn => {
         if (btn.getAttribute('data-filter') === 'all') {
           btn.classList.add('active', 'bg-primary', 'text-white');
@@ -2167,13 +2284,13 @@
         }
       });
       
-      // Add click handlers
+      
       filterBtns.forEach(btn => {
         btn.addEventListener('click', function() {
           const filter = this.getAttribute('data-filter');
           console.log('Filter selected:', filter);
           
-          // Update active button styles
+          
           filterBtns.forEach(b => {
             b.classList.remove('active', 'bg-primary', 'text-white');
             b.classList.add('bg-gray-200', 'text-gray-800');
@@ -2182,7 +2299,7 @@
           this.classList.remove('bg-gray-200', 'text-gray-800');
           this.classList.add('active', 'bg-primary', 'text-white');
           
-          // Apply filter
+          
           const filteredWorkouts = filter === 'all' 
             ? workouts 
             : workouts.filter(w => w.type === filter);
@@ -2192,7 +2309,7 @@
       });
     }
 
-    // Initialize clear all button
+    
     function initClearAllButton() {
       const clearBtn = document.getElementById('clear-all-btn');
       
@@ -2209,13 +2326,13 @@
           return;
         }
         
-        // Show confirmation
+       
         showConfirmationModal(
           'Clear All Workouts',
           'Are you sure you want to delete all workouts? This cannot be undone.',
           'Delete All',
           function() {
-            // Clear all workouts
+           
             workouts = [];
             saveWorkouts();
             renderWorkouts(workouts);
@@ -2227,23 +2344,19 @@
       });
     }
 
-    // ============================================
-    // WORKOUT OPERATIONS
-    // ============================================
-
-    // Add a new workout
+  
     function addWorkout(workout) {
-      workouts.unshift(workout); // Add to beginning of array
+      workouts.unshift(workout); 
       saveWorkouts();
       renderWorkouts(workouts);
       updateStats();
     }
 
-    // Update an existing workout
+    
     function updateWorkout(id, updatedData) {
       const index = workouts.findIndex(w => w.id === id);
       if (index !== -1) {
-        // Preserve the ID
+        
         workouts[index] = { ...updatedData, id };
         saveWorkouts();
         renderWorkouts(workouts);
@@ -2251,7 +2364,7 @@
       }
     }
 
-    // Delete a workout
+   
     function deleteWorkout(id) {
       workouts = workouts.filter(workout => workout.id !== id);
       saveWorkouts();
@@ -2260,16 +2373,16 @@
       closeModal();
     }
 
-    // Edit a workout (prepare form)
+    
     function editWorkout(id) {
       const workout = workouts.find(w => w.id === id);
       if (!workout) return;
       
-      // Set form in edit mode
+      
       const workoutForm = document.getElementById('workout-form');
       workoutForm.dataset.editId = id;
       
-      // Set form values
+    
       document.getElementById('workout-type').value = workout.type;
       document.getElementById('workout-date').value = workout.date;
       document.getElementById('workout-duration').value = workout.duration;
@@ -2277,7 +2390,7 @@
       document.getElementById('workout-feeling').value = workout.feeling;
       document.getElementById('workout-description').value = workout.description || '';
       
-      // Add edit indicator
+    
       const editIndicator = document.createElement('div');
       editIndicator.id = 'edit-indicator';
       editIndicator.className = 'edit-mode-indicator';
@@ -2286,37 +2399,33 @@
         <button id="cancel-edit"><i class="fas fa-times"></i></button>
       `;
       
-      // Remove existing indicator if present
+     
       const existingIndicator = document.getElementById('edit-indicator');
       if (existingIndicator) existingIndicator.remove();
       
-      // Add new indicator
+      
       workoutForm.prepend(editIndicator);
       
-      // Add cancel button handler
+      
       document.getElementById('cancel-edit').addEventListener('click', function() {
         workoutForm.reset();
         delete workoutForm.dataset.editId;
         editIndicator.remove();
         
-        // Reset date to today
+        
         const dateInput = document.getElementById('workout-date');
         const today = new Date().toISOString().split('T')[0];
         dateInput.value = today;
       });
       
-      // Scroll to form
+     
       const formSection = document.getElementById('log-workout');
       if (formSection) {
         formSection.scrollIntoView({ behavior: 'smooth' });
       }
     }
 
-    // ============================================
-    // UI RENDERING
-    // ============================================
-
-    // Render workouts list
+   
     function renderWorkouts(workoutsToRender = workouts) {
       const workoutsContainer = document.getElementById('workouts-container');
       
@@ -2340,7 +2449,7 @@
         return;
       }
       
-      // Create a document fragment for better performance
+    
       const fragment = document.createDocumentFragment();
       
       workoutsToRender.forEach(workout => {
@@ -2351,7 +2460,7 @@
       workoutsContainer.appendChild(fragment);
     }
 
-    // Create a workout card
+    
     function createWorkoutCard(workout) {
       const workoutDate = new Date(workout.date);
       const formattedDate = workoutDate.toLocaleDateString('en-US', { 
@@ -2361,7 +2470,7 @@
         day: 'numeric' 
       });
       
-      // Get the icon for workout type
+      
       let typeIcon = 'fa-dumbbell';
       if (workout.type === 'Running') typeIcon = 'fa-running';
       else if (workout.type === 'Cycling') typeIcon = 'fa-biking';
@@ -2371,7 +2480,7 @@
       else if (workout.type === 'Yoga') typeIcon = 'fa-om';
       else if (workout.type === 'HIIT') typeIcon = 'fa-bolt';
       
-      // Get the feeling icon
+    
       let feelingIcon = 'fa-meh';
       if (workout.feeling === 'Great') feelingIcon = 'fa-laugh-beam';
       else if (workout.feeling === 'Good') feelingIcon = 'fa-smile';
@@ -2444,15 +2553,15 @@
       return card;
     }
 
-    // Update statistics display
+    
     function updateStats() {
-      // Update total workouts count
+     
       const totalWorkoutsEl = document.getElementById('total-workouts');
       if (totalWorkoutsEl) {
         totalWorkoutsEl.textContent = workouts.length;
       }
       
-      // If no workouts, set defaults and return
+    
       if (workouts.length === 0) {
         const thisWeekEl = document.getElementById('this-week');
         const avgDurationEl = document.getElementById('avg-duration');
@@ -2464,7 +2573,7 @@
         return;
       }
       
-      // Calculate workouts this week
+      
       const today = new Date();
       const startOfWeek = new Date(today);
       startOfWeek.setDate(today.getDate() - today.getDay());
@@ -2480,7 +2589,7 @@
         thisWeekEl.textContent = thisWeekWorkouts.length;
       }
       
-      // Calculate average duration
+  
       const totalDuration = workouts.reduce((sum, workout) => sum + workout.duration, 0);
       const avgDuration = (totalDuration / workouts.length).toFixed(1);
       
@@ -2489,7 +2598,7 @@
         avgDurationEl.textContent = avgDuration;
       }
       
-      // Calculate average intensity
+     
       const totalIntensity = workouts.reduce((sum, workout) => sum + workout.intensity, 0);
       const avgIntensity = (totalIntensity / workouts.length).toFixed(1);
       
@@ -2499,11 +2608,7 @@
       }
     }
 
-    // ============================================
-    // UI HELPERS & MODALS
-    // ============================================
-
-    // Show alert message
+  
     function showAlert(message, type) {
       const alertBox = document.createElement('div');
       alertBox.className = `alert alert-${type}`;
@@ -2519,14 +2624,14 @@
       
       document.body.appendChild(alertBox);
       
-      // Auto-remove after 3 seconds
+      
       setTimeout(() => {
         alertBox.classList.add('fade-out');
         setTimeout(() => alertBox.remove(), 300);
       }, 3000);
     }
 
-    // Show confirmation modal
+   
     function showConfirmationModal(title, message, confirmText, onConfirm) {
       const modal = document.createElement('div');
       modal.className = 'confirmation-modal';
@@ -2553,14 +2658,13 @@
       
       document.body.appendChild(modal);
       
-      // Add confirm button handler
-      document.getElementById('confirm-action').addEventListener('click', onConfirm);
       
-      // Show modal with animation
+      document.getElementById('confirm-action').addEventListener('click', onConfirm);
+    
       setTimeout(() => modal.classList.add('active'), 10);
     }
 
-    // Confirm delete
+    
     function confirmDelete(id) {
       showConfirmationModal(
         'Delete Workout',
@@ -2570,7 +2674,7 @@
       );
     }
 
-    // Close modal
+  
     function closeModal() {
       const modal = document.querySelector('.confirmation-modal');
       if (modal) {
@@ -2579,32 +2683,28 @@
       }
     }
 
-    // ============================================
-    // EXPOSE FUNCTIONS TO GLOBAL SCOPE
-    // ============================================
 
-    // Make functions available to HTML onclick handlers
     window.deleteWorkout = deleteWorkout;
     window.editWorkout = editWorkout;
     window.confirmDelete = confirmDelete;
     window.closeModal = closeModal;
     
-    // Execute immediately on script load
+   
     (function() {
       function removeLogWorkout() {
         console.log("Actively hunting for Log Workout link...");
         
-        // Find any log workout links
+
         var logWorkoutLinks = [];
         
-        // Method 1: Direct href matching
+       
         document.querySelectorAll('a[href="#log-workout"]').forEach(link => {
           if (!link.closest('header') && !link.closest('nav')) {
             logWorkoutLinks.push(link);
           }
         });
         
-        // Method 2: Text content matching
+   
         document.querySelectorAll('a').forEach(link => {
           if (link.textContent.trim() === 'Log Workout' || 
               link.innerText.trim() === 'Log Workout') {
@@ -2613,8 +2713,7 @@
             }
           }
         });
-        
-        // Method 3: Position-based detection (top of page)
+ 
         document.querySelectorAll('a').forEach(link => {
           const rect = link.getBoundingClientRect();
           if (rect.top < 200 && !link.closest('header') && !link.closest('nav')) {
@@ -2622,13 +2721,13 @@
           }
         });
         
-        // Remove all found links
+   
         logWorkoutLinks.forEach(link => {
           console.log("Removing Log Workout link:", link);
           link.style.display = 'none';
           link.style.visibility = 'hidden';
           link.style.opacity = '0';
-          // Try actual removal if possible
+    
           try {
             link.remove();
           } catch (e) {
@@ -2636,12 +2735,11 @@
           }
         });
         
-        // Find any close text nodes or elements that might be part of the same navigation
+      
         document.querySelectorAll('body > *').forEach(el => {
           if (el.nodeType === Node.TEXT_NODE || el.childNodes.length < 3) {
             if (!el.closest('header') && !el.closest('nav') && 
                 !el.closest('form') && !el.closest('.workout-card')) {
-              // Hide any small elements at the top that could be part of navigation
               if (el.getBoundingClientRect().top < 200) {
                 el.style.display = 'none';
               }
@@ -2649,7 +2747,7 @@
           }
         });
         
-        // Look for links in the first 5 elements of the body
+    
         const bodyChildren = Array.from(document.body.children).slice(0, 5);
         bodyChildren.forEach(child => {
           const links = child.querySelectorAll('a');
@@ -2661,21 +2759,127 @@
           });
         });
       }
-      
-      // Run immediately
+
       removeLogWorkout();
-      
-      // And after a short delay to catch any late-rendering elements
+
       setTimeout(removeLogWorkout, 100);
       setTimeout(removeLogWorkout, 500);
-      
-      // Run on any DOM changes
+
       const observer = new MutationObserver(removeLogWorkout);
       observer.observe(document.body, { 
         childList: true, 
         subtree: true 
       });
     })();
+  </script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+
+      const particleContainer = document.createElement('div');
+      particleContainer.className = 'particle-container';
+      
+      for (let i = 0; i < 15; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        
+        
+        const size = Math.random() * 40 + 10;
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size}px`;
+        
+       
+        particle.style.top = `${Math.random() * 100}%`;
+        particle.style.left = `${Math.random() * 100}%`;
+        
+    
+        particle.style.animationDelay = `${Math.random() * 10}s`;
+        
+        particleContainer.appendChild(particle);
+      }
+      
+      document.body.appendChild(particleContainer);
+      
+     
+      const waveContainer = document.createElement('div');
+      waveContainer.className = 'wave-container';
+      
+      const wave = document.createElement('div');
+      wave.className = 'wave';
+      waveContainer.appendChild(wave);
+      
+      document.body.appendChild(waveContainer);
+      
+     
+      const iconPositions = [
+        { top: '15%', left: '5%', icon: 'fa-dumbbell', size: '2rem', delay: '0s' },
+        { top: '70%', left: '8%', icon: 'fa-running', size: '3rem', delay: '1.5s' },
+        { top: '25%', right: '7%', icon: 'fa-heartbeat', size: '2.5rem', delay: '1s' },
+        { top: '80%', right: '10%', icon: 'fa-biking', size: '2.8rem', delay: '2s' }
+      ];
+      
+      iconPositions.forEach(pos => {
+        const icon = document.createElement('i');
+        icon.className = `fas ${pos.icon} fitness-icon`;
+        icon.style.top = pos.top;
+        icon.style.left = pos.left;
+        icon.style.right = pos.right;
+        icon.style.fontSize = pos.size;
+        icon.style.animationDelay = pos.delay;
+        
+        document.body.appendChild(icon);
+      });
+      
+      
+      const sections = document.querySelectorAll('section');
+      const scrollIndicator = document.createElement('div');
+      scrollIndicator.className = 'scroll-indicator';
+      
+      sections.forEach((_, index) => {
+        const dot = document.createElement('div');
+        dot.className = 'scroll-dot';
+        if (index === 0) dot.classList.add('active');
+        scrollIndicator.appendChild(dot);
+      });
+      
+      document.body.appendChild(scrollIndicator);
+      
+  
+      const observerOptions = {
+        root: null,
+        rootMargin: '0px',
+        threshold: 0.1
+      };
+      
+      const sectionObserver = new IntersectionObserver(function(entries) {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            
+            
+            const sectionIndex = Array.from(sections).indexOf(entry.target);
+            document.querySelectorAll('.scroll-dot').forEach((dot, i) => {
+              if (i === sectionIndex) {
+                dot.classList.add('active');
+              } else {
+                dot.classList.remove('active');
+              }
+            });
+          }
+        });
+      }, observerOptions);
+      
+      sections.forEach(section => {
+        section.classList.add('visible'); 
+        sectionObserver.observe(section);
+      });
+      
+     
+      document.querySelectorAll('.scroll-dot').forEach((dot, index) => {
+        dot.addEventListener('click', () => {
+          sections[index].scrollIntoView({ behavior: 'smooth' });
+        });
+      });
+    });
   </script>
 </body>
 </html>
